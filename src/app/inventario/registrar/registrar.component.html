@@ -1,0 +1,68 @@
+<div class="col">
+    <div class="card text-center">
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+              <button class="nav-link text-info" (click)="seleccionarTipo('qr')">QR</button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link text-primary" (click)="seleccionarTipo('barcode')">Código de barras</button>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body" *ngIf="tipoEscaner == ''">
+            <h3 class="card-title">Registrar una nueva entrada</h3>
+            <h5 class="card-text">Selecciona el tipo de código <span class="text-info">QR</span> ó <span class="text-primary">Código de barras</span>.</h5>
+        </div>
+
+        <div class="card-body" *ngIf="tipoEscaner == 'qr'">
+            <div class="row d-flex justify-content-center">
+                <div class="col-6">
+                    <p>Escanea el código</p>
+                    <form (ngSubmit)="registrar()" autocomplete="off">
+                        <input type="text" 
+                            name="qr" 
+                            class="form-control"
+                            [(ngModel)]="qr">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body" *ngIf="tipoEscaner == 'barcode'">
+            <form (ngSubmit)="registrar()" autocomplete="off">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-4">
+                        <ng-template [ngIf]="barcodePaso == 1">
+                            <p>Número de código</p>
+                            <input type="text" 
+                                name="barcode" 
+                                class="form-control"
+                                [(ngModel)]="codigo">
+                        </ng-template>                        
+                        <ng-template [ngIf]="barcodePaso == 2">
+                            <p>Lote</p>
+                            <input type="text" 
+                                name="lote" 
+                                class="form-control"
+                                [(ngModel)]="lote">
+                        </ng-template>
+                        <ng-template [ngIf]="barcodePaso == 3">
+                            <p>Cantidad</p>
+                            <input type="number" 
+                                name="cantidad" 
+                                class="form-control"
+                                [(ngModel)]="cantidad">
+                        </ng-template>
+                    </div>
+                </div>
+            </form>
+            <button *ngIf="barcodePaso > 1" 
+                    class="btn btn-sm btn-danger float-end"
+                    (click)="resetearVariables()"
+                    type="button">
+                Cancelar
+            </button>
+        </div>
+      </div>
+</div>

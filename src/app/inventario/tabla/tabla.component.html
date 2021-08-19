@@ -1,0 +1,30 @@
+<div class="row">
+    <h1>Registros escaneados</h1>
+</div>
+<div class="row">
+    <div class="table-responsive">
+        <table datatable [dtOptions]="dtOptions"  *ngIf="data.length; else elseDiv" class="table table-hover table-striped row-border hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Lote</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data; index as i">
+                    <td> {{ i+1 }} </td>
+                    <td> {{ item.code }} </td>
+                    <td> {{ item.desc }} </td>
+                    <td> {{ item.lote }} </td>
+                    <td> {{ item.cant }} </td>
+                </tr>
+            </tbody>
+        </table>
+        <ng-template #elseDiv>
+            <h3 class="mt-4">No cuentas con registros</h3>
+        </ng-template>
+    </div>
+</div>
