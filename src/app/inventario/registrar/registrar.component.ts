@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Registro } from '../../interfaces/registro.interface';
 import data from '../../../assets/files/data.json';
 import Swal from 'sweetalert2';
@@ -27,11 +27,32 @@ export class RegistrarComponent implements OnInit {
   @Input() dentroRango: boolean = true;
   @Output() registrarNuevo: EventEmitter<Registro> = new EventEmitter();
 
+  @ViewChildren('txtQr') qrInputs!: QueryList<ElementRef>;
+  @ViewChildren('txtCodigo') codigoInputs!: QueryList<ElementRef>;
+  @ViewChildren('txtLote') loteInputs!: QueryList<ElementRef>;
+  @ViewChildren('txtCantidad') cantidadInputs!: QueryList<ElementRef>;
+
   constructor() { }
 
   ngOnInit(): void {
     this.productos = data.data;
   }
+
+  public ngAfterViewInit(): void
+    {
+      this.qrInputs.changes.subscribe((comps: QueryList <any>) => {
+        if (this.tipoEscaner == 'qr') comps.first.nativeElement.focus();
+      });
+      this.codigoInputs.changes.subscribe((comps: QueryList <any>) => {
+        if (this.barcodePaso == 1 && this.tipoEscaner == 'barcode') comps.first.nativeElement.focus();
+      });
+      this.loteInputs.changes.subscribe((comps: QueryList <any>) => {
+        if (this.barcodePaso == 2) comps.first.nativeElement.focus();
+      });
+      this.cantidadInputs.changes.subscribe((comps: QueryList <any>) => {
+        if (this.barcodePaso == 3) comps.first.nativeElement.focus();
+      });
+    }
 
   seleccionarTipo( tipo:string ): void {
     if (this.dentroRango) {
@@ -71,13 +92,13 @@ export class RegistrarComponent implements OnInit {
 
   validarQr(cadena: any[]): boolean {
     if (cadena.length != 3) return false;
-    if (!(/^\d+$/.test(cadena[0])) || !(/^\d+$/.test(cadena[1])) || !(/^\d+$/.test(cadena[2]))) return false;
+    if (!(/^\d+$/.test(cadena[0])) || !(/^([a-zA-Z0-9]+)$/.test(cadena[1])) || !(/^\d+$/.test(cadena[2]))) return false;
     return true;
   }
 
   validarBarcode(): boolean {
     if (this.barcodePaso == 3 && parseInt(this.cantidad.toString(), 10) <= 0) return false;
-    if (this.barcodePaso == 2 && !(/^\d+$/.test(this.lote))) return false;
+    if (this.barcodePaso == 2 && !(/^([a-zA-Z0-9]+)$/.test(this.lote))) return false;
     if (this.barcodePaso == 1 && !(/^\d+$/.test(this.codigo))) return false;
     return true;
   }

@@ -11,6 +11,7 @@
                     <th>Descripción</th>
                     <th>Lote</th>
                     <th>Cantidad</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,6 +21,13 @@
                     <td> {{ item.desc }} </td>
                     <td> {{ item.lote }} </td>
                     <td> {{ item.cant }} </td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <button (click)="eliminarRegistro(item)" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>

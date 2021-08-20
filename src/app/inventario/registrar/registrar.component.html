@@ -12,7 +12,16 @@
         </div>
         <div class="card-body" *ngIf="tipoEscaner == ''">
             <h3 class="card-title">Registrar una nueva entrada</h3>
-            <h5 class="card-text">Selecciona el tipo de código <span class="text-info">QR</span> ó <span class="text-primary">Código de barras</span>.</h5>
+            <h5 class="card-text">
+                Selecciona el tipo de código 
+                <button class="btn text-info p-0 m-0" (click)="seleccionarTipo('qr')">
+                    <h5>QR</h5>
+                </button> 
+                ó 
+                <button class="btn text-primary p-0 m-0" (click)="seleccionarTipo('barcode')">
+                    <h5>Código de barras</h5>
+                </button>.
+            </h5>
         </div>
 
         <div class="card-body" *ngIf="tipoEscaner == 'qr'">
@@ -23,7 +32,8 @@
                         <input type="text" 
                             name="qr" 
                             class="form-control"
-                            [(ngModel)]="qr">
+                            [(ngModel)]="qr"
+                            #txtQr>
                     </form>
                 </div>
             </div>
@@ -38,21 +48,24 @@
                             <input type="text" 
                                 name="barcode" 
                                 class="form-control"
-                                [(ngModel)]="codigo">
+                                [(ngModel)]="codigo"
+                                #txtCodigo>
                         </ng-template>                        
                         <ng-template [ngIf]="barcodePaso == 2">
                             <p>Lote</p>
                             <input type="text" 
                                 name="lote" 
                                 class="form-control"
-                                [(ngModel)]="lote">
+                                [(ngModel)]="lote"
+                                #txtLote>
                         </ng-template>
                         <ng-template [ngIf]="barcodePaso == 3">
                             <p>Cantidad</p>
                             <input type="number" 
                                 name="cantidad" 
                                 class="form-control"
-                                [(ngModel)]="cantidad">
+                                [(ngModel)]="cantidad"
+                                #txtCantidad>
                         </ng-template>
                     </div>
                 </div>

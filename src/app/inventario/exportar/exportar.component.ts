@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import Swal from 'sweetalert2';
+import { Registro } from '../../interfaces/registro.interface';
 
 @Component({
   selector: 'app-exportar',
@@ -8,7 +9,7 @@ import Swal from 'sweetalert2';
 })
 export class ExportarComponent implements OnInit {
 
-  @Output() exportExcel :EventEmitter<any> = new EventEmitter();
+  @Output() exportExcel :EventEmitter<Registro> = new EventEmitter();
 
   constructor() { }
 

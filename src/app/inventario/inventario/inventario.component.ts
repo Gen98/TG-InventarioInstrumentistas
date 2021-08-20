@@ -40,4 +40,9 @@ export class InventarioComponent implements OnInit {
   eliminarRegistros(): void {
     this.storageServicio.deleteItems();
   }
+
+  eliminarRegistro( registro: Registro ): void {
+    this.storageServicio.deleteItem(registro);
+    this.getRegistros();
+  }
 }

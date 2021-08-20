@@ -6,7 +6,7 @@
         <hr class="my-5">
         <div class="row">
             <app-exportar (exportExcel)="exportAsXLSX()" *ngIf="registros.length"></app-exportar>
-            <app-tabla [data]="registros"></app-tabla>
+            <app-tabla [data]="registros" (eliminarItem)="eliminarRegistro($event)"></app-tabla>
         </div>
     </div>
 </div>
