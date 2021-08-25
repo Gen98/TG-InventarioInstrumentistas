@@ -76,7 +76,7 @@ export class RegistrarComponent implements OnInit {
   }
 
   resetearVariables(): void {
-    this.tipoEscaner = "";
+    // this.tipoEscaner = "";
     this.qr = "";
     this.codigo = "";
     this.lote = ""
@@ -92,19 +92,19 @@ export class RegistrarComponent implements OnInit {
 
   validarQr(cadena: any[]): boolean {
     if (cadena.length != 3) return false;
-    if (!(/^\d+$/.test(cadena[0])) || !(/^([a-zA-Z0-9]+)$/.test(cadena[1])) || !(/^\d+$/.test(cadena[2]))) return false;
+    if (!(/^\d+$/.test(cadena[0])) || !(/^([a-zA-Z0-9-]+)$/.test(cadena[1])) || !(/^\d+$/.test(cadena[2]))) return false;
     return true;
   }
 
   validarBarcode(): boolean {
     if (this.barcodePaso == 3 && parseInt(this.cantidad.toString(), 10) <= 0) return false;
-    if (this.barcodePaso == 2 && !(/^([a-zA-Z0-9]+)$/.test(this.lote))) return false;
+    if (this.barcodePaso == 2 && !(/^([a-zA-Z0-9-]+)$/.test(this.lote))) return false;
     if (this.barcodePaso == 1 && !(/^\d+$/.test(this.codigo))) return false;
     return true;
   }
 
   registrarQr(): void {
-    let cadena = this.qr.split('/');
+    let cadena = this.qr.includes('/') ? this.qr.split('/') : this.qr.split('-');
     let producto = this.productos.find((e: any) => e.Codigo == cadena[0]);
 
     if (this.validarQr(cadena) && producto) {
@@ -120,7 +120,7 @@ export class RegistrarComponent implements OnInit {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Código inválido'
+        text: 'Código inválido, intenta nuevamente o realiza el registro manual.'
       });
     }
     this.resetearVariables();
