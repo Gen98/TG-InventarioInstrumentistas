@@ -22,6 +22,9 @@ export class TablaComponent implements OnInit{
       pagingType: 'full_numbers',
       pageLength: 20,
       lengthMenu: [ 10, 20, 25, 50 ],
+      order: [
+        [0, 'desc']
+      ],
       language: {
         url: "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
       }
@@ -36,7 +39,7 @@ export class TablaComponent implements OnInit{
       showCancelButton: true,
       confirmButtonColor: '#02a3b5',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Confirmar',
+      confirmButtonText: 'Continuar',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {

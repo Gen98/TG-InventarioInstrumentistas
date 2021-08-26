@@ -3,20 +3,25 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { InicioComponent } from './components/inicio/inicio.component';
 import { InventarioComponent } from './inventario/inventario/inventario.component';
+import { CatalogoComponent } from './components/catalogo/catalogo.component';
 
 const routes: Routes = [
   {
-      path: '',
-      component: InicioComponent,
-      pathMatch: 'full'
+    path: '',
+    component: InicioComponent,
+    pathMatch: 'full'
   },
   {
-      path: 'inventario',
-      component: InventarioComponent
+    path: 'inventario',
+    component: InventarioComponent
   },
   {
-      path: '**',
-      redirectTo: ''
+    path: 'catalogo',
+    component: CatalogoComponent
+  },
+  {
+    path: '**',
+    redirectTo: ''
   }
 ];
 

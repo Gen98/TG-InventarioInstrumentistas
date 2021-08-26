@@ -20,7 +20,7 @@ export class StorageService {
     if (duplicado != -1) {
       storage[duplicado].cant = storage[duplicado].cant + item.cant;
     } else {
-      storage.push(item);
+      storage.unshift(item);
     }
     localStorage.setItem('inventariado', JSON.stringify(storage))
   }
@@ -48,7 +48,7 @@ export class StorageService {
 
   verificarLimiteRegistros(): boolean {
     let total = this.getItems();
-    if (total.length <= 30) return true;
+    if (total.length <= 199) return true;
     return false;
   }  
 }

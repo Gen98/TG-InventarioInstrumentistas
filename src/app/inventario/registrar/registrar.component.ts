@@ -98,7 +98,7 @@ export class RegistrarComponent implements OnInit {
 
   validarBarcode(): boolean {
     if (this.barcodePaso == 3 && parseInt(this.cantidad.toString(), 10) <= 0) return false;
-    if (this.barcodePaso == 2 && !(/^([a-zA-Z0-9-]+)$/.test(this.lote))) return false;
+    if (this.barcodePaso == 2 && !(/^([a-zA-Z0-9-/]+)$/.test(this.lote))) return false;
     if (this.barcodePaso == 1 && !(/^\d+$/.test(this.codigo))) return false;
     return true;
   }
