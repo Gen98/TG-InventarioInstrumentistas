@@ -19,6 +19,11 @@ export class StorageService {
     });
     if (duplicado != -1) {
       storage[duplicado].cant = storage[duplicado].cant + item.cant;
+      let actualizado = storage[duplicado];
+      storage = storage.filter(function(el) {
+        return !(el.lote === item.lote && el.code === item.code);
+      });
+      storage.unshift(actualizado);
     } else {
       storage.unshift(item);
     }

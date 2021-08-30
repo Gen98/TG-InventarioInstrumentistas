@@ -116,6 +116,14 @@ export class RegistrarComponent implements OnInit {
       }
 
       this.registrarNuevo.emit(this.nuevoRegistro);
+
+      Swal.fire({
+        icon: 'success',
+        text: 'Registro exitoso',
+        showCloseButton: true,
+        showConfirmButton: false,
+        timer: 4000
+      });
     } else {
       Swal.fire({
         icon: 'error',
