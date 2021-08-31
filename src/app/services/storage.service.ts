@@ -18,7 +18,7 @@ export class StorageService {
       return e.code == item.code && e.lote == item.lote
     });
     if (duplicado != -1) {
-      storage[duplicado].cant = storage[duplicado].cant + item.cant;
+      storage[duplicado].cant = Number(storage[duplicado].cant) + item.cant;
       let actualizado = storage[duplicado];
       storage = storage.filter(function(el) {
         return !(el.lote === item.lote && el.code === item.code);

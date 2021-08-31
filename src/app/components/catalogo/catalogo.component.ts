@@ -104,7 +104,7 @@ export class CatalogoComponent implements OnInit {
                   code: codigo,
                   desc: desc,
                   lote: '1',
-                  cant: cantidad.value
+                  cant: parseInt(cantidad.value)
                 }
                 this.registrarNuevo(nuevoRegistro);
               }
