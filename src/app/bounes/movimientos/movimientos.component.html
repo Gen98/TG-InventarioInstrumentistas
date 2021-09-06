@@ -1,0 +1,35 @@
+<div class="container-fluid m-0 p-0">
+    <div class="d-flex flex-column justify-content-center">
+        <div class="col">
+            <div class="card text-center">
+                <div class="card-header">
+                  <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <button class="nav-link text-info" 
+                                (click)="noSincronizados = true"
+                                [ngClass]="{'active':noSincronizados}"
+                        >NO Sincronizados</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link text-primary" 
+                                (click)="noSincronizados = false"
+                                [ngClass]="{'active':!noSincronizados}"
+                        >Sincronizados</button>
+                    </li>
+                  </ul>
+                </div>
+                <div class="card-body">
+                    <app-no-sincronizados *ngIf="noSincronizados; else Sincronizados"
+                        [movimientos]="movimientos"
+                        (registrarMovimiento)="registrarMovimiento($event)"
+                        (actualizarMovimientoOutput)="actualizarMovimiento($event)"
+                        (eliminarMovimientoOutput)="eliminarMovimiento($event)"
+                    ></app-no-sincronizados>
+                    <ng-template #Sincronizados>
+                        <app-sincronizados></app-sincronizados>
+                    </ng-template>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>

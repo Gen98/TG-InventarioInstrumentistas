@@ -1,0 +1,46 @@
+<ng-template [ngIf]="!evidencias" [ngIfElse]="evidencias">
+    <div class="col">
+        <div class="card text-center">
+            <div class="card-header"></div>
+            <div class="card-body">
+                <div class="row d-flex justify-content-center form-row">
+                    <div class="col-4">
+                        <h5 class="card-text">
+                            Cámara.
+                        </h5>
+                        <select name="camaras" 
+                                id="camaras" 
+                                class="form-control" 
+                                *ngIf="camarasDispositivo"
+                                (change)="seleccionarCamara($event)"
+                        >
+                            <option value disable selected>Elige</option>
+                            <option *ngFor="let camara of camarasDispositivo" [value]="camara.deviceId">
+                                {{ camara.label }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <zxing-scanner 
+        [enable]="escanerActivo"
+        [formats]="allowedFormats"
+        [device]="camaraSeleccionada"
+        (camerasFound)="camarasEncontradas($event)"
+        (scanSuccess)="scanSuccessHandler($event)"
+        (scanError)="scanErrorHandler($event)"
+        (scanFailure)="scanFailureHandler($event)"
+        (scanComplete)="scanCompleteHandler($event)"
+        #scanner
+        *ngIf="escanerActivo"
+    ></zxing-scanner>
+</ng-template>
+
+<ng-template #evidencias>
+    <div class="row d-flex justify-content-center">
+        <webcam [height]="300" [width]="300" [allowCameraSwitch]="true" [trigger]="triggerObservable" (imageCapture)="evidenciaTomada($event)" *ngIf="mostrarCamara"></webcam>
+        <button type="button" class="btn btn-sm btn-success mt-2" (click)="tomarFoto()">Tomar foto</button>
+    </div>
+</ng-template>

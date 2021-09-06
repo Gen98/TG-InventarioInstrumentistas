@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Registro } from 'src/app/interfaces/registro.interface';
+import { Movimiento } from '../../interfaces/movimiento.interface';
 import Swal from 'sweetalert2';
 import { StorageService } from '../../services/storage.service';
 
@@ -12,8 +13,12 @@ export class TablaComponent implements OnInit{
 
   dtOptions: DataTables.Settings = {};
   
-  @Input() data: Registro[] = [];
+  @Input() data: any[] = [];
+  @Input() isBounes: boolean = false;
+  @Input() soloVisualizar: boolean = false;
   @Output() eliminarItem :EventEmitter<Registro> = new EventEmitter();
+  @Output() visualizarMovimiento :EventEmitter<Movimiento> = new EventEmitter();
+  @Output() eliminarMov :EventEmitter<Movimiento> = new EventEmitter();
 
   constructor( private storageService: StorageService ) { }
 
@@ -60,7 +65,6 @@ export class TablaComponent implements OnInit{
           confirmButtonText: 'Confirmar',
           cancelButtonText: 'Cancelar'
         }).then((option) => {
-          console.log(option);
           if (option.isConfirmed) {
             if (!option.value || !['_total', '_parcial'].includes(option.value)) {
               this.mostrarError();
@@ -105,6 +109,34 @@ export class TablaComponent implements OnInit{
       icon: 'error',
       title: 'Error',
       text: 'Opción inválida'
+    });
+  }
+
+  detallesMovimiento(movimiento: Movimiento, movimientoIndex: number): void {
+    movimiento.index = movimientoIndex;
+    this.visualizarMovimiento.emit(movimiento);
+  }
+
+  eliminarMovimiento(movimiento: Movimiento, movimientoIndex: number): void {
+    movimiento.index = movimientoIndex;
+    Swal.fire({
+      title: 'Eliminar',
+      text: '¿Deseas eliminar este movimiento?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#02a3b5',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Eliminación exitosa',
+          timer: 2000
+        });
+        this.eliminarMov.emit(movimiento);
+      }
     });
   }
 }

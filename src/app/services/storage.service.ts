@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Registro } from '../interfaces/registro.interface';
+import { Movimiento } from '../interfaces/movimiento.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,10 @@ export class StorageService {
 
   getItems():Registro[]{
     return JSON.parse(localStorage.getItem('inventariado')!) || [];
+  }
+
+  getMovimientos(): Movimiento[] {
+    return JSON.parse(localStorage.getItem('movimientos')!) || [];
   }
 
   addItem( item: Registro ) {
@@ -30,7 +35,28 @@ export class StorageService {
     localStorage.setItem('inventariado', JSON.stringify(storage))
   }
 
-  deleteItems(): void {
+  addMovimiento(movimiento: Movimiento): void {
+    movimiento.fechaCreacion = Date.now();
+    let movimientos: Movimiento[] = this.getMovimientos();
+    movimientos.unshift(movimiento);
+    localStorage.setItem('movimientos', JSON.stringify(movimientos));
+  }
+
+  updateMovimiento(movimiento: Movimiento): boolean {
+
+    let movimientos: Movimiento[] = this.getMovimientos();
+    let response: boolean = false;
+    if (movimientos[movimiento.index!].folioRecepcion != movimiento.folioRecepcion || movimientos[movimiento.index!].comentario != movimiento.comentario) {
+      movimientos[movimiento.index!].folioRecepcion = movimiento.folioRecepcion;
+      movimientos[movimiento.index!].comentario = movimiento.comentario;
+  
+      localStorage.setItem('movimientos', JSON.stringify(movimientos));
+      response = true;
+    }
+    return response;
+  }
+
+  deleteItems(isBounes: boolean = false): void {
     localStorage.removeItem('inventariado');
   }
 
@@ -49,6 +75,14 @@ export class StorageService {
       storage[index].cant = item.cant;
     }
     localStorage.setItem('inventariado', JSON.stringify(storage))
+  }
+
+  deleteMovimiento(movimiento: Movimiento): void {
+    let movimientos = this.getMovimientos();
+    movimientos = movimientos.filter(function(el, i) {
+      return i != movimiento.index;
+    });
+    localStorage.setItem('movimientos', JSON.stringify(movimientos))
   }
 
   verificarLimiteRegistros(): boolean {

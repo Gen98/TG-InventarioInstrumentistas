@@ -35,6 +35,12 @@
                             [(ngModel)]="qr"
                             placeholder="CÓDIGO/LOTE/CANTIDAD"
                             #txtQr>
+                        <ng-template [ngIf]="movil() && isBounes" class="mt-3">
+                            <div class="row">
+                                <label for="camera">Utilizar cámara</label>
+                                <button type="button" class="btn btn-outline-light fas fa-camera" (click)="mostrarModalCamara()"></button>
+                            </div>
+                        </ng-template>
                     </form>
                 </div>
             </div>
@@ -51,6 +57,12 @@
                                 class="form-control"
                                 [(ngModel)]="codigo"
                                 #txtCodigo>
+                            <ng-template [ngIf]="movil() && isBounes" class="mt-3">
+                                <div class="row">
+                                    <label for="camera">Utilizar cámara</label>
+                                    <button type="button" class="btn btn-outline-light fas fa-camera" (click)="mostrarModalCamara()"></button>
+                                </div>
+                            </ng-template>
                         </ng-template>                        
                         <ng-template [ngIf]="barcodePaso == 2">
                             <p>Lote</p>
@@ -59,6 +71,12 @@
                                 class="form-control"
                                 [(ngModel)]="lote"
                                 #txtLote>
+                            <ng-template [ngIf]="movil() && isBounes" class="mt-3">
+                                <div class="row">
+                                    <label for="camera">Utilizar cámara</label>
+                                    <button type="button" class="btn btn-outline-light fas fa-camera" (click)="mostrarModalCamara()"></button>
+                                </div>
+                            </ng-template>
                         </ng-template>
                         <ng-template [ngIf]="barcodePaso == 3">
                             <p>Cantidad</p>
@@ -79,4 +97,22 @@
             </button>
         </div>
       </div>
+</div>
+
+<div class="modal" id="camaraModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="camaraModalLabel">Camara</h5>
+                <button type="button" id="closeCamaraModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid m-0 p-0">
+                    <div class="d-flex flex-column justify-content-center">
+                        <app-escaner-movil [escanerActivo]="escanerActivo" (codigoEscaneado)="codigoEscaneado($event)"></app-escaner-movil>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
