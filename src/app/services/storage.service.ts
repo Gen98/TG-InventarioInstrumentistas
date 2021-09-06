@@ -20,7 +20,7 @@ export class StorageService {
     if (duplicado != -1) {
       storage[duplicado].cant = storage[duplicado].cant + item.cant;
     } else {
-      storage.push(item);
+      storage.unshift(item);
     }
     localStorage.setItem('inventariado', JSON.stringify(storage))
   }
@@ -31,15 +31,24 @@ export class StorageService {
 
   deleteItem( item: Registro ): void{
     let storage: Registro[] = this.getItems();
-    let nuevo = storage.filter(function(el) {
-      return !(el.lote === item.lote && el.code === item.code);
+
+    let index = storage.findIndex(function(e) {
+      return e.code == item.code && e.lote == item.lote
     });
-    localStorage.setItem('inventariado', JSON.stringify(nuevo))
+
+    if (storage[index].cant - item.cant <= 0 || item.cant == 0) {
+      storage = storage.filter(function(el) {
+        return !(el.lote === item.lote && el.code === item.code);
+      });
+    } else {
+      storage[index].cant = item.cant;
+    }
+    localStorage.setItem('inventariado', JSON.stringify(storage))
   }
 
   verificarLimiteRegistros(): boolean {
     let total = this.getItems();
-    if (total.length <= 30) return true;
+    if (total.length <= 199) return true;
     return false;
   }  
 }

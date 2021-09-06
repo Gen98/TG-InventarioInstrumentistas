@@ -20,7 +20,9 @@ export class InventarioComponent implements OnInit {
 
   registrarNuevo(registro: Registro): void {
     this.storageServicio.addItem(registro);
-    this.getRegistros();
+    setTimeout(() => {
+      this.getRegistros();
+    }, 1000);
   }
 
   getRegistros(): void {

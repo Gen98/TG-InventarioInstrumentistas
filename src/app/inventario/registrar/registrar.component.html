@@ -24,7 +24,7 @@
             </h5>
         </div>
 
-        <div class="card-body" *ngIf="tipoEscaner == 'qr'">
+        <div class="card-body bg-info" *ngIf="tipoEscaner == 'qr'">
             <div class="row d-flex justify-content-center">
                 <div class="col-6">
                     <p>Escanea el código</p>
@@ -33,13 +33,14 @@
                             name="qr" 
                             class="form-control"
                             [(ngModel)]="qr"
+                            placeholder="CÓDIGO/LOTE/CANTIDAD"
                             #txtQr>
                     </form>
                 </div>
             </div>
         </div>
 
-        <div class="card-body" *ngIf="tipoEscaner == 'barcode'">
+        <div class="card-body bg-secondary text-white" *ngIf="tipoEscaner == 'barcode'">
             <form (ngSubmit)="registrar()" autocomplete="off">
                 <div class="row d-flex justify-content-center">
                     <div class="col-4">
