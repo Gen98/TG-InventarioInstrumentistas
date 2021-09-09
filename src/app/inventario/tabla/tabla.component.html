@@ -1,74 +1,119 @@
-<div class="row">
-    <h1>Registros escaneados</h1>
-</div>
-<div class="row">
-    <div class="table-responsive">
-    <ng-template [ngIf]="!isBounes" [ngIfElse]="Bounes">
-        <table datatable [dtOptions]="dtOptions"  *ngIf="data.length; else elseDiv" class="table table-hover table-striped row-border hover">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Código</th>
-                    <th>Descripción</th>
-                    <th>Lote</th>
-                    <th>Cantidad</th>
-                    <th *ngIf="!soloVisualizar">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let item of data; index as i">
-                    <td> {{ data.length - i }} </td>
-                    <td> {{ item.code }} </td>
-                    <td> {{ item.desc }} </td>
-                    <td> {{ item.lote }} </td>
-                    <td> {{ item.cant }} </td>
-                    <td *ngIf="!soloVisualizar">
-                        <div class="btn-group" role="group">
-                            <button (click)="eliminarRegistro(item)" class="btn btn-outline-danger btn-sm">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <ng-template #elseDiv>
-            <h3 class="mt-4">No cuentas con registros</h3>
-        </ng-template>
-    </ng-template>
-    <ng-template #Bounes>
-        <table datatable [dtOptions]="dtOptions"  *ngIf="data.length; else elseDivMovs" class="table table-hover table-striped row-border hover">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Fecha creación</th>
-                    <th># registros</th>
-                    <th>Tipo</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let item of data; index as i">
-                    <td> {{ data.length - i }} </td>
-                    <td> {{ item.fechaCreacion | date:'d/M/yy, h:mm a'}} </td>
-                    <td> {{ item.registros.length }} </td>
-                    <td> {{ item.tipoEntrada ? 'Entrada' : 'Salida' }} </td>
-                    <td>
-                        <div class="btn-group" role="group">
-                            <button (click)="detallesMovimiento(item, i)" class="btn btn-outline-info btn-sm">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button (click)="eliminarMovimiento(item, i)" class="btn btn-outline-danger btn-sm">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <ng-template #elseDivMovs>
-            <h3 class="mt-4">No cuentas con movimientos</h3>
-        </ng-template>
-    </ng-template>
+<ng-template [ngIf]="!isSync" [ngIfElse]="Sync">
+    <div class="row">
+        <h1>Registros escaneados</h1>
     </div>
-</div>
+    <div class="row">
+        <div class="table-responsive">
+        <ng-template [ngIf]="!isBounes" [ngIfElse]="Bounes">
+            <table datatable [dtOptions]="dtOptions"  *ngIf="data.length; else elseDiv" class="table table-hover table-striped row-border hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Lote</th>
+                        <th>Cantidad</th>
+                        <th *ngIf="!soloVisualizar">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of data; index as i">
+                        <td> {{ data.length - i }} </td>
+                        <td> {{ item.code }} </td>
+                        <td> {{ item.desc }} </td>
+                        <td> {{ item.lote }} </td>
+                        <td> {{ item.cant }} </td>
+                        <td *ngIf="!soloVisualizar">
+                            <div class="btn-group" role="group">
+                                <button (click)="eliminarRegistro(item)" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ng-template #elseDiv>
+                <h3 class="mt-4">No cuentas con registros</h3>
+            </ng-template>
+        </ng-template>
+        <ng-template #Bounes>
+            <table datatable [dtOptions]="dtOptions"  *ngIf="data.length; else elseDivMovs" class="table table-hover table-striped row-border hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Fecha creación</th>
+                        <th># registros</th>
+                        <th>Tipo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of data; index as i">
+                        <td> {{ data.length - i }} </td>
+                        <td> {{ item.fechaCreacion | date:'d/M/yy, h:mm a'}} </td>
+                        <td> {{ item.registros.length }} </td>
+                        <td> {{ item.tipoEntrada ? 'Entrada' : 'Salida' }} </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button (click)="detallesMovimiento(item, i)" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button (click)="eliminarMovimiento(item, i)" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ng-template #elseDivMovs>
+                <h3 class="mt-4">No cuentas con movimientos</h3>
+            </ng-template>
+        </ng-template>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #Sync>
+    <div class="row">
+        <h1>Ultimos registros sincronizados</h1>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table datatable [dtOptions]="dtOptions"  *ngIf="data.length; else elseDivSyncs" class="table table-hover table-striped row-border hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Fecha creación</th>
+                        <th>Fecha sincronización</th>
+                        <th>Folio</th>
+                        <th># registros</th>
+                        <th>Tipo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of data; index as i">
+                        <td> {{ data.length - i }} </td>
+                        <td> {{ item.fechaCreacion }} </td>
+                        <td> {{ item.fechaSincronizacion }} </td>
+                        <td> {{ item.folio ? item.folio : 'NA' }} </td>
+                        <td> {{ item.registros.length }} </td>
+                        <td> {{ item.tipoEntrada ? 'Entrada' : 'Salida' }} </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button (click)="detallesMovimiento(item, i)" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ng-template #elseDivSyncs>
+                <h3 class="mt-4">No cuentas con movimientos</h3>
+            </ng-template>
+        </div>
+    </div>
+</ng-template>

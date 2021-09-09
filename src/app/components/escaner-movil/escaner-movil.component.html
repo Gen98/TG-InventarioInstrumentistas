@@ -1,20 +1,40 @@
-<ng-template [ngIf]="!evidencias" [ngIfElse]="evidencias">
+<ng-template [ngIf]="evidencias" [ngIfElse]="noEvidencias">
+    <div class="d-flex justify-content-center my-5" [ngClass]="{'d-none': loaded}">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center" [ngClass]="{'d-none': !loaded}">
+        <webcam [height]="300" 
+                [width]="265" 
+                [allowCameraSwitch]="false" 
+                [trigger]="triggerObservable" 
+                (imageCapture)="evidenciaTomada($event)" 
+                (initError)="handleInitError($event)"
+                (cameraSwitched)="camaraCambiada($event)"
+                *ngIf="mostrarCamara"
+                ></webcam>
+        <button type="button" class="btn btn-sm btn-success mt-2" (click)="tomarFoto()">Tomar foto</button>
+    </div>
+</ng-template>
+
+<ng-template #noEvidencias>
     <div class="col">
         <div class="card text-center">
             <div class="card-header"></div>
             <div class="card-body">
                 <div class="row d-flex justify-content-center form-row">
-                    <div class="col-4">
+                    <div class="col-sm-12">
                         <h5 class="card-text">
                             Cámara.
                         </h5>
                         <select name="camaras" 
                                 id="camaras" 
-                                class="form-control" 
+                                class="form-select" 
                                 *ngIf="camarasDispositivo"
                                 (change)="seleccionarCamara($event)"
                         >
-                            <option value disable selected>Elige</option>
+                            <option value disabled selected>Elige</option>
                             <option *ngFor="let camara of camarasDispositivo" [value]="camara.deviceId">
                                 {{ camara.label }}
                             </option>
@@ -33,14 +53,14 @@
         (scanError)="scanErrorHandler($event)"
         (scanFailure)="scanFailureHandler($event)"
         (scanComplete)="scanCompleteHandler($event)"
+        (permissionResponse)="handleZxingPermission($event)"
         #scanner
         *ngIf="escanerActivo"
+        [ngClass]="{'d-none': !loaded}"
     ></zxing-scanner>
-</ng-template>
-
-<ng-template #evidencias>
-    <div class="row d-flex justify-content-center">
-        <webcam [height]="300" [width]="300" [allowCameraSwitch]="true" [trigger]="triggerObservable" (imageCapture)="evidenciaTomada($event)" *ngIf="mostrarCamara"></webcam>
-        <button type="button" class="btn btn-sm btn-success mt-2" (click)="tomarFoto()">Tomar foto</button>
+    <div class="d-flex justify-content-center" [ngClass]="{'d-none': loaded}">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
 </ng-template>

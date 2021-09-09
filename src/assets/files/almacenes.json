@@ -1,0 +1,29 @@
+﻿{
+  "data":  
+  [
+    {
+      "value": 21,
+      "nombre": "INSTRUMENTISTA DF SUR"
+    },
+    {
+      "value": 27,
+      "nombre": "INVENTARIO INSTITUTO MEXICANO DEL SEGURO SOCIAL/ HGR 220 ESTADO DE MEXICO PONIENTE"
+    },
+    {
+      "value": 28,
+      "nombre": "INVENTARIO INSTITUTO MEXICANO DEL SEGURO SOCIAL MAGDALENA TRAUMATOLOGIA"
+    },
+    {
+      "value": 29,
+      "nombre": "INVENTARIO INSTITUTO MEXICANO DEL SEGURO SOCIAL MAGDALENA ORTOPEDIA"
+    },
+    {
+      "value": 30,
+      "nombre": "INVENTARIO DIGOCO TABASCO"
+    },
+    {
+      "value": 31,
+      "nombre": "ALMACEN DE PRUEBA OFFLINE ORTOPEDIA MAGDALENA"
+    }
+  ]
+}

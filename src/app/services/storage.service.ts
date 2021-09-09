@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Registro } from '../interfaces/registro.interface';
 import { Movimiento } from '../interfaces/movimiento.interface';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   getItems():Registro[]{
     return JSON.parse(localStorage.getItem('inventariado')!) || [];
@@ -15,6 +17,10 @@ export class StorageService {
 
   getMovimientos(): Movimiento[] {
     return JSON.parse(localStorage.getItem('movimientos')!) || [];
+  }
+
+  getSincronizados(): any[] {
+    return JSON.parse(localStorage.getItem('sincronizados')!) || [];
   }
 
   addItem( item: Registro ) {
@@ -46,14 +52,33 @@ export class StorageService {
 
     let movimientos: Movimiento[] = this.getMovimientos();
     let response: boolean = false;
-    if (movimientos[movimiento.index!].folioRecepcion != movimiento.folioRecepcion || movimientos[movimiento.index!].comentario != movimiento.comentario) {
-      movimientos[movimiento.index!].folioRecepcion = movimiento.folioRecepcion;
+    if (movimientos[movimiento.index!].folio != movimiento.folio || movimientos[movimiento.index!].comentario != movimiento.comentario) {
+      movimientos[movimiento.index!].folio = movimiento.folio;
       movimientos[movimiento.index!].comentario = movimiento.comentario;
   
       localStorage.setItem('movimientos', JSON.stringify(movimientos));
       response = true;
     }
     return response;
+  }
+
+  sincronizarMovimientos(): Observable<any> {
+    let movimientos = this.getMovimientos();
+    return this.http.post<Observable<any>>('http://206.225.83.181:7004/movimientos', movimientos);
+  }
+
+  addSincronizado(sincronizado: any): void {
+    let movimientos = this.getSincronizados();
+    movimientos.unshift(sincronizado);
+    localStorage.setItem('sincronizados', JSON.stringify(movimientos));
+  }
+
+  deleteMovimientos(): void {
+    localStorage.removeItem('movimientos');
+  }
+
+  deleteSincronizados(): void {
+    localStorage.removeItem('sincronizados');
   }
 
   deleteItems(isBounes: boolean = false): void {

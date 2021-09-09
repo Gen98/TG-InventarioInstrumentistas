@@ -15,6 +15,7 @@ export class TablaComponent implements OnInit{
   
   @Input() data: any[] = [];
   @Input() isBounes: boolean = false;
+  @Input() isSync: boolean = false;
   @Input() soloVisualizar: boolean = false;
   @Output() eliminarItem :EventEmitter<Registro> = new EventEmitter();
   @Output() visualizarMovimiento :EventEmitter<Movimiento> = new EventEmitter();

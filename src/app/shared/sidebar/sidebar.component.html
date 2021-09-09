@@ -33,6 +33,12 @@
             <i class="fa fa-cubes fa-2x"></i>
             <span class="nav-text"> Movimientos </span>
         </li>
+        <li (click)="ruta ( 'almacenes' )"
+            [ngClass]="{'bg-white text-secondary':url == '/almacenes'}"
+            class="nav-item">
+            <i class="fa fa-warehouse fa-2x"></i>
+            <span class="nav-text"> Catalogo </span>
+        </li>
     </ul>
 </nav>
 <app-navbar (showBar)="showBar()"></app-navbar>
