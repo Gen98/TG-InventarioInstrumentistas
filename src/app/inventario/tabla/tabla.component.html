@@ -1,6 +1,6 @@
 <ng-template [ngIf]="!isSync" [ngIfElse]="Sync">
     <div class="row">
-        <h1>Registros escaneados</h1>
+        <h1>{{ !isBounes ? 'Productos registrados' : 'Movimientos registrados' }}</h1>
     </div>
     <div class="row">
         <div class="table-responsive">
@@ -53,7 +53,7 @@
                         <td> {{ data.length - i }} </td>
                         <td> {{ item.fechaCreacion | date:'d/M/yy, h:mm a'}} </td>
                         <td> {{ item.registros.length }} </td>
-                        <td> {{ item.tipoEntrada ? 'Entrada' : 'Salida' }} </td>
+                        <td> {{ item.tipoEntrada ? 'Recepción' : 'Entrega' }} </td>
                         <td>
                             <div class="btn-group" role="group">
                                 <button (click)="detallesMovimiento(item, i)" class="btn btn-outline-info btn-sm">
@@ -100,7 +100,7 @@
                         <td> {{ item.fechaSincronizacion }} </td>
                         <td> {{ item.folio ? item.folio : 'NA' }} </td>
                         <td> {{ item.registros.length }} </td>
-                        <td> {{ item.tipoEntrada ? 'Entrada' : 'Salida' }} </td>
+                        <td> {{ item.tipoEntrada ? 'Recepción' : 'Entrega' }} </td>
                         <td>
                             <div class="btn-group" role="group">
                                 <button (click)="detallesMovimiento(item, i)" class="btn btn-outline-info btn-sm">

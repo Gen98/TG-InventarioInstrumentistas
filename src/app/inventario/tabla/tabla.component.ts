@@ -25,7 +25,7 @@ export class TablaComponent implements OnInit{
 
   ngOnInit(): void {
     this.dtOptions = {
-      pagingType: 'full_numbers',
+      // pagingType: 'full_numbers',
       pageLength: 20,
       lengthMenu: [ 10, 20, 25, 50 ],
       order: [

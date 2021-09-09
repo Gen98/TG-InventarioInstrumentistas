@@ -160,7 +160,7 @@ export class NoSincronizadosComponent implements OnInit {
       this.mostrarAlert('Necesitas ingresar una imagen');
       return false;
     }
-    if (this.nuevoMovimiento.firmas.length == 0) {
+    if (!this.nuevoMovimiento.tipoEntrada && this.nuevoMovimiento.firmas.length == 0) {
       this.mostrarAlert('Necesitas ingresar la firma');
       return false;
     }
