@@ -1,24 +1,38 @@
+<div *ngIf="movil()" id="sidebarcontainer" (click)="showBar()" class="sidebarcontainer">
+</div>
 <nav class="main-menu" id="mySidebar">
     <ul class="nav nav-pills flex-column mb-auto">
         <li 
-            routerLink=""
+            (click)="ruta ( '' )"
+            [ngClass]="{'bg-white text-secondary':url == ''}"
             routerLinkActive="bg-white text-secondary"
             [routerLinkActiveOptions]="{ exact:true }"
             class="nav-item my-2">
             <i class="fas fa-home fa-2x"></i>
             <span class="nav-text"> Inicio </span>
         </li>
-        <li routerLink="inventario"
-            routerLinkActive="bg-white text-secondary"
+        <li (click)="ruta ( 'inventario')"
+            [ngClass]="{'bg-white text-secondary':url == '/inventario'}"
             class="nav-item">
             <i class="fa fa-laptop-medical fa-2x"></i>
             <span class="nav-text"> Inventario </span>
         </li>
-        <li routerLink="catalogo"
-            routerLinkActive="bg-white text-secondary"
+        <li (click)="ruta ( 'catalogo' )"
+            [ngClass]="{'bg-white text-secondary':url == '/catalogo'}"
             class="nav-item">
             <i class="fa fa-notes-medical fa-2x"></i>
             <span class="nav-text"> Productos </span>
         </li>
+        <hr>
+        <div class="text-center my-2 text-white">
+            <span class="nav-text"> Almacén </span>
+        </div>
+        <li (click)="ruta ( 'movimientos' )"
+            [ngClass]="{'bg-white text-secondary':url == '/movimientos'}"
+            class="nav-item">
+            <i class="fa fa-cubes fa-2x"></i>
+            <span class="nav-text"> Movimientos </span>
+        </li>
     </ul>
 </nav>
+<app-navbar (showBar)="showBar()"></app-navbar>

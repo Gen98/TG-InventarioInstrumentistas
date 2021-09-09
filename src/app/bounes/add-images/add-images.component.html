@@ -1,0 +1,63 @@
+<div class="row" *ngIf="!soloVisualizar">
+  <div class="col-8">
+    <label class="btn btn-default p-0">
+      <input id="multiplefile" type="file" multiple (change)="seleccionarArchivos($event)" />
+    </label>
+  </div>
+
+  <div class="col-4">
+    <button
+      class="btn btn-success btn-sm"
+      (click)="guardarImagenes()"
+    >
+      Cargar
+    </button>
+  </div>
+</div>
+
+<div class="card my-3" *ngIf="archivosSubidos.length">
+  <div class="card-header">Imagenes subidas</div>
+  <ul
+    class="list-group list-group-flush"
+    *ngFor="let imagen of archivosSubidos"
+  >
+    <li class="list-group-item">
+      <div class="row" *ngIf="!soloVisualizar; else noModal">
+        <div class="col-10">
+          <a href="#" (click)="imgSelect = imagen.base64" data-bs-toggle="modal" data-bs-target="#visualizarImagenModal">{{ imagen.name }}</a>
+          <!-- <div class="col-4 m-0 p-1 text-center" *ngFor="let image of archivosSubidos">
+              <img [src]="image.base64" class="img-fluid img" (click)="imgSelect = imagen.base64" data-bs-toggle="modal" data-bs-target="#exampleModal"/>
+          </div> -->
+        </div>
+        <div class="col-2">
+          <div class="btn-group" role="group">
+            <button (click)="eliminarImagen(imagen)" class="btn btn-outline-danger btn-sm">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <ng-template #noModal>
+        <div class="row">
+          <div class="col-10">
+            <div class="col-4 m-0 p-1 text-center">
+              <img [src]="imagen.base64" class="img-fluid img"/>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="modal fade" id="visualizarImagenModal" tabindex="-1" aria-labelledby="Visor de imagen" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border border-1 border-white" style="background-color: rgba(0, 0, 0, 0);">
+          <div class="modal-header">
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <img [src]="imgSelect" class="img-fluid" data-bs-toggle="modal" data-bs-target="#exampleModal"/>
+      </div>
+  </div>
+</div>

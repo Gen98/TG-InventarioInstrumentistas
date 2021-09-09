@@ -3,6 +3,8 @@ import { Registro } from '../../interfaces/registro.interface';
 import data from '../../../assets/files/data.json';
 import Swal from 'sweetalert2';
 
+declare var $: any;
+
 @Component({
   selector: 'app-registrar',
   templateUrl: './registrar.component.html',
@@ -23,7 +25,11 @@ export class RegistrarComponent implements OnInit {
   lote: string = "";
   cantidad: number = 0;
   barcodePaso: number = 1;
+  escanerActivo: boolean = false;
 
+  private innerWidth: number;
+
+  @Input() isBounes: boolean = false;
   @Input() dentroRango: boolean = true;
   @Output() registrarNuevo: EventEmitter<Registro> = new EventEmitter();
 
@@ -32,7 +38,9 @@ export class RegistrarComponent implements OnInit {
   @ViewChildren('txtLote') loteInputs!: QueryList<ElementRef>;
   @ViewChildren('txtCantidad') cantidadInputs!: QueryList<ElementRef>;
 
-  constructor() { }
+  constructor() { 
+    this.innerWidth = window.innerWidth;
+  }
 
   ngOnInit(): void {
     this.productos = data.data;
@@ -53,6 +61,13 @@ export class RegistrarComponent implements OnInit {
         if (this.barcodePaso == 3) comps.first.nativeElement.focus();
       });
     }
+
+  movil(): boolean{
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent))
+      return true;
+
+    return this.innerWidth < 768;
+  }
 
   seleccionarTipo( tipo:string ): void {
     if (this.dentroRango) {
@@ -91,12 +106,14 @@ export class RegistrarComponent implements OnInit {
   }
 
   validarQr(cadena: any[]): boolean {
+    if ($('#camaraModal').is(':visible')) $("#camaraModal").modal('hide');
     if (cadena.length != 3) return false;
     if (!(/^\d+$/.test(cadena[0])) || !(/^([a-zA-Z0-9-]+)$/.test(cadena[1])) || !(/^\d+$/.test(cadena[2]))) return false;
     return true;
   }
 
   validarBarcode(): boolean {
+    if ($('#camaraModal').is(':visible')) $("#camaraModal").modal('hide');
     if (this.barcodePaso == 3 && parseInt(this.cantidad.toString(), 10) <= 0) return false;
     if (this.barcodePaso == 2 && !(/^([a-zA-Z0-9-/]+)$/.test(this.lote))) return false;
     if (this.barcodePaso == 1 && !(/^\d+$/.test(this.codigo))) return false;
@@ -116,6 +133,14 @@ export class RegistrarComponent implements OnInit {
       }
 
       this.registrarNuevo.emit(this.nuevoRegistro);
+
+      Swal.fire({
+        icon: 'success',
+        text: 'Registro exitoso',
+        showCloseButton: true,
+        showConfirmButton: false,
+        timer: 4000
+      });
     } else {
       Swal.fire({
         icon: 'error',
@@ -164,5 +189,25 @@ export class RegistrarComponent implements OnInit {
         text: 'Código inválido'
       });
     }
+  }
+
+  mostrarModalCamara(): void {
+    // $("#exampleModal").modal('hide');
+    // setTimeout(() => {
+      this.escanerActivo = true;
+      $("#camaraModal").modal('show');
+    // }, 1000);
+  }
+
+  codigoEscaneado(codigo: string): void {
+    if (this.tipoEscaner == 'qr') {
+      this.qr = codigo
+    } else if (this.barcodePaso == 1) {
+      this.codigo = codigo;
+    } else if (this.barcodePaso == 2) {
+      this.lote = codigo;
+    }
+    this.escanerActivo = false;
+    this.registrar();
   }
 }
