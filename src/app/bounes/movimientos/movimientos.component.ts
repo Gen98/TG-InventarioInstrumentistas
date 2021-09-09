@@ -4,6 +4,8 @@ import { StorageService } from '../../services/storage.service';
 import { Movimiento } from '../../interfaces/movimiento.interface';
 import Swal from 'sweetalert2';
 
+declare var $: any;
+
 @Component({
   selector: 'app-movimientos',
   templateUrl: './movimientos.component.html',
@@ -65,6 +67,7 @@ export class MovimientosComponent implements OnInit {
   }
 
   sincronizarMovimientos(): void {
+    $('.sincronizarBtn').prop("disabled", true);
     this.storageServicio.sincronizarMovimientos().subscribe( resp => {
       this.storageServicio.deleteSincronizados();
       setTimeout(() => {

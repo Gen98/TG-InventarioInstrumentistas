@@ -109,7 +109,7 @@
             <div class="modal-body">
                 <div class="container-fluid m-0 p-0">
                     <div class="d-flex flex-column justify-content-center">
-                        <app-escaner-movil [escanerActivo]="escanerActivo" (codigoEscaneado)="codigoEscaneado($event)"></app-escaner-movil>
+                        <app-escaner-movil [escanerActivo]="escanerActivo" (codigoEscaneado)="codigoEscaneado($event)" *ngIf="movil()"></app-escaner-movil>
                     </div>
                 </div>
             </div>

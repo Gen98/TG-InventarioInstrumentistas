@@ -50,6 +50,7 @@ export class TablaComponent implements OnInit{
     }).then((result) => {
       if (result.isConfirmed) {
         if (item.cant == 1) {
+          item.deleteAll = true;
           this.eliminarItem.emit(item);
           return;
         }
@@ -71,6 +72,7 @@ export class TablaComponent implements OnInit{
               this.mostrarError();
             } else {
               if (option.value == "_total") {
+                item.deleteAll = true;
                 this.eliminarItem.emit(item);
               } else {
                 Swal.fire({

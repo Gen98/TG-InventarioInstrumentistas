@@ -80,7 +80,7 @@
                         </div>
                         <hr [ngClass]="{'my-3':movil()}" [ngClass]="{'my-5':!movil()}">
                         <div class="row">
-                            <app-tabla [data]="nuevoMovimiento.registros"></app-tabla>
+                            <app-tabla [data]="nuevoMovimiento.registros" (eliminarItem)="eliminarRegistrosMov($event)"></app-tabla>
                         </div>
                         <hr [ngClass]="{'my-3':movil()}" [ngClass]="{'my-5':!movil()}">
                         <div class="row d-flex justify-content-center">

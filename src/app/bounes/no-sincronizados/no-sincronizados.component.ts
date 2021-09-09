@@ -76,6 +76,17 @@ export class NoSincronizadosComponent implements OnInit {
     }
   }
 
+  eliminarRegistrosMov(item: Registro) {
+    let registros: Registro[] = this.nuevoMovimiento.registros;
+
+    if (item.deleteAll) {
+      registros = registros.filter(function(el) {
+        return !(el.lote === item.lote && el.code === item.code);
+      });
+    }
+    this.nuevoMovimiento.registros = registros;
+  }
+
   agregarImagen(imagen: any): void {
     let images = this.nuevoMovimiento.imagenes;
     let duplicado = images.findIndex(function(e) {

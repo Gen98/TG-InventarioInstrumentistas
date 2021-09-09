@@ -5,7 +5,7 @@
     <div class="row">
         <div class="table-responsive">
         <ng-template [ngIf]="!isBounes" [ngIfElse]="Bounes">
-            <table datatable [dtOptions]="dtOptions"  *ngIf="data.length; else elseDiv" class="table table-hover table-striped row-border hover">
+            <table datatable [dtOptions]="dtOptions"  *ngIf="data.length > 0; else elseDiv" class="table table-hover table-striped row-border hover">
                 <thead>
                     <tr>
                         <th>#</th>

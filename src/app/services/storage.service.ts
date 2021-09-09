@@ -64,6 +64,9 @@ export class StorageService {
 
   sincronizarMovimientos(): Observable<any> {
     let movimientos = this.getMovimientos();
+    movimientos = movimientos.sort(function(a,b){
+      return (a.tipoEntrada === b.tipoEntrada)? 0 : a.tipoEntrada? -1 : 1; ;
+    });
     return this.http.post<Observable<any>>('http://206.225.83.181:7004/movimientos', movimientos);
   }
 
