@@ -1,5 +1,5 @@
 @import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css);
-
+@import url(https://fonts.googleapis.com/css?family=Titillium+Web:300);
 .fa-2x {
     font-size: 2em;
 }
@@ -14,11 +14,11 @@
     font-size: 20px;
 }
 
-/* .main-menu:hover,
+.main-menu:hover,
 nav.main-menu.expanded {
     width: 250px;
     overflow: visible;
-} */
+}
 
 .main-menu {
     background: #02a3b5;
@@ -28,8 +28,7 @@ nav.main-menu.expanded {
     bottom: 0;
     height: 100%;
     left: 0;
-    /* width: 60px; */
-    width: 16%;
+    width: 60px;
     overflow: hidden;
     -webkit-transition: width .05s linear;
     transition: width .05s linear;
@@ -64,6 +63,7 @@ nav.main-menu.expanded {
 .main-menu .nav-icon {
     position: relative;
     display: table-cell;
+    width: 60px;
     height: 36px;
     text-align: center;
     vertical-align: middle;
@@ -76,6 +76,26 @@ nav.main-menu.expanded {
     vertical-align: middle;
     width: 190px;
     font-family: 'Titillium Web', sans-serif;
+}
+
+/* .main-menu>ul.logout {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+} */
+
+.no-touch .scrollable.hover {
+    overflow-y: hidden;
+}
+
+.no-touch .scrollable.hover:hover {
+    overflow-y: auto;
+    overflow: visible;
+}
+
+a:hover,
+a:focus {
+    text-decoration: none;
 }
 
 nav {
@@ -93,6 +113,10 @@ nav li {
     padding: 0;
 }
 
+.nav-item:hover{
+    cursor: pointer;
+}
+
 .main-menu li:hover>a,
 nav.main-menu li.active>a,
 .dropdown-menu>li>a:hover,
@@ -102,8 +126,8 @@ nav.main-menu li.active>a,
 .dropdown-menu>.active>a:focus,
 .no-touch .dashboard-page nav.dashboard-menu ul li:hover a,
 .dashboard-page nav.dashboard-menu ul li.active a {
-    color: #fff;
-    background-color: rgb(13, 161, 176);
+    color: #999;
+    background-color: rgb(255, 255, 255);
 }
 
 .sidebarcontainer {
@@ -120,6 +144,13 @@ nav.main-menu li.active>a,
     visibility: hidden;
 }
 
+/* @font-face {
+    font-family: 'Titillium Web';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Titillium WebLight'), local('TitilliumWeb-Light'), url(http://themes.googleusercontent.com/static/fonts/titilliumweb/v2/anMUvcNT0H1YN4FII8wpr24bNCNEoFTpS2BTjF6FB5E.woff) format('woff');
+} */
+
 @media screen and (max-width: 767px) {
     .main-menu {
         /* background: #212121; */
@@ -128,8 +159,8 @@ nav.main-menu li.active>a,
         top: 0;
         bottom: 0;
         height: 100%;
-        /* left: -250px; */
-        /* width: 250px; */
+        left: -250px;
+        width: 250px;
         overflow: visible;
         -webkit-transition: width .05s linear;
         transition: width .05s linear;

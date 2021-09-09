@@ -1,0 +1,161 @@
+<div class="container-fluid m-0 p-0">
+    <div class="d-flex flex-column justify-content-center">
+        <div class="row">
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h3 class="card-title">Registrar una nuevo movimiento</h3>
+                        <div class="d-grid gap-2 mt-5">
+                            <button class="btn btn-block btn-info text-white p-0 m-0"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            >
+                                <h5>Registrar</h5>
+                            </button>
+                        </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+        <hr class="my-5">
+        <div class="row">
+            <app-tabla [data]="movimientos" 
+                    [isBounes]="isBounes"
+                    (visualizarMovimiento)="detallesMovimiento($event)"
+                    (eliminarMov)="eliminarMovimiento($event)"></app-tabla>
+        </div>
+    </div>
+</div>
+
+<!-- Agregar Movimiento Modal -->
+<div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar movimiento</h5>
+                <button type="button" id="closeAgregarModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid m-0 p-0">
+                    <div class="d-flex flex-column justify-content-center">
+                        <div class="row my-4">
+                            <div class="col-2"></div>
+                            <div class="col-4">
+                                <label for="folio">Folio: <em class="text-secondary">(Opcional)</em></label>
+                                <input type="text" class="form-control" [(ngModel)]="nuevoMovimiento.folioRecepcion">
+                            </div>
+                            <div class="col-6">
+                                <label for="tipo">Tipo de movimiento: <span>*</span></label>
+                                <br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineRadio1" [(ngModel)]="nuevoMovimiento.tipoEntrada" (change)="nuevoMovimiento.tipoEntrada = true">
+                                    <label class="form-check-label" for="inlineRadio1">Entrada</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineRadio2" [(ngModel)]="!nuevoMovimiento.tipoEntrada" (change)="nuevoMovimiento.tipoEntrada = false">
+                                    <label class="form-check-label" for="inlineRadio2">Salida</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center mb-4">
+                            <div class="col-8">
+                                <label for="comentario">Comentario: <em class="text-secondary">(Opcional)</em></label>
+                                <textarea name="comentario" id="comentario" cols="30" rows="5" class="form-control" [(ngModel)]="nuevoMovimiento.comentario"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <app-registrar [isBounes]="isBounes" (registrarNuevo)="registrarEscaneo($event)"></app-registrar>
+                        </div>
+                        <hr class="my-5">
+                        <div class="row">
+                            <app-tabla [data]="nuevoMovimiento.registros"></app-tabla>
+                        </div>
+                        <hr class="my-5">
+                        <div class="row d-flex justify-content-center">
+                            <div class="mb-4">
+                                
+                            </div>
+                            <div class="col-7">
+                                <label for="images">Imagenes de evidencia <span>*</span></label>
+                                <app-add-images [archivosSubidos]="nuevoMovimiento.imagenes" (agregarImagen)="agregarImagen($event)" (quitarImagen)="eliminarImagen($event)"></app-add-images>
+                                <div class="row">
+                                    <label for="camera">Utilizar cámara</label>
+                                    <button type="button" class="btn btn-outline-primary fas fa-camera" (click)="camaraEvidencias = !camaraEvidencias"></button>
+                                </div>
+                                <app-escaner-movil [evidencias]="true" [mostrarCamara]="camaraEvidencias" *ngIf="camaraEvidencias" (fotoTomada)="agregarImagen($event)"></app-escaner-movil>
+                            </div>
+                        </div>
+                        <hr class="my-2">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-10">
+                                <app-signature (base64)="agregarFirma($event)" [limpiar]="limpiarPad"></app-signature>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="limpiarNuevoMovimiento()">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="guardarMovimientoNuevo()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Actualizar Movimiento Modal -->
+<button id="openvisualizarModal" [hidden]="true" data-bs-toggle="modal" data-bs-target="#visualizarMovimientoModal"></button>
+<div class="modal fade" id="visualizarMovimientoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Visualizar movimiento</h5>
+                <button type="button" id="closeVisualizarModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid m-0 p-0">
+                    <div class="d-flex flex-column justify-content-center">
+                        <div class="row my-4">
+                            <div class="col-2"></div>
+                            <div class="col-4">
+                                <label for="folio">Folio: </label>
+                                <input type="text" class="form-control" [(ngModel)]="actualizarMovimiento.folioRecepcion">
+                            </div>
+                            <div class="col-6">
+                                <label for="tipo">Tipo de movimiento: <span class="text-secondary">{{ actualizarMovimiento.tipoEntrada ? 'Entrada' : 'Salida' }}</span></label>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center mb-4">
+                            <div class="col-8">
+                                <label for="comentario">Comentario:</label>
+                                <textarea name="comentario" id="comentario" cols="30" rows="5" class="form-control" [(ngModel)]="actualizarMovimiento.comentario"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <app-tabla [soloVisualizar]="true" [data]="actualizarMovimiento.registros"></app-tabla>
+                        </div>
+                        <hr class="my-5">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-7">
+                                <app-add-images [archivosSubidos]="actualizarMovimiento.imagenes" [soloVisualizar]="true"></app-add-images>
+                            </div>
+                        </div>
+                        <ng-template [ngIf]="actualizarMovimiento.firmas.length">
+                            <hr class="my-2">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-6">
+                                    <ng-template ngFor let-firma [ngForOf]="actualizarMovimiento.firmas">
+                                        <img [src]="firma" class="img-fluid img"/>
+                                        <hr>
+                                    </ng-template>
+                                    
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="actualizarMovimientoCreado()">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>

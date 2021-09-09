@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Registro } from '../interfaces/registro.interface';
+import { Movimiento } from '../interfaces/movimiento.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -12,20 +13,50 @@ export class StorageService {
     return JSON.parse(localStorage.getItem('inventariado')!) || [];
   }
 
+  getMovimientos(): Movimiento[] {
+    return JSON.parse(localStorage.getItem('movimientos')!) || [];
+  }
+
   addItem( item: Registro ) {
     let storage: Registro[] = this.getItems();
     let duplicado = storage.findIndex(function(e) {
       return e.code == item.code && e.lote == item.lote
     });
     if (duplicado != -1) {
-      storage[duplicado].cant = storage[duplicado].cant + item.cant;
+      storage[duplicado].cant = Number(storage[duplicado].cant) + item.cant;
+      let actualizado = storage[duplicado];
+      storage = storage.filter(function(el) {
+        return !(el.lote === item.lote && el.code === item.code);
+      });
+      storage.unshift(actualizado);
     } else {
       storage.unshift(item);
     }
     localStorage.setItem('inventariado', JSON.stringify(storage))
   }
 
-  deleteItems(): void {
+  addMovimiento(movimiento: Movimiento): void {
+    movimiento.fechaCreacion = Date.now();
+    let movimientos: Movimiento[] = this.getMovimientos();
+    movimientos.unshift(movimiento);
+    localStorage.setItem('movimientos', JSON.stringify(movimientos));
+  }
+
+  updateMovimiento(movimiento: Movimiento): boolean {
+
+    let movimientos: Movimiento[] = this.getMovimientos();
+    let response: boolean = false;
+    if (movimientos[movimiento.index!].folioRecepcion != movimiento.folioRecepcion || movimientos[movimiento.index!].comentario != movimiento.comentario) {
+      movimientos[movimiento.index!].folioRecepcion = movimiento.folioRecepcion;
+      movimientos[movimiento.index!].comentario = movimiento.comentario;
+  
+      localStorage.setItem('movimientos', JSON.stringify(movimientos));
+      response = true;
+    }
+    return response;
+  }
+
+  deleteItems(isBounes: boolean = false): void {
     localStorage.removeItem('inventariado');
   }
 
@@ -44,6 +75,14 @@ export class StorageService {
       storage[index].cant = item.cant;
     }
     localStorage.setItem('inventariado', JSON.stringify(storage))
+  }
+
+  deleteMovimiento(movimiento: Movimiento): void {
+    let movimientos = this.getMovimientos();
+    movimientos = movimientos.filter(function(el, i) {
+      return i != movimiento.index;
+    });
+    localStorage.setItem('movimientos', JSON.stringify(movimientos))
   }
 
   verificarLimiteRegistros(): boolean {
