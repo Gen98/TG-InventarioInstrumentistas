@@ -10,5 +10,5 @@ export interface Movimiento{
     tipoEntrada: boolean;
     fechaSincronizacion?: string;
     comentario?: string;
-    folio: string;
+    folio?: string;
 }

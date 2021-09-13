@@ -42,12 +42,10 @@
                         <div class="row my-4">
                             <div class="col-md-2"></div>
                             <div class="col-sm-12 col-md-4">
-                                <form (ngSubmit)="folioEscaneado(nuevoMovimiento.folio)" autocomplete="off">
-                                    <label for="folio">Folio (Número de factura/Nota): <span>*</span></label>
-                                    <input type="text" class="form-control" name="folio" [(ngModel)]="nuevoMovimiento.folio">
-                                </form>
-                                <div class="row" *ngIf="movil()">
-                                    <p>O Utiliza tu Cámara</p>
+                                <label for="folio">Folio (Número de factura/Nota): </label>
+                                <input type="text" class="form-control" name="folio" [(ngModel)]="nuevoMovimiento.folio">
+                                <div class="row mt-2" *ngIf="movil()">
+                                    <p>Si estás recibiendo material desde el CEDI, escanea el código QR que viene en la hoja incluida con tu material</p>
                                     <button type="button" class="btn btn-outline-primary fas fa-camera" (click)="escanearFolioModal()"></button>
                                     <hr class="my-3">
                                 </div>
@@ -68,7 +66,7 @@
                         <div class="row d-flex justify-content-center mb-4">
                             <div class="col-sm-12 col-md-8">
                                 <label for="almacen">Selecciona tu Almacén <span>*</span></label>
-                                <select name="almacen" id="almacen" class="form-select" [(ngModel)]="nuevoMovimiento.almacen" disabled>
+                                <select name="almacen" id="almacen" class="form-select" [(ngModel)]="nuevoMovimiento.almacen">
                                     <option disabled>Selecciona una opción</option>
                                     <option *ngFor="let almacen of almacenes" [value]="almacen.value">
                                         {{ almacen.nombre }}

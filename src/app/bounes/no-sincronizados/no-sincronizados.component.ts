@@ -168,10 +168,16 @@ export class NoSincronizadosComponent implements OnInit {
         if (almacen[1].includes(',')) {
           $('#almacen').prop("disabled", false);
           $('[name="folio"]').prop("disabled", true);
+          $('.form-check-input').prop("disabled", true);
+          this.nuevoMovimiento.tipoEntrada = true;
         } else {
           this.nuevoMovimiento.almacen = parseInt(codigo[1]);
+          $('#almacen').prop("disabled", true);
           $('[name="folio"]').prop("disabled", true);
+          $('.form-check-input').prop("disabled", true);
+          this.nuevoMovimiento.tipoEntrada = true;
         }
+        
       }
     }
 
@@ -191,14 +197,15 @@ export class NoSincronizadosComponent implements OnInit {
     };
     $('#almacen').prop("disabled", true);
     $('[name="folio"]').prop("disabled", false);
+    $('.form-check-input').prop("disabled", false);
     this.almacenes = almacenesJSON.data;
   }
 
   validarMovimiento(): boolean {
-    if(!this.nuevoMovimiento.folio) {
-      this.mostrarAlert('Escanea el folio');
-      return false
-    }
+    // if(!this.nuevoMovimiento.folio) {
+    //   this.mostrarAlert('Escanea el folio');
+    //   return false
+    // }
     let almacen = this.almacenes.find((e: any) => e.value == this.nuevoMovimiento.almacen);
     if (!almacen) {
       this.mostrarAlert('Selecciona el almacen');
