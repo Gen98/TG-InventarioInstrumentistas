@@ -16,6 +16,7 @@ declare var $: any;
 export class NoSincronizadosComponent implements OnInit {
 
   nuevoMovimiento: Movimiento = {
+    folio: '',
     almacen: 0,
     registros: [],
     fechaCreacion: 0,
@@ -24,6 +25,7 @@ export class NoSincronizadosComponent implements OnInit {
     tipoEntrada: true
   };
   actualizarMovimiento: Movimiento = {
+    folio: '',
     almacen: 0,
     registros: [],
     fechaCreacion: 0,
@@ -34,6 +36,7 @@ export class NoSincronizadosComponent implements OnInit {
   almacenes: any;
   isBounes: boolean = true;
   limpiarPad: boolean = false;
+  camaraFolio: boolean = false;
   camaraEvidencias: boolean = false;
   private innerWidth: number;
 
@@ -142,8 +145,43 @@ export class NoSincronizadosComponent implements OnInit {
     this.eliminarMovimientoOutput.emit(movimiento);
   }
 
+  folioEscaneado(e: String): void {
+    let codigo = e.split('/');
+    let almacen = e.split('/');
+    if (this.validarFolio(codigo)) {
+      this.nuevoMovimiento.folio = codigo[0];
+
+      let buscarAlmacen: string[] = [];
+      if (almacen[1].includes(',')) {
+        buscarAlmacen = almacen[1].split(',');
+      } else {
+        buscarAlmacen.push(codigo[1]);
+      }
+
+      this.almacenes = this.almacenes.filter(function(el: any) {
+        return buscarAlmacen.includes(el.value.toString());
+      });
+      if (this.almacenes.length == 0) {
+        this.mostrarAlert('Tu folio no incluye inventario que pueda recibir.'); 
+        this.almacenes = almacenesJSON.data;
+      } else {
+        if (almacen[1].includes(',')) {
+          $('#almacen').prop("disabled", false);
+          $('[name="folio"]').prop("disabled", true);
+        } else {
+          this.nuevoMovimiento.almacen = parseInt(codigo[1]);
+          $('[name="folio"]').prop("disabled", true);
+        }
+      }
+    }
+
+    this.camaraFolio = false;
+    $("#escanerFolioModal").modal('hide');
+  }
+
   limpiarNuevoMovimiento(): void {
     this.nuevoMovimiento = {
+      folio: '',
       almacen: 0,
       registros: [],
       fechaCreacion: 0,
@@ -151,9 +189,16 @@ export class NoSincronizadosComponent implements OnInit {
       firmas: [],
       tipoEntrada: true
     };
+    $('#almacen').prop("disabled", true);
+    $('[name="folio"]').prop("disabled", false);
+    this.almacenes = almacenesJSON.data;
   }
 
   validarMovimiento(): boolean {
+    if(!this.nuevoMovimiento.folio) {
+      this.mostrarAlert('Escanea el folio');
+      return false
+    }
     let almacen = this.almacenes.find((e: any) => e.value == this.nuevoMovimiento.almacen);
     if (!almacen) {
       this.mostrarAlert('Selecciona el almacen');
@@ -178,6 +223,32 @@ export class NoSincronizadosComponent implements OnInit {
     return true;
   }
 
+  validarFolio(cadena: any[]): boolean {
+    var pass = true;
+    if (cadena.length == 1) {
+      this.mostrarAlert('Tu folio no incluye inventario que pueda recibir.');
+      return false;
+    }
+    if (cadena.length != 2) {
+      this.mostrarAlert('Folio invalido');
+      return false;
+    }
+    if (cadena[1].includes(',')) {
+      cadena[1] = cadena[1].split(',');
+      cadena[1].forEach((almacen: string) => {
+        if (!(/^\d+$/.test(almacen))) {
+          pass = false;
+        }
+      });
+    } else {
+      if (!(/^\d+$/.test(cadena[1]))) pass = false;
+    }
+    if (!pass) {
+      this.mostrarAlert('El almacen de tu folio en invalido');
+    }
+    return pass;
+  }
+
   mostrarAlert(mensaje: string): void {
     Swal.fire({
       icon: 'error',
@@ -189,6 +260,11 @@ export class NoSincronizadosComponent implements OnInit {
   mostrarModalCamara() {
     this.camaraEvidencias = true;
     $("#camaraEvidenciasModal").modal('show');
+  }
+
+  escanearFolioModal() {
+    this.camaraFolio = true;
+    $("#escanerFolioModal").modal('show');
   }
 
   sincronizar(e: any): void {
