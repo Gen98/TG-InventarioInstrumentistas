@@ -264,6 +264,7 @@ export class NoSincronizadosComponent implements OnInit {
 
   escanearFolioModal() {
     this.camaraFolio = true;
+    this.almacenes = almacenesJSON.data;
     $("#escanerFolioModal").modal('show');
   }
 
