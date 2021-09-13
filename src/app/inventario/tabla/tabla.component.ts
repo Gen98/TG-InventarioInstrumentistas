@@ -15,6 +15,7 @@ export class TablaComponent implements OnInit{
   
   @Input() data: any[] = [];
   @Input() isBounes: boolean = false;
+  @Input() isSync: boolean = false;
   @Input() soloVisualizar: boolean = false;
   @Output() eliminarItem :EventEmitter<Registro> = new EventEmitter();
   @Output() visualizarMovimiento :EventEmitter<Movimiento> = new EventEmitter();
@@ -24,7 +25,7 @@ export class TablaComponent implements OnInit{
 
   ngOnInit(): void {
     this.dtOptions = {
-      pagingType: 'full_numbers',
+      // pagingType: 'full_numbers',
       pageLength: 20,
       lengthMenu: [ 10, 20, 25, 50 ],
       order: [
@@ -49,6 +50,7 @@ export class TablaComponent implements OnInit{
     }).then((result) => {
       if (result.isConfirmed) {
         if (item.cant == 1) {
+          item.deleteAll = true;
           this.eliminarItem.emit(item);
           return;
         }
@@ -70,6 +72,7 @@ export class TablaComponent implements OnInit{
               this.mostrarError();
             } else {
               if (option.value == "_total") {
+                item.deleteAll = true;
                 this.eliminarItem.emit(item);
               } else {
                 Swal.fire({

@@ -1,11 +1,11 @@
 <div class="row" *ngIf="!soloVisualizar">
-  <div class="col-8">
+  <div class="col-sm-12 col-md-8">
     <label class="btn btn-default p-0">
       <input id="multiplefile" type="file" multiple (change)="seleccionarArchivos($event)" />
     </label>
   </div>
 
-  <div class="col-4">
+  <div class="col-md-4">
     <button
       class="btn btn-success btn-sm"
       (click)="guardarImagenes()"
@@ -39,8 +39,8 @@
       </div>
       <ng-template #noModal>
         <div class="row">
-          <div class="col-10">
-            <div class="col-4 m-0 p-1 text-center">
+          <div class="col-sm-12 col-md-10">
+            <div class="col-sm-12 col-md-4 m-0 p-1 text-center">
               <img [src]="imagen.base64" class="img-fluid img"/>
             </div>
           </div>
@@ -54,7 +54,7 @@
 <div class="modal fade" id="visualizarImagenModal" tabindex="-1" aria-labelledby="Visor de imagen" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border border-1 border-white" style="background-color: rgba(0, 0, 0, 0);">
-          <div class="modal-header">
+          <div class="modal-header bg-secondary">
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <img [src]="imgSelect" class="img-fluid" data-bs-toggle="modal" data-bs-target="#exampleModal"/>

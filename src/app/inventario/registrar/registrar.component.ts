@@ -139,7 +139,7 @@ export class RegistrarComponent implements OnInit {
         text: 'Registro exitoso',
         showCloseButton: true,
         showConfirmButton: false,
-        timer: 4000
+        timer: 500
       });
     } else {
       Swal.fire({

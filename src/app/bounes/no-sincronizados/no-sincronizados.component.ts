@@ -2,6 +2,11 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 import Swal from 'sweetalert2';
 import { Movimiento } from '../../interfaces/movimiento.interface';
 import { Registro } from '../../interfaces/registro.interface';
+import almacenesJSON from '../../../assets/files/almacenes.json';
+
+
+declare var $: any;
+
 
 @Component({
   selector: 'app-no-sincronizados',
@@ -11,6 +16,7 @@ import { Registro } from '../../interfaces/registro.interface';
 export class NoSincronizadosComponent implements OnInit {
 
   nuevoMovimiento: Movimiento = {
+    almacen: 0,
     registros: [],
     fechaCreacion: 0,
     imagenes: [],
@@ -18,25 +24,39 @@ export class NoSincronizadosComponent implements OnInit {
     tipoEntrada: true
   };
   actualizarMovimiento: Movimiento = {
+    almacen: 0,
     registros: [],
     fechaCreacion: 0,
     imagenes: [],
     firmas: [],
     tipoEntrada: true
   };
+  almacenes: any;
   isBounes: boolean = true;
   limpiarPad: boolean = false;
   camaraEvidencias: boolean = false;
+  private innerWidth: number;
 
   @Input() movimientos: Movimiento[] = [];
   @Output() registrarMovimiento: EventEmitter<Movimiento> = new EventEmitter();
   @Output() actualizarMovimientoOutput: EventEmitter<Movimiento> = new EventEmitter();
   @Output() eliminarMovimientoOutput: EventEmitter<Movimiento> = new EventEmitter();
+  @Output() sincronizarEmit :EventEmitter<Movimiento[]> = new EventEmitter();
 
-  constructor() { }
+  constructor() { 
+    this.innerWidth = window.innerWidth;
+    this.almacenes = almacenesJSON.data;
+  }
 
   ngOnInit(): void {
-  
+
+  }
+
+  movil(): boolean{
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent))
+      return true;
+
+    return this.innerWidth < 768;
   }
 
   registrarEscaneo(item: Registro) {
@@ -54,6 +74,17 @@ export class NoSincronizadosComponent implements OnInit {
     } else {
       registros.unshift(item);
     }
+  }
+
+  eliminarRegistrosMov(item: Registro) {
+    let registros: Registro[] = this.nuevoMovimiento.registros;
+
+    if (item.deleteAll) {
+      registros = registros.filter(function(el) {
+        return !(el.lote === item.lote && el.code === item.code);
+      });
+    }
+    this.nuevoMovimiento.registros = registros;
   }
 
   agregarImagen(imagen: any): void {
@@ -77,7 +108,7 @@ export class NoSincronizadosComponent implements OnInit {
     this.nuevoMovimiento.imagenes = images;
   }
 
-  agregarFirma(base64: string[]): void {
+  agregarFirma(base64: any[]): void {
     this.nuevoMovimiento.firmas = base64;
     this.limpiarPad = false;
   }
@@ -113,6 +144,7 @@ export class NoSincronizadosComponent implements OnInit {
 
   limpiarNuevoMovimiento(): void {
     this.nuevoMovimiento = {
+      almacen: 0,
       registros: [],
       fechaCreacion: 0,
       imagenes: [],
@@ -122,6 +154,11 @@ export class NoSincronizadosComponent implements OnInit {
   }
 
   validarMovimiento(): boolean {
+    let almacen = this.almacenes.find((e: any) => e.value == this.nuevoMovimiento.almacen);
+    if (!almacen) {
+      this.mostrarAlert('Selecciona el almacen');
+      return false
+    }
     if (this.nuevoMovimiento.tipoEntrada == null) {
       this.mostrarAlert('Especifica el tipo de movimiento');
       return false;
@@ -134,7 +171,7 @@ export class NoSincronizadosComponent implements OnInit {
       this.mostrarAlert('Necesitas ingresar una imagen');
       return false;
     }
-    if (this.nuevoMovimiento.firmas.length == 0) {
+    if (!this.nuevoMovimiento.tipoEntrada && this.nuevoMovimiento.firmas.length == 0) {
       this.mostrarAlert('Necesitas ingresar la firma');
       return false;
     }
@@ -147,5 +184,14 @@ export class NoSincronizadosComponent implements OnInit {
       title: 'Error',
       text: mensaje
     });
+  }
+
+  mostrarModalCamara() {
+    this.camaraEvidencias = true;
+    $("#camaraEvidenciasModal").modal('show');
+  }
+
+  sincronizar(e: any): void {
+    this.sincronizarEmit.emit();
   }
 }

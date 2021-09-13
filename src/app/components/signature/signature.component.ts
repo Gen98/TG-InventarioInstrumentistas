@@ -8,7 +8,7 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChil
 })
 export class SignatureComponent implements OnInit {
 
-  firmas: string[] = [];
+  firmas: any[] = [];
   @ViewChild('signature') signaturePad!: SignaturePadComponent;
   @Output() base64: EventEmitter<string[]> = new EventEmitter();
   @Input() limpiar: boolean = false;
@@ -35,7 +35,11 @@ export class SignatureComponent implements OnInit {
   }
 
   drawComplete(event: MouseEvent | Touch) {
-    this.firmas.unshift(this.signaturePad.toDataURL());
+    this.firmas = [];
+    let firma = {
+      base64: this.signaturePad.toDataURL()
+    };
+    this.firmas.unshift(firma);
     this.base64.emit(this.firmas);
   }
 
