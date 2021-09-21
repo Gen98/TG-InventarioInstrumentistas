@@ -195,7 +195,7 @@ export class NoSincronizadosComponent implements OnInit {
       firmas: [],
       tipoEntrada: true
     };
-    $('#almacen').prop("disabled", true);
+    $('#almacen').prop("disabled", false);
     $('[name="folio"]').prop("disabled", false);
     $('.form-check-input').prop("disabled", false);
     this.almacenes = almacenesJSON.data;

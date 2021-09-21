@@ -2,6 +2,10 @@
   "data":  
   [
     {
+      "value": 20,
+      "nombre": "DF SUR ENTREGADO A HOSPITAL"
+    },
+    {
       "value": 21,
       "nombre": "INSTRUMENTISTA DF SUR"
     },
