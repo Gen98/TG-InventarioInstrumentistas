@@ -45,6 +45,7 @@ export class StorageService {
     movimiento.fechaCreacion = Date.now();
     let movimientos: Movimiento[] = this.getMovimientos();
     movimientos.unshift(movimiento);
+    localStorage.removeItem('movimientos');
     localStorage.setItem('movimientos', JSON.stringify(movimientos));
   }
 

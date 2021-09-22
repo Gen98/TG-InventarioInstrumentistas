@@ -10,6 +10,7 @@ import almacenesJSON from '../../../assets/files/almacenes.json';
 export class SincronizadosComponent implements OnInit {
 
   sincronizado: Movimiento = {
+    folio: '',
     almacen: 0,
     registros: [],
     fechaCreacion: 0,

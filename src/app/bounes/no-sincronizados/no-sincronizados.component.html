@@ -34,7 +34,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Agregar movimiento</h5>
-                <button type="button" id="closeAgregarModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" id="closeAgregarModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="limpiarNuevoMovimiento()"></button>
             </div>
             <div class="modal-body">
                 <div class="container-fluid m-0 p-0">
@@ -42,8 +42,13 @@
                         <div class="row my-4">
                             <div class="col-md-2"></div>
                             <div class="col-sm-12 col-md-4">
-                                <label for="folio">Folio (Número de factura/Nota): <em class="text-secondary">(Opcional)</em></label>
-                                <input type="text" class="form-control" [(ngModel)]="nuevoMovimiento.folio">
+                                <label for="folio">Folio (Número de factura/Nota): </label>
+                                <input type="text" class="form-control" name="folio" [(ngModel)]="nuevoMovimiento.folio">
+                                <div class="row mt-2" *ngIf="movil()">
+                                    <p>Si estás recibiendo material desde el CEDI, escanea el código QR que viene en la hoja incluida con tu material</p>
+                                    <button type="button" class="btn btn-outline-primary fas fa-camera" (click)="escanearFolioModal()"></button>
+                                    <hr class="my-3">
+                                </div>
                             </div>
                             <div class="col-sm-12 col-md-6">
                                 <label for="tipo">Tipo de movimiento: <span>*</span></label>
@@ -131,8 +136,7 @@
                         <div class="row my-4">
                             <div class="col-md-2"></div>
                             <div class="col-sm-12 col-md-4">
-                                <label for="folio">Folio: </label>
-                                <input type="text" class="form-control" [(ngModel)]="actualizarMovimiento.folio">
+                                <label for="folio">Folio: <span class="text-secondary">{{ actualizarMovimiento.folio}}</span></label>
                             </div>
                             <div class="col-sm-12 col-md-6">
                                 <label for="tipo">Tipo de movimiento: <span class="text-secondary">{{ actualizarMovimiento.tipoEntrada ? 'Recepción' : 'Entrega' }}</span></label>
@@ -196,6 +200,24 @@
                 <div class="container-fluid m-0 p-0">
                     <div class="d-flex flex-column justify-content-center">
                         <app-escaner-movil [evidencias]="true" [mostrarCamara]="camaraEvidencias" *ngIf="camaraEvidencias" (fotoTomada)="agregarImagen($event)"></app-escaner-movil>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="escanerFolioModal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="camaraModalLabel">Camara</h5>
+                <button type="button" id="closeCamaraModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid m-0 p-0">
+                    <div class="d-flex flex-column justify-content-center">
+                        <app-escaner-movil [escanerActivo]="camaraFolio" (codigoEscaneado)="folioEscaneado($event)" *ngIf="movil()"></app-escaner-movil>
                     </div>
                 </div>
             </div>
