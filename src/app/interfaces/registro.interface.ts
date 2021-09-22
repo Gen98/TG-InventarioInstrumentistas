@@ -3,4 +3,5 @@ export interface Registro{
     desc: string;
     lote: string;
     cant: number;
+    deleteAll?: boolean;
 }

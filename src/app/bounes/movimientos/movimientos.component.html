@@ -24,9 +24,10 @@
                         (registrarMovimiento)="registrarMovimiento($event)"
                         (actualizarMovimientoOutput)="actualizarMovimiento($event)"
                         (eliminarMovimientoOutput)="eliminarMovimiento($event)"
+                        (sincronizarEmit)="sincronizarMovimientos()"
                     ></app-no-sincronizados>
                     <ng-template #Sincronizados>
-                        <app-sincronizados></app-sincronizados>
+                        <app-sincronizados [movimientos]="sincronizados"></app-sincronizados>
                     </ng-template>
                 </div>
               </div>

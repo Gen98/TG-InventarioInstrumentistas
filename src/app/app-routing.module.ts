@@ -5,6 +5,7 @@ import { InicioComponent } from './components/inicio/inicio.component';
 import { InventarioComponent } from './inventario/inventario/inventario.component';
 import { CatalogoComponent } from './components/catalogo/catalogo.component';
 import { MovimientosComponent } from './bounes/movimientos/movimientos.component';
+import { AlmacenesComponent } from './components/almacenes/almacenes.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,10 @@ const routes: Routes = [
   {
     path: 'catalogo',
     component: CatalogoComponent
+  },
+  {
+    path: 'almacenes',
+    component: AlmacenesComponent
   },
   {
     path: 'movimientos',

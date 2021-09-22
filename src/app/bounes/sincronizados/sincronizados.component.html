@@ -1,1 +1,76 @@
-<p>sincronizados works!</p>
+<div class="container-fluid m-0 p-0">
+    <div class="d-flex flex-column justify-content-center">
+        <div class="row">
+            <app-tabla [data]="movimientos" 
+                    [isBounes]="true"
+                    [isSync]="true"
+                    (visualizarMovimiento)="detallesMovimiento($event)">
+            </app-tabla>
+        </div>
+    </div>
+</div>
+
+<!-- Movimiento Sincronizado Modal -->
+<button id="openSincronizadoModal" [hidden]="true" data-bs-toggle="modal" data-bs-target="#visualizarSincronizadoModal"></button>
+<div class="modal fade" id="visualizarSincronizadoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Visualizar movimiento</h5>
+                <button type="button" id="closeVisualizarModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid m-0 p-0">
+                    <div class="d-flex flex-column justify-content-center">
+                        <div class="row my-4">
+                            <div class="col-md-2"></div>
+                            <div class="col-sm-12 col-md-4">
+                                <label for="folio">Folio: <span class="text-secondary">{{ sincronizado.folio }}</span></label>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <label for="tipo">Tipo de movimiento: <span class="text-secondary">{{ sincronizado.tipoEntrada ? 'Recepción' : 'Entrega' }}</span></label>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center mb-4">
+                            <div class="col-sm-12 col-md-8">
+                                <label for="almacen">Almacen: <span class="text-secondary">{{ sincronizado.almacen }}</span></label>
+                                <select name="almacen" id="almacen" class="form-select" disabled>
+                                    <option *ngFor="let almacen of almacenes" [value]="almacen.value" [selected]="almacen.value == sincronizado.almacen">
+                                        {{ almacen.nombre }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center mb-4">
+                            <div class="col-sm-12 col-md-8">
+                                <label for="comentario">Comentario:</label>
+                                <textarea name="comentario" id="comentario" cols="30" rows="5" class="form-control" readonly>{{ sincronizado.comentario }}</textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <app-tabla [soloVisualizar]="true" [data]="sincronizado.registros"></app-tabla>
+                        </div>
+                        <hr [ngClass]="{'my-3':movil()}" [ngClass]="{'my-5':!movil()}">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-sm-12 col-md-7">
+                                <app-add-images [archivosSubidos]="sincronizado.imagenes" [soloVisualizar]="true"></app-add-images>
+                            </div>
+                        </div>
+                        <ng-template [ngIf]="sincronizado.firmas.length">
+                            <hr class="my-2">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-6">
+                                    <ng-template ngFor let-firma [ngForOf]="sincronizado.firmas">
+                                        <img [src]="firma.base64" class="img-fluid img"/>
+                                        <hr>
+                                    </ng-template>
+                                    
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

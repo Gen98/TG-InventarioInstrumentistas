@@ -15,13 +15,13 @@
             [ngClass]="{'bg-white text-secondary':url == '/inventario'}"
             class="nav-item">
             <i class="fa fa-laptop-medical fa-2x"></i>
-            <span class="nav-text"> Inventario </span>
+            <span class="nav-text"> Realizar Inventario </span>
         </li>
         <li (click)="ruta ( 'catalogo' )"
             [ngClass]="{'bg-white text-secondary':url == '/catalogo'}"
             class="nav-item">
             <i class="fa fa-notes-medical fa-2x"></i>
-            <span class="nav-text"> Productos </span>
+            <span class="nav-text"> Catálogo de Productos </span>
         </li>
         <hr>
         <div class="text-center my-2 text-white">
@@ -31,7 +31,13 @@
             [ngClass]="{'bg-white text-secondary':url == '/movimientos'}"
             class="nav-item">
             <i class="fa fa-cubes fa-2x"></i>
-            <span class="nav-text"> Movimientos </span>
+            <span class="nav-text"> Entrada y Salidas </span>
+        </li>
+        <li (click)="ruta ( 'almacenes' )"
+            [ngClass]="{'bg-white text-secondary':url == '/almacenes'}"
+            class="nav-item">
+            <i class="fa fa-warehouse fa-2x"></i>
+            <span class="nav-text"> Catálogo de Almacenes </span>
         </li>
     </ul>
 </nav>

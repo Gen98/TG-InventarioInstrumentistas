@@ -11,7 +11,7 @@
           </ul>
         </div>
         <div class="card-body" *ngIf="tipoEscaner == ''">
-            <h3 class="card-title">Registrar una nueva entrada</h3>
+            <h3 class="card-title">¿Cómo quieres registrar tus productos?</h3>
             <h5 class="card-text">
                 Selecciona el tipo de código 
                 <button class="btn text-info p-0 m-0" (click)="seleccionarTipo('qr')">
@@ -100,7 +100,7 @@
 </div>
 
 <div class="modal" id="camaraModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="camaraModalLabel">Camara</h5>
@@ -109,7 +109,7 @@
             <div class="modal-body">
                 <div class="container-fluid m-0 p-0">
                     <div class="d-flex flex-column justify-content-center">
-                        <app-escaner-movil [escanerActivo]="escanerActivo" (codigoEscaneado)="codigoEscaneado($event)"></app-escaner-movil>
+                        <app-escaner-movil [escanerActivo]="escanerActivo" (codigoEscaneado)="codigoEscaneado($event)" *ngIf="movil()"></app-escaner-movil>
                     </div>
                 </div>
             </div>

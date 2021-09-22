@@ -59,6 +59,9 @@ export class SidebarComponent implements OnInit {
       case 'movimientos':
         this.router.navigate(['movimientos']);
         break;
+      case 'almacenes':
+        this.router.navigate(['almacenes']);
+        break;
     }
     setTimeout(() => {
       this.url = this.location.path();
