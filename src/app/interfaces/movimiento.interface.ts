@@ -1,6 +1,7 @@
 import { Registro } from './registro.interface';
 
 export interface Movimiento{
+    idIndexed?: number;
     index?: number;
     almacen: number;
     registros: Registro[];

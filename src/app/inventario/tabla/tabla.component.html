@@ -43,6 +43,7 @@
                     <tr>
                         <th>#</th>
                         <th>Fecha creación</th>
+                        <th>Folio</th>
                         <th># registros</th>
                         <th>Tipo</th>
                         <th>Acciones</th>
@@ -52,6 +53,7 @@
                     <tr *ngFor="let item of data; index as i">
                         <td> {{ data.length - i }} </td>
                         <td> {{ item.fechaCreacion | date:'d/M/yy, h:mm a'}} </td>
+                        <td> {{ item.folio }} </td>
                         <td> {{ item.registros.length }} </td>
                         <td> {{ item.tipoEntrada ? 'Recepción' : 'Entrega' }} </td>
                         <td>
@@ -98,7 +100,7 @@
                         <td> {{ data.length - i }} </td>
                         <td> {{ item.fechaCreacion }} </td>
                         <td> {{ item.fechaSincronizacion }} </td>
-                        <td> {{ item.folio ? item.folio : 'NA' }} </td>
+                        <td> {{ item.folio }} </td>
                         <td> {{ item.registros.length }} </td>
                         <td> {{ item.tipoEntrada ? 'Recepción' : 'Entrega' }} </td>
                         <td>
