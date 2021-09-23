@@ -68,7 +68,7 @@ export class StorageService {
     movimientos = movimientos.sort(function(a,b){
       return (a.tipoEntrada === b.tipoEntrada)? 0 : a.tipoEntrada? -1 : 1; ;
     });
-    return this.http.post<Observable<any>>('http://206.225.83.181:7004/movimientos', movimientos);
+    return this.http.post<Observable<any>>('https://inventario-bounes.truemedgroup.com:7004/movimientos', movimientos);
   }
 
   addSincronizado(sincronizado: any): void {

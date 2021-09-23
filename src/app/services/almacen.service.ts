@@ -10,6 +10,6 @@ export class AlmacenService {
   constructor( private http: HttpClient ) { }
 
   sincronizar(): Observable<any> {
-    return this.http.get<Observable<any>>('http://206.225.83.181:7004/movimientos/almacenes');
+    return this.http.get<Observable<any>>('https://inventario-bounes.truemedgroup.com:7004/movimientos/almacenes');
   }
 }
