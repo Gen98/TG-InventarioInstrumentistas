@@ -89,6 +89,11 @@ export class MovimientosComponent implements OnInit {
 
   async sincronizarMovimientos() {
     $('.sincronizarBtn').prop("disabled", true);
+    Swal.fire({
+      allowOutsideClick: false,
+      text: 'Cargando, no salgas de esta ventana...'
+    });
+    Swal.showLoading();
     (await this.dexieService.sincronizarMovimientos()).subscribe( resp => {
       this.dexieService.deleteSincronizados().then(async() => {
         resp.forEach((element:any) => {
