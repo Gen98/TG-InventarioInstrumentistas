@@ -6,6 +6,7 @@ import { InventarioComponent } from './inventario/inventario/inventario.componen
 import { CatalogoComponent } from './components/catalogo/catalogo.component';
 import { MovimientosComponent } from './bounes/movimientos/movimientos.component';
 import { AlmacenesComponent } from './components/almacenes/almacenes.component';
+import { XRecibirComponent } from './bounes/x-recibir/x-recibir.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,10 @@ const routes: Routes = [
   {
     path: 'movimientos',
     component: MovimientosComponent
+  },
+  {
+    path: 'xRecibir',
+    component: XRecibirComponent
   },
   {
     path: '**',

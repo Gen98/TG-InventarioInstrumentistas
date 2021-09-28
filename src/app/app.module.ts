@@ -19,6 +19,7 @@ import { SincronizadosComponent } from './bounes/sincronizados/sincronizados.com
 import { SignatureComponent } from './components/signature/signature.component';
 import { SincronizarComponent } from './components/sincronizar/sincronizar.component';
 import { AlmacenesComponent } from './components/almacenes/almacenes.component';
+import { XRecibirComponent } from './bounes/x-recibir/x-recibir.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { AlmacenesComponent } from './components/almacenes/almacenes.component';
     SincronizadosComponent,
     SignatureComponent,
     SincronizarComponent,
-    AlmacenesComponent
+    AlmacenesComponent,
+    XRecibirComponent
   ],
   imports: [
     BrowserModule,

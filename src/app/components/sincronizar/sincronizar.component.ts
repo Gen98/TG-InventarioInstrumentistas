@@ -3,6 +3,7 @@ import { Observable, Observer, fromEvent, merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { Movimiento } from '../../interfaces/movimiento.interface';
+import { WifiStatusService } from '../../services/wifi-status.service';
 
 @Component({
   selector: 'app-sincronizar',
@@ -15,9 +16,12 @@ export class SincronizarComponent implements OnInit {
 
   @Output() sincronizarEmit :EventEmitter<Movimiento[]> = new EventEmitter();
 
-  constructor() { 
+  constructor(private wifiStatusService: WifiStatusService) { 
     // Para el telefono se necesito comentar la linea webView.setNetworkAvailable(value) en SystemWebViewEngine AndroidStudio
-    this.createOnline$().subscribe(isOnline => this.isConnected = isOnline);
+    // this.createOnline$().subscribe(isOnline => this.isConnected = isOnline);
+    this.wifiStatusService.createOnline().subscribe((isOnline) => {
+      this.isConnected = isOnline;
+    });
   }
 
   ngOnInit(): void {
@@ -41,13 +45,13 @@ export class SincronizarComponent implements OnInit {
     });
   }
 
-  createOnline$() {
-    return merge<boolean>(
-      fromEvent(window, 'offline').pipe(map(() => false)),
-      fromEvent(window, 'online').pipe(map(() => true)),
-      new Observable((sub: Observer<boolean>) => {
-        sub.next(navigator.onLine);
-        sub.complete();
-      }));
-    }
+  // createOnline$() {
+  //   return merge<boolean>(
+  //     fromEvent(window, 'offline').pipe(map(() => false)),
+  //     fromEvent(window, 'online').pipe(map(() => true)),
+  //     new Observable((sub: Observer<boolean>) => {
+  //       sub.next(navigator.onLine);
+  //       sub.complete();
+  //     }));
+  //   }
 }
