@@ -28,10 +28,10 @@
                     </div>
                     <div class="row">
                         <div class="table-responsive">
-                            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-hover table-striped row-border hover table-sm">
+                            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-hover table-striped row-border hover table-sm nowrap">
                                 <thead>
                                     <tr>
-                                        <th *ngIf="isFromScimpla">Documento</th>
+                                        <th>Documento</th>
                                         <th>Folio</th>
                                         <th>Fecha Emisión</th>
                                         <th>Cliente</th>
@@ -40,7 +40,7 @@
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let item of data; index as i">
-                                        <td *ngIf="isFromScimpla"> {{ item.documento }} </td>
+                                        <td> {{ item.documento }} </td>
                                         <td> {{ item.folio }} </td>
                                         <td> {{ item.fecha.split(" ")[0] }} </td>
                                         <td> {{ item.cliente }} </td>

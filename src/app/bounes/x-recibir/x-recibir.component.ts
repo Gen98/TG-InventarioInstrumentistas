@@ -22,9 +22,9 @@ export class XRecibirComponent implements OnInit {
   constructor( private bounesService: BounesService, private router: Router ) { }
 
   ngOnInit(): void {
+    this.loadData();
     this.dtOptions = {
-      pageLength: 5,
-      lengthMenu: [ 5, 10, 20, 25, 50 ],
+      lengthMenu: [ 10, 20, 25, 50 ],
       responsive: true,
       language: {
         url: "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
@@ -35,7 +35,6 @@ export class XRecibirComponent implements OnInit {
         { "width": "10%", "targets": 2 }
       ]
     };
-    this.loadData();
   }
 
   loadData(): void {
@@ -45,6 +44,7 @@ export class XRecibirComponent implements OnInit {
     });
     Swal.showLoading();
     this.bounesService.ConsultarMxRecibir(this.isFromScimpla).subscribe( resp => {
+      this.esconderColumna();
       setTimeout(() => {
         this.data = resp;
         this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
@@ -52,7 +52,7 @@ export class XRecibirComponent implements OnInit {
           this.dtTrigger.next();
         });
         Swal.close();
-      }, 1500);
+      }, 1000);
     }, err => {
       Swal.fire({
         icon: 'warning',
@@ -64,13 +64,43 @@ export class XRecibirComponent implements OnInit {
             window.location.reload();
           });
         }
-      });;
+      });
     });
   }
 
   cambiarTab(tab: boolean): void {
     this.isFromScimpla = tab;
     this.loadData();
+  }
+
+  esconderColumna(): void {
+    if (!this.isFromScimpla) {
+      this.dtOptions = {
+        lengthMenu: [ 10, 20, 25, 50 ],
+        responsive: true,
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+        },
+        columnDefs: [
+          { "width": "5%", "targets": 0, "visible": false },
+          { "width": "5%", "targets": 1 },
+          { "width": "10%", "targets": 2 }
+        ]
+      };
+    } else {
+      this.dtOptions = {
+        lengthMenu: [ 10, 20, 25, 50 ],
+        responsive: true,
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+        },
+        columnDefs: [
+          { "width": "5%", "targets": 0 },
+          { "width": "5%", "targets": 1 },
+          { "width": "10%", "targets": 2 }
+        ]
+      };
+    }
   }
 
   ngAfterViewInit(): void {
