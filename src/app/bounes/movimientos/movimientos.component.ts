@@ -4,6 +4,9 @@ import { StorageService } from '../../services/storage.service';
 import { DexieService } from '../../services/dexie.service';
 import { Movimiento } from '../../interfaces/movimiento.interface';
 import Swal from 'sweetalert2';
+import { BounesService } from '../../services/bounes.service';
+import { from } from 'rxjs';
+import { concatMap, map, toArray } from 'rxjs/operators';
 
 declare var $: any;
 
@@ -18,7 +21,10 @@ export class MovimientosComponent implements OnInit {
   movimientos: any = [];
   sincronizados: any[] = [];
   isBounes: boolean = true;
-  constructor( private storageServicio: StorageService, private dexieService: DexieService ) { }
+  constructor( 
+    private storageServicio: StorageService, 
+    private dexieService: DexieService, 
+    private bounesService: BounesService ) { }
 
   ngOnInit(): void {
     this.getRegistros();
@@ -89,11 +95,6 @@ export class MovimientosComponent implements OnInit {
 
   async sincronizarMovimientos() {
     $('.sincronizarBtn').prop("disabled", true);
-    Swal.fire({
-      allowOutsideClick: false,
-      text: 'Cargando, no salgas de esta ventana...'
-    });
-    Swal.showLoading();
     (await this.dexieService.sincronizarMovimientos()).subscribe( resp => {
       this.dexieService.deleteSincronizados().then(async() => {
         resp.forEach((element:any) => {
@@ -131,5 +132,84 @@ export class MovimientosComponent implements OnInit {
         timer: 2000
       })
     });
+  }
+
+  validarSincronizacion() {
+    Swal.fire({
+      allowOutsideClick: false,
+      text: 'Cargando, no salgas de esta ventana...'
+    });
+    Swal.showLoading();
+
+    let observables = [];
+    for (const mov of this.movimientos) {
+      let param = mov.folio ? mov.folio : null;
+      if (param && (param.startsWith("NS_") || param.startsWith("FS_") || param.startsWith("BS_"))) {
+        observables.push(this.bounesService.consultarPartidasFolio(param));
+      }
+    }
+
+    from(observables).pipe(
+      concatMap((key) => key),
+      map((item) => {
+        return item;
+      })
+    ).pipe(toArray()
+    ).subscribe(
+      (val) => { 
+        console.log(val);
+        this.recorrerPartidas(val);
+      },
+      (err) => { 
+        console.log(err);
+        Swal.fire({
+          icon: 'warning',
+          text: 'Ha ocurrido un error, intenta más tarde',
+        });
+      }
+    )
+  }
+
+  recorrerPartidas(responses: any[]): void {
+    let feedback = true;
+    this.movimientos.forEach((mov: Movimiento) => {
+      if (mov.folio && feedback && (mov.folio.startsWith("NS_") || mov.folio.startsWith("FS_") || mov.folio.startsWith("BS_"))) {
+        console.log(mov.folio);
+        let responseIndex = responses.findIndex((res) => {
+          return res.folio === mov.folio;
+        });
+        if (responses[responseIndex].encontrado) {
+          let partidas = [...responses[responseIndex].partidas];
+          let registros = [...mov.registros];
+          mov.registros.forEach((registro:Registro) => {
+            let indexRemove = partidas.findIndex((e) => {
+              return registro.code === e.code && registro.cant == e.cant;
+            });
+            if (indexRemove != -1) {
+              partidas.splice(indexRemove, 1);
+              registros = registros.filter((e) => {
+                return !(registro.code === e.code && registro.cant == e.cant);
+              });
+            }
+          });
+          if ( (partidas.length || registros.length) != 0 && responses[responseIndex].partidasExactas ) {
+            Swal.fire({
+              icon: 'warning',
+              text: 'Tu movimiento con folio: ' + mov.folio + ' no coincide con lo enviado, revisa tus partidas.',
+            });
+            feedback = false;
+          }
+        } else {
+          Swal.fire({
+            icon: 'warning',
+            text: 'Tu movimiento con folio: ' + mov.folio + ' no se encuentra en el sistema.',
+          });
+          feedback = false;
+        }
+      }
+    });
+    if (feedback) {
+      this.sincronizarMovimientos();
+    }
   }
 }

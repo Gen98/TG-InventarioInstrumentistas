@@ -15,4 +15,9 @@ export class BounesService {
     let endpoint = `https://inventario-bounes.truemedgroup.com:7004/movimientos/pending/${param}`
     return this.http.get<XRecibir[]>(endpoint);
   }
+
+  consultarPartidasFolio(folio: string): Observable<any> {
+    let url = `https://inventario-bounes.truemedgroup.com:7004/movimientos/${folio}/partidas`;
+    return this.http.get(url);
+  }
 }
