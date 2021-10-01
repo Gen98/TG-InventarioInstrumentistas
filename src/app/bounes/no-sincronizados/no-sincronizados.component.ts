@@ -145,7 +145,11 @@ export class NoSincronizadosComponent implements OnInit {
     this.eliminarMovimientoOutput.emit(movimiento);
   }
 
-  folioEscaneado(e: String): void {
+  folioEscaneado(e: String, inputText: any = null): void {
+    if (inputText) {
+      e = inputText.target.value;
+      this.almacenes = almacenesJSON.data;
+    }
     let codigo = e.split('/');
     let almacen = e.split('/');
     if (this.validarFolio(codigo)) {
