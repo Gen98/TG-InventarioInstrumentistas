@@ -26,6 +26,7 @@
     "bootstrap": "^5.1.0",
     "datatables.net": "^1.10.20",
     "datatables.net-bs4": "^1.10.20",
+    "dexie": "^3.0.3",
     "file-saver": "^2.0.5",
     "jquery": "^3.6.0",
     "ngx-webcam": "^0.3.2",

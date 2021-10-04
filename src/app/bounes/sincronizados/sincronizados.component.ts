@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Movimiento } from '../../interfaces/movimiento.interface';
+import { Registro } from 'src/app/interfaces/registro.interface';
 import almacenesJSON from '../../../assets/files/almacenes.json';
+import data from '../../../assets/files/data.json';
 
 @Component({
   selector: 'app-sincronizados',
@@ -40,6 +42,11 @@ export class SincronizadosComponent implements OnInit {
 
   detallesMovimiento(movimiento: Movimiento): void {
     this.sincronizado = movimiento;
+    let productos = this.sincronizado.registros;
+    productos.forEach((registro: Registro) => {
+      let producto = data.data.find((e: any) => e.Codigo == registro.code);
+      registro.desc = producto!.Descripcion||'NA';
+    });
     document.getElementById("openSincronizadoModal")!.click();
   }
 }

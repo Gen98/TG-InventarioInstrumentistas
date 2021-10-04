@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Registro } from '../../interfaces/registro.interface';
 import { StorageService } from '../../services/storage.service';
+import { DexieService } from '../../services/dexie.service';
 import { Movimiento } from '../../interfaces/movimiento.interface';
 import Swal from 'sweetalert2';
 
@@ -14,10 +15,10 @@ declare var $: any;
 export class MovimientosComponent implements OnInit {
 
   noSincronizados: boolean = true;
-  movimientos: Movimiento[] = [];
+  movimientos: any = [];
   sincronizados: any[] = [];
   isBounes: boolean = true;
-  constructor( private storageServicio: StorageService ) { }
+  constructor( private storageServicio: StorageService, private dexieService: DexieService ) { }
 
   ngOnInit(): void {
     this.getRegistros();
@@ -25,31 +26,48 @@ export class MovimientosComponent implements OnInit {
   }
 
   registrarMovimiento(movimiento: Movimiento): void {
-    this.storageServicio.addMovimiento(movimiento);
-    setTimeout(() => {
+    this.dexieService.addMovimiento(movimiento).then(async() => {
       this.getRegistros();
-    }, 1000);
+    });
+    // this.storageServicio.addMovimiento(movimiento);
+    // setTimeout(() => {
+    //   this.getRegistros();
+    // }, 1000);
   }
 
   actualizarMovimiento(movimiento: Movimiento): void {
-    if (this.storageServicio.updateMovimiento(movimiento)) {
-      setTimeout(() => {
-        this.getRegistros();
-      }, 1000);
+    this.dexieService.updateMovimiento(movimiento).then(async() => {
+      this.getRegistros();
       Swal.fire({
         icon: 'success',
         title: 'Movimiento actualizado exitosamente',
         timer: 2000
       });
-    }
+    });
+    // if (this.storageServicio.updateMovimiento(movimiento)) {
+    //   setTimeout(() => {
+    //     this.getRegistros();
+    //   }, 1000);
+    //   Swal.fire({
+    //     icon: 'success',
+    //     title: 'Movimiento actualizado exitosamente',
+    //     timer: 2000
+    //   });
+    // }
   }
 
   getRegistros(): void {
-    this.movimientos = this.storageServicio.getMovimientos();
+    // this.movimientos = this.storageServicio.getMovimientos();
+    this.dexieService.getMovimientos().then(async(e) => {
+      this.movimientos = e;
+    });
   }
 
   getSincronizados(): void {
-    this.sincronizados = this.storageServicio.getSincronizados();
+    // this.sincronizados = this.storageServicio.getSincronizados();
+    this.dexieService.getSincronizados().then(async(e) => {
+      this.sincronizados = e;
+    });
   }
 
   eliminarRegistros(): void {
@@ -62,20 +80,21 @@ export class MovimientosComponent implements OnInit {
   }
 
   eliminarMovimiento(movimiento: Movimiento): void {
-    this.storageServicio.deleteMovimiento(movimiento);
-    this.getRegistros();
+    this.dexieService.deleteMovimiento(movimiento).then(async(e) => {
+      this.getRegistros();
+    });
+    // this.storageServicio.deleteMovimiento(movimiento);
+    // this.getRegistros();
   }
 
-  sincronizarMovimientos(): void {
+  async sincronizarMovimientos() {
     $('.sincronizarBtn').prop("disabled", true);
-    this.storageServicio.sincronizarMovimientos().subscribe( resp => {
-      this.storageServicio.deleteSincronizados();
-      setTimeout(() => {
+    (await this.dexieService.sincronizarMovimientos()).subscribe( resp => {
+      this.dexieService.deleteSincronizados().then(async() => {
         resp.forEach((element:any) => {
-          this.storageServicio.addSincronizado(element);
+          this.dexieService.addSincronizado(element);
         });
-        this.storageServicio.deleteMovimientos();
-        setTimeout(() => {
+        this.dexieService.deleteMovimientos().then(async() => {
           Swal.fire({
             icon: 'success',
             title: 'Movimientos sincronizados exitosamente.',
@@ -83,8 +102,23 @@ export class MovimientosComponent implements OnInit {
           });
           this.getRegistros();
           this.getSincronizados();
-        }, 1000);
-      }, 2000);
+        })
+      });
+      // setTimeout(() => {
+      //   resp.forEach((element:any) => {
+      //     this.storageServicio.addSincronizado(element);
+      //   });
+      //   this.storageServicio.deleteMovimientos();
+      //   setTimeout(() => {
+      //     Swal.fire({
+      //       icon: 'success',
+      //       title: 'Movimientos sincronizados exitosamente.',
+      //       timer: 2000
+      //     });
+      //     this.getRegistros();
+      //     this.getSincronizados();
+      //   }, 1000);
+      // }, 2000);
     }, err => {
       Swal.fire({
         icon: 'error',
