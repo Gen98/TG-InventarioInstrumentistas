@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { WifiStatusService } from '../../services/wifi-status.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,11 +13,15 @@ export class SidebarComponent implements OnInit {
   private innerWidth: number;
   private ban: boolean;
   public url: string;
+  public isConnected: boolean = false;
 
-  constructor( private router: Router, private location: Location ) {
+  constructor( private router: Router, private location: Location, private wifiStatusService: WifiStatusService ) {
     this.ban = false;
     this.innerWidth = window.innerWidth;
     this.url = location.path();
+    wifiStatusService.createOnline().subscribe(isOnline => {
+      this.isConnected = isOnline;
+    });
   }
 
   ngOnInit(): void {
@@ -53,8 +58,8 @@ export class SidebarComponent implements OnInit {
       case 'catalogo':
         this.router.navigate(['catalogo']);
         break;
-      case 'sincronizados':
-        this.router.navigate(['sincronizados']);
+      case 'xRecibir':
+        this.router.navigate(['xRecibir']);
         break;
       case 'movimientos':
         this.router.navigate(['movimientos']);

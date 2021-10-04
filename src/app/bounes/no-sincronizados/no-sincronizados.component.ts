@@ -145,7 +145,11 @@ export class NoSincronizadosComponent implements OnInit {
     this.eliminarMovimientoOutput.emit(movimiento);
   }
 
-  folioEscaneado(e: String): void {
+  folioEscaneado(e: String, inputText: any = null): void {
+    if (inputText) {
+      e = inputText.target.value;
+      this.almacenes = almacenesJSON.data;
+    }
     let codigo = e.split('/');
     let almacen = e.split('/');
     if (this.validarFolio(codigo)) {
@@ -219,10 +223,10 @@ export class NoSincronizadosComponent implements OnInit {
       this.mostrarAlert('Ingresa por lo menos un registro');
       return false;
     }
-    if (this.nuevoMovimiento.imagenes.length == 0) {
-      this.mostrarAlert('Necesitas ingresar una imagen');
-      return false;
-    }
+    // if (this.nuevoMovimiento.imagenes.length == 0) {
+    //   this.mostrarAlert('Necesitas ingresar una imagen');
+    //   return false;
+    // }
     if (!this.nuevoMovimiento.tipoEntrada && this.nuevoMovimiento.firmas.length == 0) {
       this.mostrarAlert('Necesitas ingresar la firma');
       return false;

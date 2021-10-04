@@ -27,6 +27,13 @@
         <div class="text-center my-2 text-white">
             <span class="nav-text"> Almacén </span>
         </div>
+        <li (click)="ruta ( 'xRecibir' )"
+            *ngIf="isConnected"
+            [ngClass]="{'bg-white text-secondary': url == '/xRecibir'}"
+            class="nav-item">
+            <i class="fa fa-truck-loading fa-2x"></i>
+            <span class="nav-text"> Material x Recibir </span>
+        </li>
         <li (click)="ruta ( 'movimientos' )"
             [ngClass]="{'bg-white text-secondary':url == '/movimientos'}"
             class="nav-item">

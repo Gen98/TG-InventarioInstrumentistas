@@ -1,0 +1,57 @@
+<div class="container-fluid m-0 p-0">
+    <div class="d-flex flex-column justify-content-center">
+        <div class="col">
+            <div class="card text-center">
+                <div class="card-header">
+                  <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <button class="nav-link text-info" 
+                                (click)="cambiarTab(true)"
+                                [ngClass]="{'active':isFromScimpla}"
+                        >Scimpla</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link text-primary"
+                                (click)="cambiarTab(false)"
+                                [ngClass]="{'active':!isFromScimpla}"
+                        >Bounes</button>
+                    </li>
+                  </ul>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-2 col-md-6 col-lg-6">
+                            <button class="btn btn-primary float-end" (click)="loadData()">
+                                <i class="fas fa-sync"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-hover table-striped row-border hover table-sm nowrap">
+                                <thead>
+                                    <tr>
+                                        <th>Documento</th>
+                                        <th>Folio</th>
+                                        <th>Fecha Emisión</th>
+                                        <th>Cliente</th>
+                                        <th>Distribuidor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of data; index as i">
+                                        <td> {{ item.documento }} </td>
+                                        <td> {{ item.folio }} </td>
+                                        <td> {{ item.fecha.split(" ")[0] }} </td>
+                                        <td> {{ item.cliente }} </td>
+                                        <td> {{ item.distribuidor }} </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>

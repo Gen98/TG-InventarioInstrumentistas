@@ -43,7 +43,7 @@
                             <div class="col-md-2"></div>
                             <div class="col-sm-12 col-md-4">
                                 <label for="folio">Folio (Número de factura/Nota): </label>
-                                <input type="text" class="form-control" name="folio" [(ngModel)]="nuevoMovimiento.folio">
+                                <input type="text" class="form-control" name="folio" [(ngModel)]="nuevoMovimiento.folio" (keyup.enter)="folioEscaneado('',$event)">
                                 <div class="row mt-2" *ngIf="movil()">
                                     <p>Si estás recibiendo material desde el CEDI, escanea el código QR que viene en la hoja incluida con tu material</p>
                                     <button type="button" class="btn btn-outline-primary fas fa-camera" (click)="escanearFolioModal()"></button>
