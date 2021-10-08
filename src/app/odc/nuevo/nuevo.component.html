@@ -1,0 +1,106 @@
+<div class="modal" id="nuevaSolicitudModal" tabindex="-1" aria-labelledby="nuevaSolicitudModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nuevaSolicitudModalLabel">Nueva solicitud</h5>
+                <button type="button" id="closeNuevaSolicitudModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="limpiarNuevaSolicitud('completo')"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="d-flex flex-column justify-content-center">
+                        <div class="row my-4">
+                            <div class="col-lg-4 col-md-12">
+                                <label for="distribuidor">Distribuidor: </label>
+                                <select name="distribuidor" id="distribuidor" class="form-select" (change)="getClientes($event)">
+                                    <option selected value>Selecciona una opción</option>
+                                    <option *ngFor="let distribuidor of distribuidores" [value]="distribuidor.id">
+                                        {{ distribuidor.nombre }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-12">
+                                <label for="cliente">Cliente: </label>
+                                <select name="cliente" id="cliente" class="form-select" (change)="getListas($event)">
+                                    <option selected value>Selecciona una opción</option>
+                                    <option *ngFor="let cliente of clientes" [value]="cliente.id">
+                                        {{ cliente.nombre }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-12">
+                                <label for="lista_precios">Lista de precios: </label>
+                                <select name="lista_precio" id="lista_precio" class="form-select" (change)="actualizarListaPrecios($event)">
+                                    <option selected value>Selecciona una opción</option>
+                                    <option *ngFor="let lista of listasPrecios" [value]="lista.id">
+                                        {{ lista.desc }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <h4>Información CIRUGÍA</h4>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="folio">Ruta del archivo: </label>
+                                <input id="file" type="file" class="form-control" name="folio" (change)="subirArchivo($event)">
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-4">
+                                <label for="folio">No Contrato: <span>{{ nuevaSolicitud.noContrato }}</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="folio">No Fianza: <span>{{ nuevaSolicitud.noFianza }}</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="folio">No Proveedor: <span>{{ nuevaSolicitud.noProveedor }}</span></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="paciente">Paciente: </label>
+                                <input type="text" class="form-control" name="paciente" [(ngModel)]="nuevaSolicitud.paciente">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="nss">NSS: </label>
+                                <input type="text" class="form-control" name="nss" [(ngModel)]="nuevaSolicitud.nss">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="folioConsumo">Folio Consumo: </label>
+                                <input type="text" class="form-control" name="folioConsumo" [(ngModel)]="nuevaSolicitud.folioConsumo">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="fechaReq">Fecha Requisición: </label>
+                                <app-datepicker (actualizarModel)="nuevaSolicitud.fechaReq = $event"></app-datepicker>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="fechaCirugia">Fecha Cirugía: </label>
+                                <app-datepicker (actualizarModel)="nuevaSolicitud.fechaCirugia = $event"></app-datepicker>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="doctor">Nombre del doctor: </label>
+                                <input type="text" class="form-control" name="doctor" [(ngModel)]="nuevaSolicitud.nombreDoctor">
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center mb-4">
+                            <div class="col-sm-12 col-md-12">
+                                <label for="observaciones">Observaciones de la cirugía/prefactura: </label>
+                                <textarea name="comentario" id="comentario" cols="30" rows="5" class="form-control" [(ngModel)]="nuevaSolicitud.observacionesPrefactura"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="limpiarNuevaSolicitud('completo')">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="guardarSolicitud()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -46,6 +46,32 @@
             <i class="fa fa-warehouse fa-2x"></i>
             <span class="nav-text"> Catálogo de Almacenes </span>
         </li>
+        <hr>
+        <div class="text-center my-2 text-white font-weight">
+            <span class="nav-text"> ODC </span>
+        </div>
+        <li (click)="ruta ( 'xAtender' )"
+            [ngClass]="{'bg-white text-secondary':url == '/xAtender'}"
+            class="nav-item">
+            <i class="fa fa-calendar-alt fa-2x"></i>
+            <span class="nav-text"> Solicitudes por Atender </span>
+        </li>
+        <!-- <li class="nav-item">
+            <i class="fa fa-calendar-check fa-2x"></i>
+            <span class="nav-text"> Solicitudes Atendidas </span>
+        </li>
+        <li class="nav-item">
+            <i class="fa fa-calendar-times fa-2x"></i>
+            <span class="nav-text"> Solicitudes Canceladas </span>
+        </li> -->
+    </ul>
+    <ul class="logout" *ngIf="isAuth">
+        <li class="nav-item" (click)="logout()">
+            <i class="fa fa-power-off fa-2x"></i>
+            <span class="nav-text">
+                Cerrar sesión
+            </span>
+        </li>
     </ul>
 </nav>
 <app-navbar (showBar)="showBar()"></app-navbar>

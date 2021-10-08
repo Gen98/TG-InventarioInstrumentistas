@@ -1,0 +1,64 @@
+<div class="modal" id="cotizarModal" tabindex="-1" aria-labelledby="cotizarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cotizarModalLabel">Completa la información</h5>
+                <button type="button" id="closeNuevaSolicitudModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label for="envio">Direccion de envio:</label>
+                        <textarea class="form-control" name="envio" id="envio" cols="30" rows="10" [(ngModel)]="request.direccionEnvio"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-lg-4">
+                        <label for="forma_pago">Forma de pago:</label>
+                        <select name="forma_pago" id="forma_pago" class="form-select" [(ngModel)]="request.formaPago">
+                            <option *ngFor="let fPago of informacion.formasPago" [value]="fPago.clave">
+                                {{ fPago.descripcion }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <label for="noCuenta">Numero de cuenta:</label>
+                        <select name="cuenta" id="cuenta" class="form-select" [(ngModel)]="request.noCuenta">
+                            <option *ngFor="let cuenta of informacion.nosCuenta" [value]="cuenta">
+                                {{ cuenta }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <label for="tipo_pago">Tipo de pago:</label>
+                        <select name="tipo_pago" id="tipo_pago" class="form-select" [(ngModel)]="request.tipoPago">
+                            <option *ngFor="let tPago of informacion.tiposPago" [value]="tPago.idx">
+                                {{ tPago.descripcion }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label for="cfdi">Uso CFDI:</label>
+                        <select name="cfdi" id="cfdi" class="form-select" [(ngModel)]="request.cfdi">
+                            <option *ngFor="let cfdi of informacion.usosCFDI" [value]="cfdi.clave">
+                                {{ cfdi.descripcion }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label for="hoja_consumo">Hoja de consumo:</label>
+                        <input id="file" type="file" class="form-control" name="hoja_consumo" (change)="subirArchivo($event)">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" *ngIf="validarCotizacion()" (click)="guardarCotizacion()">Guardar solicitud</button>
+            </div>
+        </div>
+    </div>
+</div>

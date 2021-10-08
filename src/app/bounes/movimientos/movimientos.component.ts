@@ -157,7 +157,6 @@ export class MovimientosComponent implements OnInit {
     ).pipe(toArray()
     ).subscribe(
       (val) => { 
-        console.log(val);
         this.recorrerPartidas(val);
       },
       (err) => { 
@@ -174,7 +173,6 @@ export class MovimientosComponent implements OnInit {
     let feedback = true;
     this.movimientos.forEach((mov: Movimiento) => {
       if (mov.folio && feedback && (mov.folio.startsWith("NS_") || mov.folio.startsWith("FS_") || mov.folio.startsWith("BS_"))) {
-        console.log(mov.folio);
         let responseIndex = responses.findIndex((res) => {
           return res.folio === mov.folio;
         });

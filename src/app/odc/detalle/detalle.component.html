@@ -1,0 +1,46 @@
+<div class="modal" id="detalleSolicitudModal" tabindex="-1" aria-labelledby="detalleSolicitudModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleSolicitudModalLabel">Detalle del pedido</h5>
+                <button type="button" id="closeNuevaSolicitudModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="accordion" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item" *ngFor="let partida of pedido, let i = index">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#panelsStayOpen-collapse'+i">
+                                <strong>'{{ partida.partida }}'</strong> cantidad: 
+                                <span class="btn btn-info btn-sm rounded-circle float-end">{{ partida.cantidad }}</span>
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapse{{i}}" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <ul class="list-group">
+                                    <li class="list-group-item" *ngFor="let producto of partida.productos">
+                                        <div class="row text-sm">
+                                            <div class="col-8">
+                                                <div class="clearfix">
+                                                    <p class="float-start">{{ producto.codigoProducto }}</p>
+                                                    <p class="float-end text-info">{{ producto.precio | currency }}</p>
+                                                </div>
+                                                <p class="text-break">{{ producto.descripcion }}</p>
+                                            </div>
+                                            <div class="col-4 border-start">
+                                                <p>Cantidad: {{ producto.cantidad }}</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cotizarModal">Cotizar</button>
+            </div>
+        </div>
+    </div>
+</div>
