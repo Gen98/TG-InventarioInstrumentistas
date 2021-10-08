@@ -11,7 +11,7 @@ export class CotizacionesService {
   private endPoint: string = '';
 
   constructor(private http: HttpClient) { 
-    this.endPoint = 'http://localhost:8084/cotizaciones'
+    this.endPoint = 'https://inventario-bounes.truemedgroup.com:7004/cotizaciones'
   }
 
   getInformacionCotizar(idCliente: number): Observable<InformacionCotizar> {

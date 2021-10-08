@@ -20,7 +20,7 @@ export class AuthService {
    Para el login, se pide un objeto de tupo UsuarioModel que contiene
    su username y password */
   login(usuario: UsuarioModel): Observable<any> {
-    const urlEndpoint = 'http://localhost:8084/security/oauth/token';
+    const urlEndpoint = 'https://inventario-bounes.truemedgroup.com:7004/security/oauth/token';
     const credenciales = btoa('tmapp' + ':' + 'Ag785.-4$795Tyui');
 
     const httpHeaders = new HttpHeaders({

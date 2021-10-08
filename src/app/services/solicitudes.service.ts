@@ -18,7 +18,7 @@ export class SolicitudesService {
 
   constructor(private http: HttpClient) { 
     this.cliente = this.readToken();
-    this.endPoint = 'http://localhost:8084/solicitudes'
+    this.endPoint = 'https://inventario-bounes.truemedgroup.com:7004/solicitudes'
   }
 
   readToken(): string{
