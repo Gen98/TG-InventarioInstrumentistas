@@ -1,5 +1,32 @@
+<!-- Modal Preview PDF -->
+<div class="container-fkuid">
+    <div class="modal fade" id="previewPdfModal" tabindex="-1" role="dialog" aria-labelledby="previewPdfModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewPdfModalLabel">PDF</h5>
+                    <button (click)="zoom(-0.5)" class="btn btn-sm btn-light mx-4">
+                        <i class="fas fa-search-minus fa-sm"></i>
+                    </button>
+                    <button (click)="zoom(0.5)" class="btn btn-sm btn-light">
+                        <i class="fas fa-search-plus fa-sm"></i>
+                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <pdf-viewer [src]="sourcePdf"
+                            [original-size]="false"
+                            [zoom]="zoomPdf"
+                ></pdf-viewer>
+            </div>
+        </div>
+    </div>
+
+</div>
 <app-nuevo [distribuidores]="distribuidores" (storeSolicitud)="guardarSolicitud($event)"></app-nuevo>
-<app-ver [solicitud]="verSolicitudModel" [listasPrecios]="verSolicitudListaPrecio" (updateSolicitud)="actualizarSolicitud($event)"></app-ver>
+<app-ver [solicitud]="verSolicitudModel" 
+        [listasPrecios]="verSolicitudListaPrecio" 
+        (updateSolicitud)="actualizarSolicitud($event)"
+        (previewPdf)="previewPDF($event)"></app-ver>
 <div class="container-fluid m-0 p-0">
     <div class="d-flex flex-column justify-content-center">
         <div class="row">

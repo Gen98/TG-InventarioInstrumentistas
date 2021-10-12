@@ -78,6 +78,7 @@ export class SidebarComponent implements OnInit {
       this.url = this.location.path();
     }, 1000);
     this.showBar();
+    this.isAuth = this.authService.isAuth();
   }
 
   movil(): boolean{

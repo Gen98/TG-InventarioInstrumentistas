@@ -41,6 +41,7 @@ export class NoSincronizadosComponent implements OnInit {
   private innerWidth: number;
 
   @Input() movimientos: Movimiento[] = [];
+  @Input() folios: String[] = [];
   @Output() registrarMovimiento: EventEmitter<Movimiento> = new EventEmitter();
   @Output() actualizarMovimientoOutput: EventEmitter<Movimiento> = new EventEmitter();
   @Output() eliminarMovimientoOutput: EventEmitter<Movimiento> = new EventEmitter();
@@ -206,6 +207,15 @@ export class NoSincronizadosComponent implements OnInit {
   }
 
   validarMovimiento(): boolean {
+    if (this.nuevoMovimiento.folio) {
+      let exists = this.folios.findIndex((e) => {
+        return e == this.nuevoMovimiento.folio;
+      });
+      if (exists != -1) {
+        this.mostrarAlert('Ya haz registrado el folio');
+        return false;
+      }
+    }
     // if(!this.nuevoMovimiento.folio) {
     //   this.mostrarAlert('Escanea el folio');
     //   return false

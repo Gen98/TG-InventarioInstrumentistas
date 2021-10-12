@@ -6,6 +6,7 @@ import { ClienteDistribuidor } from '../../interfaces/cliente_distribuidor.inter
 import { SolicitudesService } from '../../services/solicitudes.service';
 import { ListaPrecio } from '../../interfaces/lista_precio.interface';
 import { Solicitud } from 'src/app/interfaces/solicitud.interface';
+import { SafeResourceUrl } from '@angular/platform-browser';
 
 declare var $: any;
 
@@ -24,8 +25,11 @@ export class PorAtenderComponent implements OnInit {
   distribuidores: ClienteDistribuidor[] = [];
   verSolicitudModel: Solicitud;
   verSolicitudListaPrecio: ListaPrecio[];
+  sourcePdf: SafeResourceUrl;
+  zoomPdf: number = 1;
 
   constructor(private solicitudService: SolicitudesService, private router: Router) { 
+    this.sourcePdf = '';
     this.suscription = new Subscription();
     this.suscription2 = new Subscription();
     this.verSolicitudListaPrecio = [];
@@ -89,9 +93,9 @@ export class PorAtenderComponent implements OnInit {
         text: 'Ocurrió un error, si este persiste contacte a sistemas'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.router.navigate(['']).then( () => {
-            window.location.reload();
-          });
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigate(['/']);
+          }); 
         }
       });
     });
@@ -115,11 +119,15 @@ export class PorAtenderComponent implements OnInit {
           allowOutsideClick: false,
         }).then((result) => {
           if (result.isConfirmed) {
-            window.location.reload();
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+              this.router.navigate(['/xAtender']);
+            }); 
           }
         });
       } else {
-        window.location.reload();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/']);
+        }); 
       }
     }, err => {
       this.mostrarAlert('Ocurrió un error, si este persiste contacte a sistemas');
@@ -173,21 +181,37 @@ export class PorAtenderComponent implements OnInit {
         }).then((result) => {
           if (result.isConfirmed) {
             if (event.procesar) {
-              this.router.navigate(['/xAtender/preparar', event.solicitud.id, event.solicitud.idLista]).then( () => {
-                window.location.reload();
-              });
+              this.router.navigateByUrl(`/xAtender/preparar/${event.solicitud.id}/${event.solicitud.idLista}`, { skipLocationChange: true }).then(() => {
+                this.router.navigate(['/xAtender/preparar', event.solicitud.id, event.solicitud.idLista]);
+              }); 
             } else {
-              window.location.reload();
+              this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                this.router.navigate(['/']);
+              }); 
             }
           }
         });
       } else {
         Swal.close();
-        window.location.reload();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/']);
+        }); 
       }
     }, err => {
       this.mostrarAlert('Ocurrió un error, si este persiste contacte a sistemas');
     });
+  }
+
+  previewPDF(e: any): void {
+    this.sourcePdf = e;
+    this.zoomPdf = 1;
+
+    $('#verSolicitudModal').modal('hide');
+    $('#previewPdfModal').modal('show');
+  }
+
+  zoom(amount: number) {
+    this.zoomPdf += amount;
   }
 
   mostrarAlert(mensaje: string): void {

@@ -21,6 +21,7 @@
                 <div class="card-body">
                     <app-no-sincronizados *ngIf="noSincronizados; else Sincronizados"
                         [movimientos]="movimientos"
+                        [folios]="folios"
                         (registrarMovimiento)="registrarMovimiento($event)"
                         (actualizarMovimientoOutput)="actualizarMovimiento($event)"
                         (eliminarMovimientoOutput)="eliminarMovimiento($event)"

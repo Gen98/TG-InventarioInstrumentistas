@@ -61,9 +61,9 @@ export class XRecibirComponent implements OnInit {
         allowOutsideClick: false
       }).then((result) => {
         if (result.isConfirmed) {
-          this.router.navigate(['']).then( () => {
-            window.location.reload();
-          });
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigate(['/']);
+          }); 
         }
       });
     });

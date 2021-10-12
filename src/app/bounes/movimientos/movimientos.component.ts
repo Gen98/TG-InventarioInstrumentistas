@@ -21,6 +21,7 @@ export class MovimientosComponent implements OnInit {
   movimientos: any = [];
   sincronizados: any[] = [];
   isBounes: boolean = true;
+  folios: any[] = [];
   constructor( 
     private storageServicio: StorageService, 
     private dexieService: DexieService, 
@@ -67,6 +68,9 @@ export class MovimientosComponent implements OnInit {
     this.dexieService.getMovimientos().then(async(e) => {
       this.movimientos = e;
     });
+    this.dexieService.getFolios().then(async(e) => {
+      this.folios = e;
+    });
   }
 
   getSincronizados(): void {
@@ -93,22 +97,24 @@ export class MovimientosComponent implements OnInit {
     // this.getRegistros();
   }
 
-  async sincronizarMovimientos() {
+  async sincronizarMovimientos(movsIdSync: number[] = [], movsFailed: any[]) {
     $('.sincronizarBtn').prop("disabled", true);
-    (await this.dexieService.sincronizarMovimientos()).subscribe( resp => {
+    (await this.dexieService.sincronizarMovimientos(movsIdSync)).subscribe( resp => {
       this.dexieService.deleteSincronizados().then(async() => {
         resp.forEach((element:any) => {
           this.dexieService.addSincronizado(element);
+          this.dexieService.deleteMovimiento(element);
         });
-        this.dexieService.deleteMovimientos().then(async() => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Movimientos sincronizados exitosamente.',
-            timer: 2000
-          });
+        setTimeout(() => {
+          $('.sincronizarBtn').prop("disabled", false);
           this.getRegistros();
           this.getSincronizados();
-        })
+          let response = this.stringSincronizarResponse(movsFailed);
+          Swal.fire({
+            icon: 'success',
+            title: response,
+          });
+        }, 2000);
       });
       // setTimeout(() => {
       //   resp.forEach((element:any) => {
@@ -170,9 +176,11 @@ export class MovimientosComponent implements OnInit {
   }
 
   recorrerPartidas(responses: any[]): void {
-    let feedback = true;
-    this.movimientos.forEach((mov: Movimiento) => {
-      if (mov.folio && feedback && (mov.folio.startsWith("NS_") || mov.folio.startsWith("FS_") || mov.folio.startsWith("BS_"))) {
+    // let feedback = true;
+    let movsIdToSync: number[] = [];
+    let movsFailed: any[] = [];
+    this.movimientos.forEach((mov: Movimiento, movIdx: number) => {
+      if (mov.folio && (mov.folio.startsWith("NS_") || mov.folio.startsWith("FS_") || mov.folio.startsWith("BS_"))) {
         let responseIndex = responses.findIndex((res) => {
           return res.folio === mov.folio;
         });
@@ -191,23 +199,95 @@ export class MovimientosComponent implements OnInit {
             }
           });
           if ( (partidas.length || registros.length) != 0 && responses[responseIndex].partidasExactas ) {
-            Swal.fire({
-              icon: 'warning',
-              text: 'Tu movimiento con folio: ' + mov.folio + ' no coincide con lo enviado, revisa tus partidas.',
+            movsFailed.push({
+              folio:  mov.folio,
+              status: 1 //No coinciden las partidas
             });
-            feedback = false;
+            // Swal.fire({
+            //   icon: 'warning',
+            //   text: 'Tu movimiento con folio: ' + mov.folio + ' no coincide con lo enviado, revisa tus partidas.',
+            // });
+            // feedback = false;
+          } else if (responses[responseIndex].registradoAnteriormente) {
+            movsFailed.push({
+              folio:  mov.folio,
+              status: 2 //Duplicado
+            });
+          } else {
+            movsIdToSync.push(movIdx);
           }
         } else {
-          Swal.fire({
-            icon: 'warning',
-            text: 'Tu movimiento con folio: ' + mov.folio + ' no se encuentra en el sistema.',
+          movsFailed.push({
+            folio:  mov.folio,
+            status: 0 //No encontrado
           });
-          feedback = false;
+          // Swal.fire({
+          //   icon: 'warning',
+          //   text: 'Tu movimiento con folio: ' + mov.folio + ' no se encuentra en el sistema.',
+          // });
+          // feedback = false;
         }
+      } else {
+        movsIdToSync.push(movIdx);
       }
     });
-    if (feedback) {
-      this.sincronizarMovimientos();
+    if (movsIdToSync.length) {
+      this.sincronizarMovimientos(movsIdToSync, movsFailed);
+    } else {
+      let response = this.stringSincronizarResponse(movsFailed, true);
+      Swal.fire({
+        icon: 'warning',
+        title: response,
+        // timer: 2000
+      });
     }
+  }
+
+  stringSincronizarResponse(movsFailed: any[], noSent: boolean = false): string {
+    let response = noSent ? '' : 'Movimientos sincronizados exitosamente.';
+    if (movsFailed.length == 0) return response;
+    // Estatus 0
+    let estatus0 = this.sincIterarMovs(movsFailed, 0);
+    // Estatus 1
+    let estatus1 = this.sincIterarMovs(movsFailed, 1);
+    // Estatus 2
+    let estatus2 = this.sincIterarMovs(movsFailed, 2);
+
+    return response + estatus0 + estatus1 + estatus2;
+  }
+
+  sincIterarMovs(movsFailed: any[], status: number) {
+    let estatusArray = movsFailed.filter((e) => {
+      return e.status === status;
+    });
+
+    let string = '';
+    if (estatusArray.length) {
+      estatusArray.forEach((element, idx, array) => {
+        if (idx == 0) {
+          switch (status) {
+            case 0:
+              string = "\nLos siguientes folios no se encontraron: " + element.folio;
+              break;
+          
+            case 1:
+              string = "\nLos siguientes folios sus partidas no coinciden con lo enviado: " + element.folio;
+              break;
+
+            case 2:
+              string = "\nLos siguientes folios ya han sido registrados: " + element.folio;
+              break;
+
+            default:
+              break;
+          }
+        } else if (idx == array.length-1) {
+          string = string + (idx == 0 ? '.' : (', ' + element.folio + '.'));
+        } else {
+          string = string + ', ' + element.folio;
+        }
+      });
+    }
+    return string;
   }
 }

@@ -34,6 +34,12 @@ export class DexieService {
     return await this.table.toArray();
   }
 
+  async getFolios() {
+    let movs: Movimiento[] = await this.table.toArray();
+
+    return [...new Set(movs.map(item => item.folio))];
+  }
+
   async getSincronizados() {
     return await this.tableSincronizados.toArray();
   }
@@ -63,8 +69,13 @@ export class DexieService {
     }
   }
 
-  async sincronizarMovimientos(): Promise<Observable<any>> {
-    let movimientos = await this.getMovimientos();
+  async sincronizarMovimientos(movsIdSyn: number[]): Promise<Observable<any>> {
+    let movimientos: Movimiento[] = await this.getMovimientos();
+
+    movimientos = movimientos.filter((e, i) => {
+      return movsIdSyn.includes(i);
+    });
+    console.log(movimientos);
     movimientos = movimientos.sort(function(a: Movimiento, b: Movimiento){
       return (a.tipoEntrada === b.tipoEntrada)? 0 : a.tipoEntrada? -1 : 1; ;
     });

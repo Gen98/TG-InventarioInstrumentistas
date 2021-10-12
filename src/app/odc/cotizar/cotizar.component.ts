@@ -4,6 +4,8 @@ import Swal from 'sweetalert2';
 import { InformacionCotizar } from '../../interfaces/informacion_cotizar.interface';
 import { CotizacionesService } from '../../services/cotizaciones.service';
 
+declare var $: any;
+
 @Component({
   selector: 'app-cotizar',
   templateUrl: './cotizar.component.html',
@@ -91,9 +93,11 @@ export class CotizarComponent implements OnInit {
           allowOutsideClick: false,
         }).then((result) => {
           if (result.isConfirmed) {
-            this.router.navigate(['']).then( () => {
-              window.location.reload();
-            });
+            $('#detalleSolicitudModal').modal('hide');
+            $('#cotizarModal').modal('hide');
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+              this.router.navigate(['/xAtender']);
+            }); 
           }
         });
       }

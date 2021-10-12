@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
+declare var $: any;
+
 @Component({
   selector: 'app-add-images',
   templateUrl: './add-images.component.html',
@@ -17,6 +19,12 @@ export class AddImagesComponent implements OnInit {
   constructor( ) { }
 
   ngOnInit(): void {
+  }
+
+  visualizarImagen(base64: string): void {
+    this.imgSelect = base64;
+    // $("#visualizarImagenModal").prependTo("body");
+    $("#visualizarImagenModal").modal("show");
   }
 
   seleccionarArchivos(event:any): void {

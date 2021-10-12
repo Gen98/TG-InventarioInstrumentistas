@@ -11,6 +11,7 @@ import { VerComponent } from './ver/ver.component';
 import { ProcesarComponent } from './procesar/procesar.component';
 import { DetalleComponent } from './detalle/detalle.component';
 import { CotizarComponent } from './cotizar/cotizar.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 
 
@@ -29,6 +30,7 @@ import { CotizarComponent } from './cotizar/cotizar.component';
     FormsModule,
     DataTablesModule,
     AngularMyDatePickerModule,
+    PdfViewerModule,
   ],
   exports: [
     PorAtenderComponent

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {saveAs as importedSaveAs} from "file-saver";
 import Swal from 'sweetalert2';
@@ -19,6 +19,7 @@ export class VerComponent implements OnInit {
   @Input() solicitud: Solicitud|any;
   @Input() listasPrecios: ListaPrecio[] = [];
   @Output() updateSolicitud: EventEmitter<any> = new EventEmitter();
+  @Output() previewPdf: EventEmitter<any> = new EventEmitter();
 
   constructor(private router: Router, private solicitudService: SolicitudesService) { }
 
@@ -28,7 +29,10 @@ export class VerComponent implements OnInit {
   descargarArchivoSolicitud(): void {
     this.solicitudService.downloadPDF(this.solicitud.idSolicitudPDF).subscribe(res => {
       let file = new Blob([res], { type: 'application/pdf' });
-      importedSaveAs(file, this.solicitud.solicitudPDFNombre);
+      var fileURL = URL.createObjectURL(file);
+      this.previewPdf.emit(fileURL);
+      
+      // importedSaveAs(file, this.solicitud.solicitudPDFNombre);
     });
   }
 
