@@ -1,0 +1,97 @@
+<div class="modal" id="verSolicitudModal" tabindex="-1" aria-labelledby="verSolicitudModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="verSolicitudModalLabel">Ver solicitud</h5>
+                <button type="button" id="closeVerSolicitudModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="d-flex flex-column justify-content-center">
+                        <div class="row my-4">
+                            <div class="col-md-12 my-1">
+                                <label for="distribuidor">Distribuidor: <span>{{ solicitud.proveedorNombre }}</span></label>
+                            </div>
+                            <div class="col-md-12 my-1">
+                                <label for="cliente">Cliente: <span>{{ solicitud.clienteNombre }}</span></label>
+                            </div>
+                            <div class="col-md-12 my-1">
+                                <label for="lista_precios">Lista de precios: </label>
+                                <select name="lista_precio" id="lista_precio" class="form-select" (change)="actualizarListaPrecios($event)">
+                                    <option selected value>Selecciona una opción</option>
+                                    <option *ngFor="let lista of listasPrecios" [value]="lista.id">
+                                        {{ lista.desc }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <h4>Información CIRUGÍA</h4>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="folio">Ruta del archivo:  
+                                    <span role="button" class="text-primary" (click)="descargarArchivoSolicitud()">{{ solicitud.solicitudPDFNombre }}</span>
+                                </label>
+                                <input id="fileVer" type="file" class="form-control" name="folio" (change)="subirArchivo($event)">
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-4">
+                                <label for="folio">No Contrato: <span>{{ solicitud.noContrato }}</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="folio">No Fianza: <span>{{ solicitud.noFianza }}</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="folio">No Proveedor: <span>{{ solicitud.noProveedor }}</span></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="paciente">Paciente: </label>
+                                <input type="text" class="form-control" name="paciente" [(ngModel)]="solicitud.paciente">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="nss">NSS: </label>
+                                <input type="text" class="form-control" name="nss" [(ngModel)]="solicitud.nss">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="folioConsumo">Folio Consumo: </label>
+                                <input type="text" class="form-control" name="folioConsumo" [(ngModel)]="solicitud.folioConsumo">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="fechaReq">Fecha Requisición: {{ solicitud.fechaReq }} </label>
+                                <app-datepicker (actualizarModel)="solicitud.fechaReq = $event"></app-datepicker>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="fechaCirugia">Fecha Cirugía: {{ solicitud.fechaCirugia }} </label>
+                                <app-datepicker (actualizarModel)="solicitud.fechaCirugia = $event"></app-datepicker>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="doctor">Nombre del doctor: </label>
+                                <input type="text" class="form-control" name="doctor" [(ngModel)]="solicitud.nombreDoctor">
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center mb-4">
+                            <div class="col-sm-12 col-md-12">
+                                <label for="observaciones">Observaciones de la cirugía/prefactura: </label>
+                                <textarea name="comentario" id="comentario" cols="30" rows="5" class="form-control" [(ngModel)]="solicitud.observacionesPrefactura"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="actualizarSolicitud()">Actualizar</button>
+                <button type="button" class="btn btn-success" (click)="procesar()">Procesar</button>
+            </div>
+        </div>
+    </div>
+</div>

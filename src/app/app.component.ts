@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
@@ -7,4 +8,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Inventario';
+  url: string = '';
+
+  constructor( private location: Location ) {
+    location.onUrlChange(val => {
+      this.url = val;
+    });
+  }
 }

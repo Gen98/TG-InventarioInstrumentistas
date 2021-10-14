@@ -1,0 +1,16 @@
+/* :host ::ng-deep .ng2-pdf-viewer-container {
+    height: 41rem!important;
+} */
+/* Se comenta la clase de arriba porque se agrego la linea viewEncapsulation */
+
+.ng2-pdf-viewer-container {
+    height: 41rem!important;
+}
+
+.popover-body {
+    color: white!important;
+}
+
+body {
+    background-color:snow;
+}

@@ -1,0 +1,54 @@
+<!--========================================= Código HTML del Login ===============================================-->
+
+<!-- Contenedor del fondo que abarca toda la pantalla y centra en horizontal-->
+<div class="d-flex fondo-login justify-content-center">
+
+    <!-- Segundo contenedor para alinear el contenido verticalmente -->
+    <div class="d-flex align-items-sm-center justify-content-center">
+
+        <!-- Contenedor del formulario que lo hace adaptativo a cualquier tamaño de pantalla -->
+        <div class="col-sm-8 col-md-6 col-xl-4  bg-white rounded text-center p-2 d-flex align-items-center">
+
+            <!-- Formulario del Login -->
+            <form (ngSubmit)="onLogin()" class=" d-flex flex-column p-2 p-sm-5 ">
+
+                <img class="img-fluid mb-4 mx-3 mx-sm-0" src="/../assets/img/TrueMED.jpeg ">
+
+                <div class="form-group mb-4 mt-3 mt-sm-0 d-flex flex-column">
+
+                    <label class="font-weight-bold d-flex" for="username">
+                            Usuario
+                    </label>
+
+                    <input type="text" class="form-control border-dark2" id="username" name="username" [(ngModel)]="usuario.username" required>
+
+                </div>
+
+                <div class="form-group mb-5 d-flex flex-column">
+
+                    <label class="font-weight-bold largo-4 d-flex " for="password">
+                           Contraseña
+                    </label>
+
+                    <div class="input-group mb-3">
+                        <input  [type]="tipoBotonPassword" placeholder="Contraseña"
+                                class="form-control border-dark2" 
+                                id="password" 
+                                name="Password"
+                                autocomplete="on"
+                                required
+                                [(ngModel)]="usuario.password">
+                        <button class="btn btn-outline-secondary" type="button" style="border: solid 1px lightgray;" (click)="cambiarInputPassword()"><i class="far" [ngClass]="{'fa-eye': tipoBotonPassword==='password', 'fa-eye-slash': tipoBotonPassword!='password'}"></i></button>
+                    </div>
+
+                </div>
+
+                <button class="btn btn-block btn-info bg-main font-weight-bold" type="submit">
+                        Iniciar Sesión
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+</div>

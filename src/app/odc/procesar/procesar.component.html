@@ -1,0 +1,99 @@
+<app-detalle [pedido]="partidasPedido" [totales]="totalesPedido"></app-detalle>
+<app-cotizar [pedido]="partidasPedido" [informacion]="informacionCotizar" *ngIf="informacionCotizar"></app-cotizar>
+<!-- <div class="container" style="height: 80vh;"> -->
+    <!-- <div class="row" style="height: 8%!important;"> -->
+        <h2>Nueva solicitud de pedido</h2>
+    <!-- </div> -->
+    <!-- <div class="row" style="height: 92%!important;"> -->
+        <div class="card border-info p-0">
+            <div class="card-header bg-info text-white">
+                <p class="mb-0">CLIENTE:</p>
+                <p class="fw-light">{{ solicitud.nombreCliente }}</p>
+            </div>
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="codigo_imss">Código IMSS: </label>
+                        <select name="codigo_imss" id="codigo_imss" class="form-select" [(ngModel)]="codigoIMSS" (change)="cantidad = 0">
+                            <option selected value>Selecciona una opción</option>
+                            <option *ngFor="let cPartida of codigosPartidas" [value]="cPartida">
+                                {{ cPartida }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-10 col-md-4">
+                        <label for="piezas">¿Cuántas piezas son? </label>
+                        <input type="number" 
+                                class="form-control" 
+                                pattern="\d*" 
+                                inputmode="numeric" 
+                                name="piezas" 
+                                id="piezas" 
+                                min="1"
+                                [(ngModel)]="cantidad">
+                    </div>
+                    <div class="col-8 d-block d-md-none"></div>
+                    <div class="col-6 col-md-4">
+                        <br>
+                        <button class="btn btn-sm float-md-end" (click)="buscarProductos()" [disabled]="bloquearNuevaPartida()" [ngClass]="{'btn-info':bloquearNuevaPartida(), 'btn-success':!bloquearNuevaPartida()}">Buscar productos</button>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <br>
+                        <button type="button" class="btn btn-sm btn-outline-info float-end rounded-circle position-relative">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ sumatoriaPedido }}
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="height: 300px; overflow-y: scroll" *ngIf="partidaActual">
+                <div class="table-responsive">
+                    <table class="table text-nowrap table-striped table-sm table-bordered border-dark" *ngIf="productosPartidas.length">
+                        <thead>
+                            <tr>
+                            <th scope="col">Producto</th>
+                            <th scope="col" >Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let producto of productosPartidas">
+                                <th>
+                                    <div class="clearfix">
+                                        <p class="float-start">{{ producto.codigoProducto }}</p>
+                                        <p class="float-end text-info">{{ producto.precio | currency}}</p>
+                                    </div>
+                                    <p class="text-sm">{{ producto.descripcion }}</p>
+                                </th>
+                                <th>
+                                    <input type="number" min="1" pattern="\d*" inputmode="numeric" class="form-control" [(ngModel)]="producto.cantidad" (ngModelChange)="modificarCantidad(producto)">
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer" *ngIf="partidaActual">
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Sumatoria</strong>
+                        <button class="btn btn-info btn-sm rounded-circle float-end float-md-none">{{ sumatoriaActual}}</button>
+                    </div>
+                    <div class="col-6">
+                        <strong>Restan</strong>
+                        <button class="btn btn-sm rounded-circle float-end float-md-none" [ngClass]="{'btn-danger':faltantesActual != 0, 'btn-success':faltantesActual == 0}">{{ faltantesActual }}</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <br>
+                        <button class="btn btn-sm float-end" [ngClass]="{'btn-info':faltantesActual != 0, 'btn-success':faltantesActual == 0}" [disabled]="faltantesActual != 0" (click)="continuarPedido()">Continuar pedido</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- </div> -->
+<!-- </div> -->

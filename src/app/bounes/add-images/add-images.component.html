@@ -24,7 +24,7 @@
     <li class="list-group-item">
       <div class="row" *ngIf="!soloVisualizar; else noModal">
         <div class="col-10">
-          <a href="#" (click)="imgSelect = imagen.base64" data-bs-toggle="modal" data-bs-target="#visualizarImagenModal">{{ imagen.name }}</a>
+          <a class="link-primary" (click)="visualizarImagen(imagen.base64)">{{ imagen.name }}</a>
           <!-- <div class="col-4 m-0 p-1 text-center" *ngFor="let image of archivosSubidos">
               <img [src]="image.base64" class="img-fluid img" (click)="imgSelect = imagen.base64" data-bs-toggle="modal" data-bs-target="#exampleModal"/>
           </div> -->

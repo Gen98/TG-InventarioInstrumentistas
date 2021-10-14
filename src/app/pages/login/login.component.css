@@ -1,0 +1,30 @@
+/* ------------------------------- Estilos que solo afectan al login ------------------------------------- */
+
+/* Estilos para acomodar adecuadamente el fondo */
+
+.fondo-login {
+    background-image: url(../../../assets/img/bg_login.jpg);
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.fondo-login:before {
+    content: "";
+    background-color: rgba(13, 161, 176, 0.9);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+}
+
+
+/* Estilo que da el color blanco y pone al formulario encima del fondo */
+
+.login {
+    position: relative;
+    background-color: white;
+}

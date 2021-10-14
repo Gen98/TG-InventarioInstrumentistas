@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { WifiStatusService } from '../../services/wifi-status.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,15 +14,17 @@ export class SidebarComponent implements OnInit {
   private innerWidth: number;
   private ban: boolean;
   public url: string;
+  public isAuth: boolean;
   public isConnected: boolean = false;
 
-  constructor( private router: Router, private location: Location, private wifiStatusService: WifiStatusService ) {
+  constructor( private router: Router, private location: Location, private authService: AuthService, private wifiStatusService: WifiStatusService ) {
     this.ban = false;
     this.innerWidth = window.innerWidth;
     this.url = location.path();
     wifiStatusService.createOnline().subscribe(isOnline => {
       this.isConnected = isOnline;
     });
+    this.isAuth = authService.isAuth();
   }
 
   ngOnInit(): void {
@@ -67,14 +70,22 @@ export class SidebarComponent implements OnInit {
       case 'almacenes':
         this.router.navigate(['almacenes']);
         break;
+      case 'xAtender':
+        this.router.navigate(['xAtender']);
+        break;
     }
     setTimeout(() => {
       this.url = this.location.path();
     }, 1000);
     this.showBar();
+    this.isAuth = this.authService.isAuth();
   }
 
   movil(): boolean{
     return this.innerWidth < 768;
+  }
+
+  logout(): void{
+    this.authService.logout();
   }
 }

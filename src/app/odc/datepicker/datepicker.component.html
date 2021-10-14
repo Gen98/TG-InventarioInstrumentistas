@@ -1,0 +1,14 @@
+<div class="input-group">
+    <input class="form-control" name="model" 
+           angular-mydatepicker #dp="angular-mydatepicker" 
+            [options]="myDpOptions" 
+           (dateChanged)="onDateChanged($event)" disabled/>
+    <div class="btn-group" role="group">
+          <button type="button" class="btn btn-secondary clearDate" *ngIf="model" (click)="dp.clearDate()">
+            <i class="far fa-times-circle"></i>
+          </button>
+          <button type="button" class="btn btn-info" (click)="dp.toggleCalendar()">
+            <i class="far fa-calendar-alt"></i>
+          </button>
+    </div>
+</div>
