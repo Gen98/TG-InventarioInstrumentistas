@@ -46,7 +46,7 @@ export class CotizarComponent implements OnInit {
     this.request.direccionEnvio = this.informacion.direccionEnvio;
     this.request.formaPago = this.informacion.formasPago.length ? this.informacion.formasPago[0].clave : '';
     this.request.noCuenta = this.informacion.nosCuenta.length ? this.informacion.nosCuenta[0] : '';
-    this.request.tipoPago = this.informacion.tiposPago.length ? this.informacion.tiposPago[0].idx : 0;
+    this.request.tipoPago = this.informacion.tiposPago.length ? this.informacion.tiposPago[1].idx : 0;
     this.request.cfdi = this.informacion.usosCFDI.length ? this.informacion.usosCFDI[0].clave : '';
   }
 
@@ -89,7 +89,7 @@ export class CotizarComponent implements OnInit {
       if (res.cotizacionId) {
         Swal.fire({
           icon: 'success',
-          title: 'Cotizacion generada exitosamente. Folio de la cotizació: ' + res.cotizacionId,
+          title: 'Cotización generada exitosamente. Folio de la cotización: ' + res.cotizacionId,
           allowOutsideClick: false,
         }).then((result) => {
           if (result.isConfirmed) {

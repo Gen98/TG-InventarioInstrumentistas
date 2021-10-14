@@ -25,6 +25,7 @@ export class ProcesarComponent implements OnInit {
   cantidad: number;
 
   productosPartidas: ProductoPartida[] = [];
+  totalesPedido: any;
 
   partidaActual: any;
   sumatoriaActual: number;
@@ -161,7 +162,7 @@ export class ProcesarComponent implements OnInit {
   }
 
   validarBusqueda(cPartida: string, cantidad: number): boolean {
-    if (!cPartida || !cantidad) {
+    if (!cPartida || !cantidad || cantidad <= 0) {
       Swal.fire({
         icon: 'warning',
         title: 'Llena los campos correctamente.',
@@ -207,6 +208,15 @@ export class ProcesarComponent implements OnInit {
           this.partidasPedido.unshift(this.partidaActual);
           this.sumatoriaPedido = this.sumarPropiedad(this.partidasPedido, 'cantidad');
           this.cantidad = 0;
+          const pedido = this.transformarPedido();
+          let subtotal = pedido.reduce((sum: any, value: any) => ( sum + (value['cantidad'] * value['precio']) ), 0);
+          let iva = subtotal * 0.16;
+          let total = subtotal + iva;
+          this.totalesPedido = {
+            subtotal: subtotal,
+            iva: iva,
+            total: total
+          };
           $('#detalleSolicitudModal').modal('show');
         }
       });
@@ -218,6 +228,16 @@ export class ProcesarComponent implements OnInit {
     }
     this.sumatoriaPedido = this.sumarPropiedad(this.partidasPedido, 'cantidad');
     this.cantidad = 0;
+
+    const pedido = this.transformarPedido();
+    let subtotal = pedido.reduce((sum: any, value: any) => ( sum + (value['cantidad'] * value['precio']) ), 0);
+    let iva = subtotal * 0.16;
+    let total = subtotal + iva;
+    this.totalesPedido = {
+      subtotal: subtotal,
+      iva: iva,
+      total: total
+    };
     $('#detalleSolicitudModal').modal('show');
   }
 
@@ -245,6 +265,28 @@ export class ProcesarComponent implements OnInit {
     // link.download = fileName;
     // link.click();
     return blob;
+  }
+
+  transformarPedido() {
+    let detalle = [];
+    let contador = 1;
+    for (let x = 0; x < this.partidasPedido.length; x++) {
+      let productos = this.partidasPedido[x].productos
+      for (let y = 0; y < productos.length; y++) {
+        let producto = productos[y];
+        let item = {
+          partida: contador,
+          cantidad: producto.cantidad,
+          codigo: producto.codigoProducto,
+          descripcion: producto.descripcion,
+          precio: producto.precio,
+          codigoPartida: producto.codigoPartida
+        };
+        detalle.push(item);
+        contador++;
+      }
+    }
+    return detalle;
   }
 
   mostrarAlertError(): void {

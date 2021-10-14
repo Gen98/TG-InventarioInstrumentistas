@@ -12,6 +12,7 @@ import { ProcesarComponent } from './procesar/procesar.component';
 import { DetalleComponent } from './detalle/detalle.component';
 import { CotizarComponent } from './cotizar/cotizar.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -31,6 +32,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     DataTablesModule,
     AngularMyDatePickerModule,
     PdfViewerModule,
+    NgbModule,
   ],
   exports: [
     PorAtenderComponent

@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Usuario o contraseña incorrectos'
+        text: 'Conexión inestable, intenta nuevamente.'
       });
     });
   }

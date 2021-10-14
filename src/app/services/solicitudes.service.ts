@@ -6,7 +6,6 @@ import { ClienteDistribuidor } from '../interfaces/cliente_distribuidor.interfac
 import { ListaPrecio } from '../interfaces/lista_precio.interface';
 import { Solicitud } from '../interfaces/solicitud.interface';
 import { ProductoPartida } from '../interfaces/producto_partida.interface';
-import { InformacionCotizar } from '../interfaces/informacion_cotizar.interface';
 
 @Injectable({
   providedIn: 'root'

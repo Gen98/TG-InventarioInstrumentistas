@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class DetalleComponent implements OnInit {
 
   @Input() pedido: any[] = [];
+  @Input() totales: any;
 
   constructor() { }
 

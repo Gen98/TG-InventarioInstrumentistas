@@ -1,4 +1,4 @@
-<app-detalle [pedido]="partidasPedido"></app-detalle>
+<app-detalle [pedido]="partidasPedido" [totales]="totalesPedido"></app-detalle>
 <app-cotizar [pedido]="partidasPedido" [informacion]="informacionCotizar" *ngIf="informacionCotizar"></app-cotizar>
 <!-- <div class="container" style="height: 80vh;"> -->
     <!-- <div class="row" style="height: 8%!important;"> -->
@@ -31,6 +31,7 @@
                                 inputmode="numeric" 
                                 name="piezas" 
                                 id="piezas" 
+                                min="1"
                                 [(ngModel)]="cantidad">
                     </div>
                     <div class="col-8 d-block d-md-none"></div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -13,7 +13,8 @@ declare var $: any;
 @Component({
   selector: 'app-por-atender',
   templateUrl: './por-atender.component.html',
-  styleUrls: ['./por-atender.component.css']
+  styleUrls: ['./por-atender.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PorAtenderComponent implements OnInit {
 

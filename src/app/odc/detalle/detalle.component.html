@@ -6,6 +6,21 @@
                 <button type="button" id="closeNuevaSolicitudModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="row d-flex justify-content-center" *ngIf="totales">
+                    <div class="col-8">
+                        <h5 class="text-secondary">SUBTOTAL: <span class="text-dark float-end">{{totales.subtotal | currency}}</span></h5>
+                    </div>
+                    <div class="col-8">
+                        <h5 class="text-secondary">IVA: <span class="text-dark float-end">{{totales.iva | currency}}</span></h5>
+                    </div>
+                    <div class="col-8 text-danger">
+                        <hr>
+                    </div>
+                    <div class="col-8">
+                        <h5 class="text-primary">TOTAL: <span class="text-dark float-end">{{totales.total | currency}}</span></h5>
+                    </div>
+                    <hr>
+                </div>
                 <div class="accordion" id="accordionPanelsStayOpenExample">
                     <div class="accordion-item" *ngFor="let partida of pedido, let i = index">
                         <h2 class="accordion-header">

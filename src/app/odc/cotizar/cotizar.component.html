@@ -12,7 +12,7 @@
                         <textarea class="form-control" name="envio" id="envio" cols="30" rows="10" [(ngModel)]="request.direccionEnvio"></textarea>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row d-none">
                     <div class="col-12 col-lg-4">
                         <label for="forma_pago">Forma de pago:</label>
                         <select name="forma_pago" id="forma_pago" class="form-select" [(ngModel)]="request.formaPago">
@@ -38,7 +38,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row d-none">
                     <div class="col-12">
                         <label for="cfdi">Uso CFDI:</label>
                         <select name="cfdi" id="cfdi" class="form-select" [(ngModel)]="request.cfdi">
