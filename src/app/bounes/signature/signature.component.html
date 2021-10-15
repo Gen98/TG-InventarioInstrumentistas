@@ -1,0 +1,3 @@
+<label for="signature">Firma: <span>*</span></label>
+<signature-pad #signature [options]="signaturePadOptions" (drawEnd)="drawComplete($event)"></signature-pad>
+<button type="button" class="btn btn-sm btn-warning mt-2" (click)="limpiarFirma()">Limpiar firma</button>

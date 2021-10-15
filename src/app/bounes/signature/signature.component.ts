@@ -13,11 +13,10 @@ export class SignatureComponent implements OnInit {
   @Output() base64: EventEmitter<string[]> = new EventEmitter();
   @Input() limpiar: boolean = false;
 
-  signaturePadOptions: NgSignaturePadOptions = { // passed through to szimek/signature_pad constructor
+  signaturePadOptions: NgSignaturePadOptions = {
     minWidth: 5,
     canvasWidth: 500,
     canvasHeight: 200,
-    // backgroundColor: 'rgba(218, 214, 214, 0.5)',
   };
 
   constructor() { }
@@ -26,12 +25,9 @@ export class SignatureComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
     if (changes.limpiar && changes.limpiar.currentValue) {
       this.signaturePad.clear();
-    }
-    
+    } 
   }
 
   drawComplete(event: MouseEvent | Touch) {
@@ -46,10 +42,6 @@ export class SignatureComponent implements OnInit {
   limpiarFirma(): void {
     this.firmas = [];
     this.base64.emit(this.firmas);
-    this.signaturePad.clear();
-  }
-
-  agregarFirma(): void {
     this.signaturePad.clear();
   }
 }

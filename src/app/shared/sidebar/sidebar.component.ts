@@ -55,14 +55,8 @@ export class SidebarComponent implements OnInit {
       case '':
         this.router.navigate(['']);
         break;
-      case 'inventario':
-        this.router.navigate(['inventario']);
-        break;
       case 'catalogo':
         this.router.navigate(['catalogo']);
-        break;
-      case 'xRecibir':
-        this.router.navigate(['xRecibir']);
         break;
       case 'movimientos':
         this.router.navigate(['movimientos']);

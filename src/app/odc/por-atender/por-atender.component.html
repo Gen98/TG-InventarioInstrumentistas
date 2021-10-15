@@ -44,10 +44,6 @@
                             <tr>
                                 <th>Id S.</th>
                                 <th>Paciente</th>
-                                <!-- <th>Nombre Solicitante</th>
-                                <th>Cliente</th>
-                                <th>Fecha Requisición</th>
-                                <th>Fecha Cirugía</th> -->
                                 <th>Acciones</th>
                             </tr>
                           </thead>
@@ -55,10 +51,6 @@
                             <tr *ngFor="let item of solicitudes">
                                 <td>{{ item.idSolicitud }}</td>
                                 <td>{{ item.paciente }}</td>
-                                <!-- <td>{{ item.nombreSolicitante }}</td>
-                                <td>{{ item.nombreCliente }}</td>
-                                <td>{{ item.fechaReq }}</td>
-                                <td>{{ item.fechaCirugia }}</td> -->
                                 <td>
                                     <ng-template #popContent>
                                         <b>Nombre Solicitante:</b><br>{{ item.nombreSolicitante }} <br>

@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Solicitud } from '../../interfaces/solicitud.interface';
+import { SolicitudesService } from '../../services/solicitudes.service';
 import { ClienteDistribuidor } from '../../interfaces/cliente_distribuidor.interface';
 import { ListaPrecio } from '../../interfaces/lista_precio.interface';
+import { Solicitud } from '../../interfaces/solicitud.interface';
 import Swal from 'sweetalert2';
-import { SolicitudesService } from '../../services/solicitudes.service';
 import moment from 'moment';
 
 @Component({

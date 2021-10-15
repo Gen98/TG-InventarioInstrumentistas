@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Registro } from 'src/app/interfaces/registro.interface';
 import { Movimiento } from '../../interfaces/movimiento.interface';
+import { Registro } from 'src/app/interfaces/registro.interface';
 import Swal from 'sweetalert2';
-import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-tabla',
@@ -21,11 +20,10 @@ export class TablaComponent implements OnInit{
   @Output() visualizarMovimiento :EventEmitter<Movimiento> = new EventEmitter();
   @Output() eliminarMov :EventEmitter<Movimiento> = new EventEmitter();
 
-  constructor( private storageService: StorageService ) { }
+  constructor( ) { }
 
   ngOnInit(): void {
     this.dtOptions = {
-      // pagingType: 'full_numbers',
       pageLength: 20,
       lengthMenu: [ 10, 20, 25, 50 ],
       order: [

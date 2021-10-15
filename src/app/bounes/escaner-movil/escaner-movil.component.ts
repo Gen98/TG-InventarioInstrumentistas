@@ -21,9 +21,7 @@ export class EscanerMovilComponent implements OnInit {
   camarasDispositivo: MediaDeviceInfo[] = [];
   camaraSeleccionada: MediaDeviceInfo | undefined;
   errors: WebcamInitError[] = [];
-  // webcam snapshot trigger
   private trigger: Subject<void> = new Subject<void>();
-  private zxingPermissionAsked: boolean = false;
   @Input() escanerActivo: boolean = false;
   @Input() evidencias: boolean = false;
   @Input()mostrarCamara: boolean = false;
@@ -38,8 +36,6 @@ export class EscanerMovilComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
     const permissions = window.cordova.plugins.permissions;
 
     permissions.checkPermission('android.permission.CAMERA', (status: any) => {
@@ -82,18 +78,6 @@ export class EscanerMovilComponent implements OnInit {
     console.log(e);
     this.codigoEscaneado.emit(e);
     this.loaded = false;
-  }
-
-  scanErrorHandler(e:any): void {
-    console.log(e);
-  }
-
-  scanFailureHandler(e:any): void {
-    // console.log(e);
-  }
-
-  scanCompleteHandler(e:any): void {
-    // console.log(e);
   }
 
   camaraCambiada(e:any): void { 
@@ -155,8 +139,7 @@ export class EscanerMovilComponent implements OnInit {
         this.loaded = true;
       }, 2000);
     } else {
-      if (!event && !this.zxingPermissionAsked) {
-        // this.zxingPermissionAsked = true;
+      if (!event) {
         Swal.fire({
           icon: 'info',
           title: 'La aplicacion necesita acceder a tu camara, dirigete a la informacion de esta aplicacion y concede los permisos.',
@@ -168,7 +151,7 @@ export class EscanerMovilComponent implements OnInit {
             $("#camaraModal").modal('hide');
           }
         });
-      } else if (!event && this.zxingPermissionAsked) {
+      } else if (!event) {
         this.scanner.askForPermission();
       }
     }

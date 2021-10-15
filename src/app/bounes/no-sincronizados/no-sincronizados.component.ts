@@ -1,12 +1,10 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import Swal from 'sweetalert2';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Movimiento } from '../../interfaces/movimiento.interface';
 import { Registro } from '../../interfaces/registro.interface';
 import almacenesJSON from '../../../assets/files/almacenes.json';
-
+import Swal from 'sweetalert2';
 
 declare var $: any;
-
 
 @Component({
   selector: 'app-no-sincronizados',
@@ -182,7 +180,6 @@ export class NoSincronizadosComponent implements OnInit {
           $('.form-check-input').prop("disabled", true);
           this.nuevoMovimiento.tipoEntrada = true;
         }
-        
       }
     }
 
@@ -216,10 +213,6 @@ export class NoSincronizadosComponent implements OnInit {
         return false;
       }
     }
-    // if(!this.nuevoMovimiento.folio) {
-    //   this.mostrarAlert('Escanea el folio');
-    //   return false
-    // }
     let almacen = this.almacenes.find((e: any) => e.value == this.nuevoMovimiento.almacen);
     if (!almacen) {
       this.mostrarAlert('Selecciona el almacen');
@@ -233,10 +226,6 @@ export class NoSincronizadosComponent implements OnInit {
       this.mostrarAlert('Ingresa por lo menos un registro');
       return false;
     }
-    // if (this.nuevoMovimiento.imagenes.length == 0) {
-    //   this.mostrarAlert('Necesitas ingresar una imagen');
-    //   return false;
-    // }
     if (!this.nuevoMovimiento.tipoEntrada && this.nuevoMovimiento.firmas.length == 0) {
       this.mostrarAlert('Necesitas ingresar la firma');
       return false;

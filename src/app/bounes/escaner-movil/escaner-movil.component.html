@@ -50,9 +50,6 @@
         [device]="camaraSeleccionada"
         (camerasFound)="camarasEncontradas($event)"
         (scanSuccess)="scanSuccessHandler($event)"
-        (scanError)="scanErrorHandler($event)"
-        (scanFailure)="scanFailureHandler($event)"
-        (scanComplete)="scanCompleteHandler($event)"
         (permissionResponse)="handleZxingPermission($event)"
         #scanner
         *ngIf="escanerActivo"

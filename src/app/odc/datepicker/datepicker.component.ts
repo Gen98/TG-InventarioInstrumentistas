@@ -27,7 +27,6 @@ export class DatepickerComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  // optional date changed callback
   onDateChanged(event: IMyDateModel): void {
     this.model = event.singleDate!.formatted;
     this.actualizarModel.emit(this.model);

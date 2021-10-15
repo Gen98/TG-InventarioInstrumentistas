@@ -11,12 +11,6 @@
             <i class="fas fa-home fa-2x"></i>
             <span class="nav-text"> Inicio </span>
         </li>
-        <li (click)="ruta ( 'inventario')"
-            [ngClass]="{'bg-white text-secondary':url == '/inventario'}"
-            class="nav-item">
-            <i class="fa fa-laptop-medical fa-2x"></i>
-            <span class="nav-text"> Realizar Inventario </span>
-        </li>
         <li (click)="ruta ( 'catalogo' )"
             [ngClass]="{'bg-white text-secondary':url == '/catalogo'}"
             class="nav-item">
@@ -27,13 +21,6 @@
         <div class="text-center my-2 text-white">
             <span class="nav-text"> Almacén </span>
         </div>
-        <li (click)="ruta ( 'xRecibir' )"
-            *ngIf="isConnected"
-            [ngClass]="{'bg-white text-secondary': url == '/xRecibir'}"
-            class="nav-item">
-            <i class="fa fa-truck-loading fa-2x"></i>
-            <span class="nav-text"> Material x Recibir </span>
-        </li>
         <li (click)="ruta ( 'movimientos' )"
             [ngClass]="{'bg-white text-secondary':url == '/movimientos'}"
             class="nav-item">
@@ -56,14 +43,6 @@
             <i class="fa fa-calendar-alt fa-2x"></i>
             <span class="nav-text"> Solicitudes por Atender </span>
         </li>
-        <!-- <li class="nav-item">
-            <i class="fa fa-calendar-check fa-2x"></i>
-            <span class="nav-text"> Solicitudes Atendidas </span>
-        </li>
-        <li class="nav-item">
-            <i class="fa fa-calendar-times fa-2x"></i>
-            <span class="nav-text"> Solicitudes Canceladas </span>
-        </li> -->
     </ul>
     <ul class="logout" *ngIf="isAuth">
         <li class="nav-item" (click)="logout()">

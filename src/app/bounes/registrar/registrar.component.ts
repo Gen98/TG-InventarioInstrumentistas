@@ -192,11 +192,8 @@ export class RegistrarComponent implements OnInit {
   }
 
   mostrarModalCamara(): void {
-    // $("#exampleModal").modal('hide');
-    // setTimeout(() => {
-      this.escanerActivo = true;
-      $("#camaraModal").modal('show');
-    // }, 1000);
+    this.escanerActivo = true;
+    $("#camaraModal").modal('show');
   }
 
   codigoEscaneado(codigo: string): void {

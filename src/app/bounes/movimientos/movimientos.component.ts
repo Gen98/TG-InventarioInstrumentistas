@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Registro } from '../../interfaces/registro.interface';
-import { StorageService } from '../../services/storage.service';
-import { DexieService } from '../../services/dexie.service';
-import { Movimiento } from '../../interfaces/movimiento.interface';
-import Swal from 'sweetalert2';
-import { BounesService } from '../../services/bounes.service';
-import { from } from 'rxjs';
 import { concatMap, map, toArray } from 'rxjs/operators';
+import { from } from 'rxjs';
+import Swal from 'sweetalert2';
+import { DexieService } from '../../services/dexie.service';
+import { BounesService } from '../../services/bounes.service';
+import { Registro } from '../../interfaces/registro.interface';
+import { Movimiento } from '../../interfaces/movimiento.interface';
 
 declare var $: any;
 
@@ -22,8 +21,7 @@ export class MovimientosComponent implements OnInit {
   sincronizados: any[] = [];
   isBounes: boolean = true;
   folios: any[] = [];
-  constructor( 
-    private storageServicio: StorageService, 
+  constructor(
     private dexieService: DexieService, 
     private bounesService: BounesService ) { }
 
@@ -36,10 +34,6 @@ export class MovimientosComponent implements OnInit {
     this.dexieService.addMovimiento(movimiento).then(async() => {
       this.getRegistros();
     });
-    // this.storageServicio.addMovimiento(movimiento);
-    // setTimeout(() => {
-    //   this.getRegistros();
-    // }, 1000);
   }
 
   actualizarMovimiento(movimiento: Movimiento): void {
@@ -51,20 +45,9 @@ export class MovimientosComponent implements OnInit {
         timer: 2000
       });
     });
-    // if (this.storageServicio.updateMovimiento(movimiento)) {
-    //   setTimeout(() => {
-    //     this.getRegistros();
-    //   }, 1000);
-    //   Swal.fire({
-    //     icon: 'success',
-    //     title: 'Movimiento actualizado exitosamente',
-    //     timer: 2000
-    //   });
-    // }
   }
 
   getRegistros(): void {
-    // this.movimientos = this.storageServicio.getMovimientos();
     this.dexieService.getMovimientos().then(async(e) => {
       this.movimientos = e;
     });
@@ -74,27 +57,15 @@ export class MovimientosComponent implements OnInit {
   }
 
   getSincronizados(): void {
-    // this.sincronizados = this.storageServicio.getSincronizados();
     this.dexieService.getSincronizados().then(async(e) => {
       this.sincronizados = e;
     });
-  }
-
-  eliminarRegistros(): void {
-    this.storageServicio.deleteItems();
-  }
-
-  eliminarRegistro( registro: Registro ): void {
-    this.storageServicio.deleteItem(registro);
-    this.getRegistros();
   }
 
   eliminarMovimiento(movimiento: Movimiento): void {
     this.dexieService.deleteMovimiento(movimiento).then(async(e) => {
       this.getRegistros();
     });
-    // this.storageServicio.deleteMovimiento(movimiento);
-    // this.getRegistros();
   }
 
   async sincronizarMovimientos(movsIdSync: number[] = [], movsFailed: any[]) {
@@ -116,21 +87,6 @@ export class MovimientosComponent implements OnInit {
           });
         }, 2000);
       });
-      // setTimeout(() => {
-      //   resp.forEach((element:any) => {
-      //     this.storageServicio.addSincronizado(element);
-      //   });
-      //   this.storageServicio.deleteMovimientos();
-      //   setTimeout(() => {
-      //     Swal.fire({
-      //       icon: 'success',
-      //       title: 'Movimientos sincronizados exitosamente.',
-      //       timer: 2000
-      //     });
-      //     this.getRegistros();
-      //     this.getSincronizados();
-      //   }, 1000);
-      // }, 2000);
     }, err => {
       Swal.fire({
         icon: 'error',
@@ -176,7 +132,6 @@ export class MovimientosComponent implements OnInit {
   }
 
   recorrerPartidas(responses: any[]): void {
-    // let feedback = true;
     let movsIdToSync: number[] = [];
     let movsFailed: any[] = [];
     this.movimientos.forEach((mov: Movimiento, movIdx: number) => {
@@ -203,11 +158,6 @@ export class MovimientosComponent implements OnInit {
               folio:  mov.folio,
               status: 1 //No coinciden las partidas
             });
-            // Swal.fire({
-            //   icon: 'warning',
-            //   text: 'Tu movimiento con folio: ' + mov.folio + ' no coincide con lo enviado, revisa tus partidas.',
-            // });
-            // feedback = false;
           } else if (responses[responseIndex].registradoAnteriormente) {
             movsFailed.push({
               folio:  mov.folio,
@@ -221,11 +171,6 @@ export class MovimientosComponent implements OnInit {
             folio:  mov.folio,
             status: 0 //No encontrado
           });
-          // Swal.fire({
-          //   icon: 'warning',
-          //   text: 'Tu movimiento con folio: ' + mov.folio + ' no se encuentra en el sistema.',
-          // });
-          // feedback = false;
         }
       } else {
         movsIdToSync.push(movIdx);
@@ -238,7 +183,6 @@ export class MovimientosComponent implements OnInit {
       Swal.fire({
         icon: 'warning',
         title: response,
-        // timer: 2000
       });
     }
   }

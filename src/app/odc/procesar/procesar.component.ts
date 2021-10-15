@@ -259,11 +259,6 @@ export class ProcesarComponent implements OnInit {
   transformarArchivoSolicitud(data: any): Blob {
     let byte = this.base64ToArrayBuffer(data);
     var blob = new Blob([byte], {type: "application/pdf"});
-    // var link = document.createElement('a');
-    // link.href = window.URL.createObjectURL(blob);
-    // var fileName = this.solicitud.solicitudPDFNombre;
-    // link.download = fileName;
-    // link.click();
     return blob;
   }
 
@@ -297,9 +292,6 @@ export class ProcesarComponent implements OnInit {
       allowOutsideClick: false
     }).then((result) => {
       if (result.isConfirmed) {
-        // this.router.navigate(['']).then( () => {
-        //   window.location.reload();
-        // });
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
           this.router.navigate(['/']);
         }); 

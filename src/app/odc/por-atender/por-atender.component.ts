@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { ClienteDistribuidor } from '../../interfaces/cliente_distribuidor.interface';
 import { SolicitudesService } from '../../services/solicitudes.service';
+import { ClienteDistribuidor } from '../../interfaces/cliente_distribuidor.interface';
 import { ListaPrecio } from '../../interfaces/lista_precio.interface';
 import { Solicitud } from 'src/app/interfaces/solicitud.interface';
-import { SafeResourceUrl } from '@angular/platform-browser';
+import { Subject, Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 
 declare var $: any;
 

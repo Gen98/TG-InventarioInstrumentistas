@@ -1,9 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Observable, Observer, fromEvent, merge } from 'rxjs';
-import { map } from 'rxjs/operators';
-import Swal from 'sweetalert2';
-import { Movimiento } from '../../interfaces/movimiento.interface';
 import { WifiStatusService } from '../../services/wifi-status.service';
+import { Movimiento } from '../../interfaces/movimiento.interface';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-sincronizar',
@@ -44,14 +42,4 @@ export class SincronizarComponent implements OnInit {
       }
     });
   }
-
-  // createOnline$() {
-  //   return merge<boolean>(
-  //     fromEvent(window, 'offline').pipe(map(() => false)),
-  //     fromEvent(window, 'online').pipe(map(() => true)),
-  //     new Observable((sub: Observer<boolean>) => {
-  //       sub.next(navigator.onLine);
-  //       sub.complete();
-  //     }));
-  //   }
 }

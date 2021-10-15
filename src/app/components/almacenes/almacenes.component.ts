@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AlmacenService } from '../../services/almacen.service';
 
 @Component({
   selector: 'app-almacenes',
@@ -10,7 +9,7 @@ export class AlmacenesComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
 
-  constructor(private almacenService: AlmacenService) { }
+  constructor( ) { }
 
   ngOnInit(): void {
     this.dtOptions = {
@@ -34,11 +33,4 @@ export class AlmacenesComponent implements OnInit {
       ]
     };
   }
-  
-  sincronizar(): void {
-    this.almacenService.sincronizar().subscribe(res => {
-      console.log(res);
-    });
-  }
-
 }

@@ -23,7 +23,6 @@ export class AddImagesComponent implements OnInit {
 
   visualizarImagen(base64: string): void {
     this.imgSelect = base64;
-    // $("#visualizarImagenModal").prependTo("body");
     $("#visualizarImagenModal").modal("show");
   }
 
@@ -42,33 +41,15 @@ export class AddImagesComponent implements OnInit {
 
   upload(idx: number, file: File): void {
   
-    // if (file) {
-      var reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          let imagen = {
-            name: file.name,
-            base64: reader.result
-          }
-          this.agregarImagen.emit(imagen);
-        };
-      // this.uploadService.upload(file).subscribe(
-      //   (event: any) => {
-      //     if (event.type === HttpEventType.UploadProgress) {
-      //       this.progressInfos[idx].value = Math.round(100 * event.loaded / event.total);
-      //     } else if (event instanceof HttpResponse) {
-      //       const msg = 'Uploaded the file successfully: ' + file.name;
-      //       this.message.push(msg);
-      //       this.fileInfos = this.uploadService.getFiles();
-      //     }
-      //   },
-      //   (err: any) => {
-      //     this.progressInfos[idx].value = 0;
-      //     const msg = 'Could not upload the file: ' + file.name;
-      //     this.message.push(msg);
-      //     this.fileInfos = this.uploadService.getFiles();
-      //   });
-    // }
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      let imagen = {
+        name: file.name,
+        base64: reader.result
+      }
+      this.agregarImagen.emit(imagen);
+    };
   }
 
   eliminarImagen(imagen: any): void {
