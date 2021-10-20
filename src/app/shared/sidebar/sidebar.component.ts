@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { WifiStatusService } from '../../services/wifi-status.service';
 import { AuthService } from '../../services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-sidebar',
@@ -80,6 +81,19 @@ export class SidebarComponent implements OnInit {
   }
 
   logout(): void{
-    this.authService.logout();
+  Swal.fire({
+    title: 'Cerrar Sesión',
+    text: '¿Esta seguro de cerrar sesión? Se perderán las solicitudes que no hayas enviado.',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#02a3b5',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí',
+    cancelButtonText: 'No'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.authService.logout();
+    }
+  });
   }
 }

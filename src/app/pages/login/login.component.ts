@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { UsuarioModel } from 'src/app/interfaces/usuario.interface';
+import { DexieSolicitudesService } from '../../services/dexie-solicitudes.service';
+import { SolicitudesService } from '../../services/solicitudes.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -18,7 +20,12 @@ export class LoginComponent implements OnInit {
   authSuscription: Subscription;
   tipoBotonPassword: string = 'password';
 
-  constructor(private authService: AuthService, private router: Router) { 
+  constructor(
+    private authService: AuthService, 
+    private solicitudService: SolicitudesService,
+    private dexieSolicitudService: DexieSolicitudesService,
+    private router: Router
+  ) { 
     this.usuario = {
       username: '',
       password: ''
@@ -43,13 +50,11 @@ export class LoginComponent implements OnInit {
     .subscribe(response => {
       if (response.status == 200) {
         Swal.fire({
-          icon: 'success',
-          text: 'Acceso Correcto',
-          showConfirmButton: false,
-          timer: 1500
-        }).then((result) => {
-          this.router.navigate([ 'inicio' ]);
+          allowOutsideClick: false,
+          text: 'Acceso correcto, cargando...'
         });
+        Swal.showLoading();
+        this.getOfflineData();
       } else {
         Swal.fire({
           icon: 'error',
@@ -74,5 +79,54 @@ export class LoginComponent implements OnInit {
     else
       this.tipoBotonPassword = 'password';
   
+  }
+
+  getOfflineData(): void {
+    this.solicitudService.getOfflineData().subscribe((res:any) => {
+      this.dexieSolicitudService.clearDB().then(async() => {
+        this.guardarProveedores(res);
+      }).then(async() => {
+        this.guardarSolicitudesList(res);
+        this.guardarSolicitudesShow(res);
+      }).then(async() => {
+        Swal.fire({
+          icon: 'success',
+          text: 'Bienvenido ' + res.proveedores[0].nombre,
+          showConfirmButton: false,
+          timer: 2000
+        }).then((result) => {
+          this.router.navigate([ 'inicio' ]);
+        });
+      });
+    }, err => {
+      this.authService.logout();
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error almacenando offline Data.'
+      });
+    });
+  }
+
+  guardarProveedores(res: any) {
+    res.proveedores.forEach((el:any) => {
+      let prov = {
+        id: el.id, 
+        nombre: el.nombre, 
+        clientes: el.clientes}
+      this.dexieSolicitudService.addProveedor(prov);
+    });
+  }
+  
+  guardarSolicitudesList(res: any) {
+    res.solicitudesList.forEach((solicitud:any) => {
+      this.dexieSolicitudService.addSolicitudList(solicitud);
+    });
+  }
+
+  guardarSolicitudesShow(res: any) {
+    res.solicitudesShow.forEach((solicitud:any) => {
+      this.dexieSolicitudService.addSolicitudShow(solicitud);
+    });
   }
 }

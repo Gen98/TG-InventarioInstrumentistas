@@ -22,7 +22,7 @@
                                 <label for="cliente">Cliente: </label>
                                 <select name="cliente" id="cliente" class="form-select" (change)="getListas($event)">
                                     <option selected value>Selecciona una opción</option>
-                                    <option *ngFor="let cliente of clientes" [value]="cliente.id">
+                                    <option *ngFor="let cliente of clientes" [value]="cliente.idCliente">
                                         {{ cliente.nombre }}
                                     </option>
                                 </select>
@@ -31,8 +31,8 @@
                                 <label for="lista_precios">Lista de precios: </label>
                                 <select name="lista_precio" id="lista_precio" class="form-select" (change)="actualizarListaPrecios($event)">
                                     <option selected value>Selecciona una opción</option>
-                                    <option *ngFor="let lista of listasPrecios" [value]="lista.id">
-                                        {{ lista.desc }}
+                                    <option *ngFor="let lista of listasPrecios" [value]="lista.idLista">
+                                        {{ lista.descripcion }}
                                     </option>
                                 </select>
                             </div>

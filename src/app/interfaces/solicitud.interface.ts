@@ -23,4 +23,5 @@ export interface Solicitud{
     proveedorNombre?: string;
     clienteNombre? :string;
     archivoSolicitud?: any;
+    cotizacion?: any
 }

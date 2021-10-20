@@ -6,6 +6,8 @@ import { Solicitud } from '../../interfaces/solicitud.interface';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 
+declare var $: any;
+
 @Component({
   selector: 'app-nuevo',
   templateUrl: './nuevo.component.html',
@@ -51,19 +53,9 @@ export class NuevoComponent implements OnInit {
 
     this.nuevaSolicitud.idProveedor = parseInt(proveedor);
 
-    this.mostrarAlertCarga();
-    this.solicitudService.getClientes(proveedor).subscribe( res => {
-      res.forEach((el: any) => {
-        let cliente = {
-          id: el.idCliente,
-          nombre: el.nombre
-        }
-        this.clientes.unshift(cliente);
-      });
-      Swal.close();
-    }, err => {
-      this.mostrarAlert('Ocurrió un error, si este persiste contacte a sistemas');
-    });
+    let clientes = this.distribuidores.find((e: any) => e.id == proveedor)!.clientes!;
+
+    this.clientes = clientes;
   }
 
   getListas(event: any): void {
@@ -74,22 +66,8 @@ export class NuevoComponent implements OnInit {
 
     this.nuevaSolicitud.idCliente = parseInt(cliente);
 
-    this.mostrarAlertCarga();
-    this.solicitudService.getListas(cliente).subscribe( res => {
-      res.forEach((el: any) => {
-        let lista = {
-          id: el.idLista,
-          desc: el.descripcion,
-          noContratoList: el.noContratoList,
-          noFianzaList: el.noFianzaList,
-          noProveedorList: el.noProveedorList
-        }
-        this.listasPrecios.unshift(lista);
-      });
-      Swal.close();
-    }, err => {
-      this.mostrarAlert('Ocurrió un error, si este persiste contacte a sistemas');
-    });
+    let listas = this.clientes.find((e: any) => e.idCliente == cliente)!.listas!;
+    this.listasPrecios = listas;
   }
 
   actualizarListaPrecios(e: any): void {
@@ -99,10 +77,10 @@ export class NuevoComponent implements OnInit {
     if (!idLista || idLista == null) return;
 
     let lista = this.listasPrecios.filter(function(lista) {
-      return lista.id == idLista;
+      return lista.idLista == idLista;
     });
 
-    this.nuevaSolicitud.idLista = lista[0].id;
+    this.nuevaSolicitud.idLista = lista[0].idLista;
     this.nuevaSolicitud.noContrato = lista[0].noContratoList;
     this.nuevaSolicitud.noFianza = lista[0].noFianzaList;
     this.nuevaSolicitud.noProveedor = lista[0].noProveedorList;
@@ -124,8 +102,8 @@ export class NuevoComponent implements OnInit {
 
   validarSolicitud(): boolean {
     let proveedor = this.distribuidores.find((e: any) => e.id == this.nuevaSolicitud.idProveedor);
-    let cliente = this.clientes.find((e: any) => e.id == this.nuevaSolicitud.idCliente);
-    let lista = this.listasPrecios.find((e: any) => e.id == this.nuevaSolicitud.idLista);
+    let cliente = this.clientes.find((e: any) => e.idCliente == this.nuevaSolicitud.idCliente);
+    let lista = this.listasPrecios.find((e: any) => e.idLista == this.nuevaSolicitud.idLista);
     let fechaReq = moment(this.nuevaSolicitud.fechaReq, "YYYY-MM-DD", true);
     let fechaCirugia = moment(this.nuevaSolicitud.fechaCirugia, "YYYY-MM-DD", true);
     if (!proveedor) {
@@ -143,6 +121,12 @@ export class NuevoComponent implements OnInit {
     if (this.nuevaSolicitud.solicitudPDF.length == 0) {
       this.mostrarAlert('Es necesario subir el archivo.');
       return false;
+    } else {
+      var sizeInMB = parseFloat((this.nuevaSolicitud.solicitudPDF.size / (1024*1024)).toFixed(2));
+      if (sizeInMB >= 10) {
+        this.mostrarAlert('Tu archivo debe pesar menos de 10 MB.');
+        return false;
+      }
     }
     if (this.nuevaSolicitud.paciente.length <= 5) {
       this.mostrarAlert('Ingresa el nombre del paciente.');
@@ -178,6 +162,9 @@ export class NuevoComponent implements OnInit {
 
   limpiarNuevaSolicitud(tipo: string = 'lista'): void {
     if (tipo == 'completo') {
+      $('#distribuidor option:eq(0)').prop('selected', true);
+      $("#file").val(null);
+      $('.clearDate').click();
       this.nuevaSolicitud.idUsuarioGenera = 0;
       this.nuevaSolicitud.solicitudPDF = '';
       this.nuevaSolicitud.paciente = '';

@@ -25,6 +25,12 @@ export class SolicitudesService {
     return  cliente ? cliente : '';
   }
 
+  getOfflineData() {
+    this.cliente = this.readToken();
+    let url = this.endPoint + `/offlineData/${this.cliente}`;
+    return this.http.get(url);
+  }
+
   getXAtender() {
     this.cliente = this.readToken();
     let url = this.endPoint + `/xAtender/${this.cliente}`;
