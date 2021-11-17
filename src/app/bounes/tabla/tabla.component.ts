@@ -8,34 +8,35 @@ import Swal from 'sweetalert2';
   templateUrl: './tabla.component.html',
   styleUrls: ['./tabla.component.css']
 })
-export class TablaComponent implements OnInit{
+export class TablaComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
-  
+
   @Input() data: any[] = [];
   @Input() isBounes: boolean = false;
   @Input() isSync: boolean = false;
   @Input() soloVisualizar: boolean = false;
-  @Output() eliminarItem :EventEmitter<Registro> = new EventEmitter();
-  @Output() visualizarMovimiento :EventEmitter<Movimiento> = new EventEmitter();
-  @Output() eliminarMov :EventEmitter<Movimiento> = new EventEmitter();
+  @Output() eliminarItem: EventEmitter<Registro> = new EventEmitter();
+  @Output() visualizarMovimiento: EventEmitter<Movimiento> = new EventEmitter();
+  @Output() eliminarMov: EventEmitter<Movimiento> = new EventEmitter();
 
-  constructor( ) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.dtOptions = {
       pageLength: 20,
-      lengthMenu: [ 10, 20, 25, 50 ],
+      lengthMenu: [10, 20, 25, 50],
       order: [
         [0, 'desc']
       ],
+      ordering: false,
       language: {
         url: "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
       }
     };
   }
 
-  eliminarRegistro( item: Registro ): void {
+  eliminarRegistro(item: Registro): void {
     Swal.fire({
       title: 'Eliminar',
       text: '¿Deseas eliminar este registro?',
