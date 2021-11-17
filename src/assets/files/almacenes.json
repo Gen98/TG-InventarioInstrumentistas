@@ -1,27 +1,27 @@
 ﻿{
   "data": [
     {
-      "value": 11,
+      "codigo": 11,
       "nombre": "INSTRUMENTISTA MÉRIDA"
     },
     {
-      "value": 21,
+      "codigo": 21,
       "nombre": "INSTRUMENTISTA DF SUR"
     },
     {
-      "value": 27,
+      "codigo": 27,
       "nombre": "INVENTARIO INSTITUTO MEXICANO DEL SEGURO SOCIAL/ HGR 220 ESTADO DE MEXICO PONIENTE"
     },
     {
-      "value": 28,
+      "codigo": 28,
       "nombre": "INVENTARIO INSTITUTO MEXICANO DEL SEGURO SOCIAL MAGDALENA TRAUMATOLOGIA"
     },
     {
-      "value": 29,
+      "codigo": 29,
       "nombre": "INVENTARIO INSTITUTO MEXICANO DEL SEGURO SOCIAL MAGDALENA ORTOPEDIA"
     },
     {
-      "value": 30,
+      "codigo": 30,
       "nombre": "INVENTARIO DIGOCO TABASCO"
     }
   ]

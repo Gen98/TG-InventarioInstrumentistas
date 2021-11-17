@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AlmacenesService } from '../../services/almacenes.service';
 import { Movimiento } from '../../interfaces/movimiento.interface';
 import { Registro } from 'src/app/interfaces/registro.interface';
 import almacenesJSON from '../../../assets/files/almacenes.json';
@@ -25,16 +26,16 @@ export class SincronizadosComponent implements OnInit {
 
   @Input() movimientos: any[] = [];
 
-  constructor() { 
+  constructor(private almacenesService: AlmacenesService) {
     this.innerWidth = window.innerWidth;
-    this.almacenes = almacenesJSON.data;
+    this.getAlmacenes();
   }
 
   ngOnInit(): void {
   }
 
-  movil(): boolean{
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent))
+  movil(): boolean {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent))
       return true;
 
     return this.innerWidth < 768;
@@ -45,8 +46,18 @@ export class SincronizadosComponent implements OnInit {
     let productos = this.sincronizado.registros;
     productos.forEach((registro: Registro) => {
       let producto = data.data.find((e: any) => e.Codigo == registro.code);
-      registro.desc = producto!.Descripcion||'NA';
+      registro.desc = producto!.Descripcion || 'NA';
     });
     document.getElementById("openSincronizadoModal")!.click();
+  }
+
+  getAlmacenes(): void {
+    this.almacenesService.getAlmacenes().then((data: any) => {
+      if (data.length == 0) {
+        this.almacenes = almacenesJSON.data;
+      } else {
+        this.almacenes = data;
+      }
+    });
   }
 }

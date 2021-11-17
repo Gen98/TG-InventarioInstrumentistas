@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AlmacenesService } from '../../services/almacenes.service';
 import { Movimiento } from '../../interfaces/movimiento.interface';
 import { Registro } from '../../interfaces/registro.interface';
+import { Almacen } from 'src/app/interfaces/almacen.interface';
 import almacenesJSON from '../../../assets/files/almacenes.json';
 import Swal from 'sweetalert2';
 
@@ -43,19 +45,19 @@ export class NoSincronizadosComponent implements OnInit {
   @Output() registrarMovimiento: EventEmitter<Movimiento> = new EventEmitter();
   @Output() actualizarMovimientoOutput: EventEmitter<Movimiento> = new EventEmitter();
   @Output() eliminarMovimientoOutput: EventEmitter<Movimiento> = new EventEmitter();
-  @Output() sincronizarEmit :EventEmitter<Movimiento[]> = new EventEmitter();
+  @Output() sincronizarEmit: EventEmitter<Movimiento[]> = new EventEmitter();
 
-  constructor() { 
+  constructor(private almacenesService: AlmacenesService) {
     this.innerWidth = window.innerWidth;
-    this.almacenes = almacenesJSON.data;
+    this.getAlmacenes();
   }
 
   ngOnInit(): void {
 
   }
 
-  movil(): boolean{
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent))
+  movil(): boolean {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent))
       return true;
 
     return this.innerWidth < 768;
@@ -63,13 +65,13 @@ export class NoSincronizadosComponent implements OnInit {
 
   registrarEscaneo(item: Registro) {
     let registros: Registro[] = this.nuevoMovimiento.registros;
-    let duplicado = registros.findIndex(function(e) {
+    let duplicado = registros.findIndex(function (e) {
       return e.code == item.code && e.lote == item.lote
     });
     if (duplicado != -1) {
       registros[duplicado].cant = Number(registros[duplicado].cant) + item.cant;
       let actualizado = registros[duplicado];
-      registros = registros.filter(function(el) {
+      registros = registros.filter(function (el) {
         return !(el.lote === item.lote && el.code === item.code);
       });
       registros.unshift(actualizado);
@@ -82,7 +84,7 @@ export class NoSincronizadosComponent implements OnInit {
     let registros: Registro[] = this.nuevoMovimiento.registros;
 
     if (item.deleteAll) {
-      registros = registros.filter(function(el) {
+      registros = registros.filter(function (el) {
         return !(el.lote === item.lote && el.code === item.code);
       });
     }
@@ -91,7 +93,7 @@ export class NoSincronizadosComponent implements OnInit {
 
   agregarImagen(imagen: any): void {
     let images = this.nuevoMovimiento.imagenes;
-    let duplicado = images.findIndex(function(e) {
+    let duplicado = images.findIndex(function (e) {
       return e.base64 == imagen.base64
     });
     if (duplicado != -1) {
@@ -104,7 +106,7 @@ export class NoSincronizadosComponent implements OnInit {
 
   eliminarImagen(imagen: any): void {
     let images = this.nuevoMovimiento.imagenes;
-    images = images.filter(function(image) {
+    images = images.filter(function (image) {
       return image.base64 != imagen.base64;
     });
     this.nuevoMovimiento.imagenes = images;
@@ -147,7 +149,7 @@ export class NoSincronizadosComponent implements OnInit {
   folioEscaneado(e: String, inputText: any = null): void {
     if (inputText) {
       e = inputText.target.value;
-      this.almacenes = almacenesJSON.data;
+      // this.getAlmacenes();
     }
     let codigo = e.split('/');
     let almacen = e.split('/');
@@ -161,12 +163,12 @@ export class NoSincronizadosComponent implements OnInit {
         buscarAlmacen.push(codigo[1]);
       }
 
-      this.almacenes = this.almacenes.filter(function(el: any) {
-        return buscarAlmacen.includes(el.value.toString());
+      this.almacenes = this.almacenes.filter(function (el: Almacen) {
+        return buscarAlmacen.includes(el.codigo.toString());
       });
       if (this.almacenes.length == 0) {
-        this.mostrarAlert('Tu folio no incluye inventario que pueda recibir.'); 
-        this.almacenes = almacenesJSON.data;
+        this.mostrarAlert('Tu folio no incluye inventario que pueda recibir.');
+        this.getAlmacenes();
       } else {
         if (almacen[1].includes(',')) {
           $('#almacen').prop("disabled", false);
@@ -200,7 +202,7 @@ export class NoSincronizadosComponent implements OnInit {
     $('#almacen').prop("disabled", false);
     $('[name="folio"]').prop("disabled", false);
     $('.form-check-input').prop("disabled", false);
-    this.almacenes = almacenesJSON.data;
+    this.getAlmacenes();
   }
 
   validarMovimiento(): boolean {
@@ -213,7 +215,7 @@ export class NoSincronizadosComponent implements OnInit {
         return false;
       }
     }
-    let almacen = this.almacenes.find((e: any) => e.value == this.nuevoMovimiento.almacen);
+    let almacen = this.almacenes.find((e: Almacen) => e.codigo == this.nuevoMovimiento.almacen);
     if (!almacen) {
       this.mostrarAlert('Selecciona el almacen');
       return false
@@ -274,11 +276,21 @@ export class NoSincronizadosComponent implements OnInit {
 
   escanearFolioModal() {
     this.camaraFolio = true;
-    this.almacenes = almacenesJSON.data;
+    this.getAlmacenes();
     $("#escanerFolioModal").modal('show');
   }
 
   sincronizar(e: any): void {
     this.sincronizarEmit.emit();
+  }
+
+  getAlmacenes(): void {
+    this.almacenesService.getAlmacenes().then((data: any) => {
+      if (data.length == 0) {
+        this.almacenes = almacenesJSON.data;
+      } else {
+        this.almacenes = [...data];
+      }
+    });
   }
 }
