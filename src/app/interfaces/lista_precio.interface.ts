@@ -1,6 +1,6 @@
 export interface ListaPrecio {
-    id: number;
-    desc: string;
+    idLista: number;
+    descripcion: string;
     noContratoList: string;
     noFianzaList: string;
     noProveedorList: string;

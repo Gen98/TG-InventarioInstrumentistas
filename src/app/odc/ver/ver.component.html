@@ -17,10 +17,10 @@
                             </div>
                             <div class="col-md-12 my-1">
                                 <label for="lista_precios">Lista de precios: </label>
-                                <select name="lista_precio" id="lista_precio" class="form-select" (change)="actualizarListaPrecios($event)">
+                                <select name="lista_precio" id="lista_precio" class="form-select lista_precio" (change)="actualizarListaPrecios($event)">
                                     <option selected value>Selecciona una opción</option>
-                                    <option *ngFor="let lista of listasPrecios" [value]="lista.id">
-                                        {{ lista.desc }}
+                                    <option *ngFor="let lista of listasPrecios" [value]="lista.idLista">
+                                        {{ lista.descripcion }}
                                     </option>
                                 </select>
                             </div>
@@ -69,7 +69,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="fechaCirugia">Fecha Cirugía: {{ solicitud.fechaCirugia }} </label>
-                                <app-datepicker (actualizarModel)="solicitud.fechaCirugia = $event"></app-datepicker>
+                                <app-datepicker (actualizarModel)="solicitud.fechaCirugia = $event" (actualizarModel)="dateUpdated = true"></app-datepicker>
                             </div>
                         </div>
                         <div class="row">
@@ -87,7 +87,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer verFooter">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" (click)="actualizarSolicitud()">Actualizar</button>
                 <button type="button" class="btn btn-success" (click)="procesar()">Procesar</button>

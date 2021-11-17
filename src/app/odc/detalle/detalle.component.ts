@@ -15,4 +15,7 @@ export class DetalleComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  click() {
+    document.getElementById("refreshInfo")!.click();
+  }
 }

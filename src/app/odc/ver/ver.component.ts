@@ -16,6 +16,7 @@ declare var $: any;
 })
 export class VerComponent implements OnInit {
 
+  dateUpdated: boolean = false;
   @Input() solicitud: Solicitud|any;
   @Input() listasPrecios: ListaPrecio[] = [];
   @Output() updateSolicitud: EventEmitter<any> = new EventEmitter();
@@ -27,13 +28,49 @@ export class VerComponent implements OnInit {
   }
 
   descargarArchivoSolicitud(): void {
-    this.solicitudService.downloadPDF(this.solicitud.idSolicitudPDF).subscribe(res => {
-      let file = new Blob([res], { type: 'application/pdf' });
-      var fileURL = URL.createObjectURL(file);
+    if (this.solicitud.archivoSolicitud) {
+      if (!this.solicitud.solicitudPDFNombre.endsWith('pdf')) {
+        this.previewPdf.emit('data:image/png;base64,' + this.solicitud.archivoSolicitud);
+        return;
+      }
+      const byteCharacters = atob(this.solicitud.archivoSolicitud);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const file = new Blob([byteArray], {type: 'application/pdf'});
+      // this.solicitudService.downloadPDF(this.solicitud.idSolicitudPDF).subscribe(res => {
+        // let file = new Blob([this.solicitud.archivoSolicitud], { type: 'application/pdf' });
+        var fileURL = URL.createObjectURL(file);
+        this.previewPdf.emit(fileURL);
+        
+        // importedSaveAs(file, this.solicitud.solicitudPDFNombre);
+      // });
+    } else {
+      if (!this.solicitud.solicitudPDFNombre.endsWith('pdf')) {
+        var reader = new FileReader();
+        let base64 = this.previewPdf;
+        reader.readAsDataURL(this.solicitud.solicitudPDF);
+        reader.onload = function () {
+          base64.emit(reader.result);
+        };
+        return;
+      }
+      var fileURL = URL.createObjectURL(this.solicitud.solicitudPDF);
       this.previewPdf.emit(fileURL);
-      
-      // importedSaveAs(file, this.solicitud.solicitudPDFNombre);
-    });
+    }
+  }
+
+  arrayBufferToBase64( buffer: any ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+      binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+
   }
 
   subirArchivo(e: any): void {
@@ -49,10 +86,10 @@ export class VerComponent implements OnInit {
     if (!idLista || idLista == null) return;
 
     let lista = this.listasPrecios.filter(function(lista) {
-      return lista.id == idLista;
+      return lista.idLista == idLista;
     });
 
-    this.solicitud.idLista = lista[0].id;
+    this.solicitud.idLista = lista[0].idLista;
     this.solicitud.noContrato = lista[0].noContratoList;
     this.solicitud.noFianza = lista[0].noFianzaList;
     this.solicitud.noProveedor = lista[0].noProveedorList;
@@ -60,12 +97,13 @@ export class VerComponent implements OnInit {
 
   actualizarSolicitud(): void {
     if (this.validarSolicitud()) {
-      this.updateSolicitud.emit({solicitud: this.solicitud, procesar: false});
+      this.updateSolicitud.emit({solicitud: this.solicitud, procesar: false, dateUpdated: this.dateUpdated});
+      this.dateUpdated = false;
     }
   }
 
   validarSolicitud(): boolean {
-    let lista = this.listasPrecios.find((e: any) => e.id == this.solicitud.idLista);
+    let lista = this.listasPrecios.find((e: any) => e.idLista == this.solicitud.idLista);
     let fechaReq = moment(this.solicitud.fechaReq, "YYYY-MM-DD", true);
     let fechaCirugia = moment(this.solicitud.fechaCirugia, "YYYY-MM-DD", true);
     if (!lista) {
@@ -124,7 +162,8 @@ export class VerComponent implements OnInit {
 
   procesar(): void {
     if (this.validarSolicitud() && this.procesarDisponible()) {
-      this.updateSolicitud.emit({solicitud: this.solicitud, procesar: true});
+      this.updateSolicitud.emit({solicitud: this.solicitud, procesar: true, dateUpdated: this.dateUpdated});
+      this.dateUpdated = false;
     }
   }
 

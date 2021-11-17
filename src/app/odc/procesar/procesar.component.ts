@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
+import { DexieSolicitudesService } from '../../services/dexie-solicitudes.service';
 import { CotizacionesService } from '../../services/cotizaciones.service';
 import { SolicitudesService } from '../../services/solicitudes.service';
 import { InformacionCotizar } from '../../interfaces/informacion_cotizar.interface';
@@ -19,6 +20,7 @@ export class ProcesarComponent implements OnInit {
 
   idSolicitud: number;
   idListaPrecio: number;
+  listaPrecio: any;
   solicitud: Solicitud|any;
   codigosPartidas: string[] = [];
   codigoIMSS: string;
@@ -32,7 +34,7 @@ export class ProcesarComponent implements OnInit {
   faltantesActual: number;
   partidasPedido: any[] = [];
   sumatoriaPedido: number;
-  informacionCotizar: InformacionCotizar|any;
+  informacionCotizar: InformacionCotizar;
   suscription: Subscription;
   suscription2: Subscription;
   
@@ -40,7 +42,8 @@ export class ProcesarComponent implements OnInit {
   constructor(private route: ActivatedRoute, 
               private solicitudService: SolicitudesService, 
               private router: Router,
-              private cotizacionService: CotizacionesService) { 
+              private cotizacionService: CotizacionesService,
+              private dexieService: DexieSolicitudesService) { 
     this.suscription = new Subscription();
     this.suscription2 = new Subscription();
     this.idSolicitud = 0;
@@ -68,6 +71,13 @@ export class ProcesarComponent implements OnInit {
       observacionesPrefactura: '',
       folioConsumo: ''
     }
+    this.informacionCotizar = {
+      direccionEnvio: '',
+      formasPago: [],
+      nosCuenta: [],
+      tiposPago: [],
+      usosCFDI: []
+    }
     this.route.paramMap.subscribe(paramMap => {
       this.idSolicitud = parseInt(paramMap.get('idSolicitud')!);
       this.idListaPrecio = parseInt(paramMap.get('idListaPrecio')!);
@@ -80,48 +90,70 @@ export class ProcesarComponent implements OnInit {
 
   getSolicitud(): void {
     this.mostrarAlertCarga();
-    this.suscription = this.solicitudService.showXAtender(this.idSolicitud).subscribe( res => {
-      if (res.estatus == '2') {
-        this.solicitud = res;
-        this.suscription.unsubscribe();
-        this.getCodigosPartidas();
-        Swal.close();
-      } else {
-        this.router.navigate(['']).then( () => {
-          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            this.router.navigate(['/']);
-          }); 
-        });
-      }
-    }, err => {
-      this.mostrarAlertError();
+    this.dexieService.getSolicitudShow(this.idSolicitud).then(async(data) => {
+      this.solicitud = data;
+      this.getCodigosPartidas();
+      Swal.close();
     });
+    // this.suscription = this.solicitudService.showXAtender(this.idSolicitud).subscribe( res => {
+    //   if (res.estatus == '2') {
+    //     this.solicitud = res;
+    //     this.suscription.unsubscribe();
+    //     this.getCodigosPartidas();
+    //     Swal.close();
+    //   } else {
+    //     this.router.navigate(['']).then( () => {
+    //       this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+    //         this.router.navigate(['/']);
+    //       }); 
+    //     });
+    //   }
+    // }, err => {
+    //   this.mostrarAlertError();
+    // });
   }
 
   getCodigosPartidas(): void {
-    this.suscription2 = this.solicitudService.getCodigosPartidas(this.idListaPrecio).subscribe(res => {
-      this.codigosPartidas = res;
-      this.suscription2.unsubscribe();
-      this.getInformacionCotizar();
-    }, err => {
-      this.mostrarAlertError();
-    });
-  }
-
-  getInformacionCotizar(): void {
-    this.suscription = this.cotizacionService.getInformacionCotizar(this.solicitud.idCliente).subscribe(res => {
-      this.informacionCotizar = res;
+    this.dexieService.getProveedores().then(async(distribuidores) => {
+      let clientes = distribuidores.find((e: any) => e.id == this.solicitud.idProveedor)!.clientes;
+      let cliente = clientes?.find((e: any) => e.idCliente == this.solicitud.idCliente);
+      let listas = cliente.listas;
+      this.listaPrecio = listas.find((e:any) => e.idLista == this.idListaPrecio);
+      this.codigosPartidas = this.listaPrecio.codigosPartidas;
+      this.informacionCotizar.direccionEnvio = cliente.direccionEnvio;
+      this.informacionCotizar.formasPago = cliente.formasPago;
+      this.informacionCotizar.nosCuenta = cliente.nosCuenta;
+      this.informacionCotizar.tiposPago = cliente.tiposPago;
+      this.informacionCotizar.usosCFDI = cliente.usosCFDI;
       this.informacionCotizar.idCliente = this.solicitud.idCliente;
       this.informacionCotizar.idLista = this.idListaPrecio;
       this.informacionCotizar.idSolicitud = this.solicitud.id;
       this.informacionCotizar.archivoSolicitud = new File([this.transformarArchivoSolicitud(this.solicitud.archivoSolicitud)], this.solicitud.solicitudPDFNombre);
-
-      this.suscription.unsubscribe();
-      Swal.close();
-    }, err => {
-      this.mostrarAlertError();
     });
+    // this.suscription2 = this.solicitudService.getCodigosPartidas(this.idListaPrecio).subscribe(res => {
+    //   this.codigosPartidas = res;
+    //   this.suscription2.unsubscribe();
+    //   this.getInformacionCotizar();
+    // }, err => {
+    //   this.mostrarAlertError();
+    // });
   }
+
+  // getInformacionCotizar(): void {
+  //   // Aqui
+  //   this.suscription = this.cotizacionService.getInformacionCotizar(this.solicitud.idCliente).subscribe(res => {
+  //     this.informacionCotizar = res;
+  //     this.informacionCotizar.idCliente = this.solicitud.idCliente;
+  //     this.informacionCotizar.idLista = this.idListaPrecio;
+  //     this.informacionCotizar.idSolicitud = this.solicitud.id;
+  //     this.informacionCotizar.archivoSolicitud = new File([this.transformarArchivoSolicitud(this.solicitud.archivoSolicitud)], this.solicitud.solicitudPDFNombre);
+
+  //     this.suscription.unsubscribe();
+  //     Swal.close();
+  //   }, err => {
+  //     this.mostrarAlertError();
+  //   });
+  // }
 
   buscarProductos(): void {
     if (this.partidaActual && this.faltantesActual == 0 ) {
@@ -136,19 +168,27 @@ export class ProcesarComponent implements OnInit {
 
     if (this.validarBusqueda(cPartida, cantidad)) {
       this.mostrarAlertCarga();
-      this.suscription = this.solicitudService.getProductosPartidas(this.idListaPrecio, cPartida).subscribe(res => {
-        this.partidaActual = {
-            partida: cPartida,
-            cantidad: cantidad,
-            productos: []
-        };
-        this.productosPartidas = res;
-        this.faltantesActual = cantidad;
-        Swal.close();
-        this.suscription.unsubscribe();
-      }, err => {
-        this.mostrarAlertError();
-      });
+      this.partidaActual = {
+        partida: cPartida,
+        cantidad: cantidad,
+        productos: []
+      };
+      this.productosPartidas = this.listaPrecio.productosPartidas.find((e:any) => {  return e[cPartida]})[cPartida];
+      this.faltantesActual = cantidad;
+      Swal.close();
+      // this.suscription = this.solicitudService.getProductosPartidas(this.idListaPrecio, cPartida).subscribe(res => {
+      //   this.partidaActual = {
+      //       partida: cPartida,
+      //       cantidad: cantidad,
+      //       productos: []
+      //   };
+      //   this.productosPartidas = res;
+      //   this.faltantesActual = cantidad;
+      //   Swal.close();
+      //   this.suscription.unsubscribe();
+      // }, err => {
+      //   this.mostrarAlertError();
+      // });
     }
   }
 
