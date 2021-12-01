@@ -19,7 +19,8 @@ export class SincronizadosComponent implements OnInit {
     fechaCreacion: 0,
     imagenes: [],
     firmas: [],
-    tipoEntrada: true
+    tipoEntrada: true,
+    exacto: 0
   };
   almacenes: any;
   private innerWidth: number;

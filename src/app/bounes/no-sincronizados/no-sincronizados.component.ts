@@ -22,7 +22,8 @@ export class NoSincronizadosComponent implements OnInit {
     fechaCreacion: 0,
     imagenes: [],
     firmas: [],
-    tipoEntrada: true
+    tipoEntrada: true,
+    exacto: 0
   };
   actualizarMovimiento: Movimiento = {
     folio: '',
@@ -31,7 +32,8 @@ export class NoSincronizadosComponent implements OnInit {
     fechaCreacion: 0,
     imagenes: [],
     firmas: [],
-    tipoEntrada: true
+    tipoEntrada: true,
+    exacto: 0
   };
   almacenes: any;
   isBounes: boolean = true;
@@ -197,7 +199,8 @@ export class NoSincronizadosComponent implements OnInit {
       fechaCreacion: 0,
       imagenes: [],
       firmas: [],
-      tipoEntrada: true
+      tipoEntrada: true,
+      exacto: 0
     };
     $('#almacen').prop("disabled", false);
     $('[name="folio"]').prop("disabled", false);

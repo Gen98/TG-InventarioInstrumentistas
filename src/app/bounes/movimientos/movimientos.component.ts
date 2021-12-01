@@ -22,8 +22,8 @@ export class MovimientosComponent implements OnInit {
   isBounes: boolean = true;
   folios: any[] = [];
   constructor(
-    private dexieService: DexieService, 
-    private bounesService: BounesService ) { }
+    private dexieService: DexieService,
+    private bounesService: BounesService) { }
 
   ngOnInit(): void {
     this.getRegistros();
@@ -31,13 +31,13 @@ export class MovimientosComponent implements OnInit {
   }
 
   registrarMovimiento(movimiento: Movimiento): void {
-    this.dexieService.addMovimiento(movimiento).then(async() => {
+    this.dexieService.addMovimiento(movimiento).then(async () => {
       this.getRegistros();
     });
   }
 
   actualizarMovimiento(movimiento: Movimiento): void {
-    this.dexieService.updateMovimiento(movimiento).then(async() => {
+    this.dexieService.updateMovimiento(movimiento).then(async () => {
       this.getRegistros();
       Swal.fire({
         icon: 'success',
@@ -48,31 +48,31 @@ export class MovimientosComponent implements OnInit {
   }
 
   getRegistros(): void {
-    this.dexieService.getMovimientos().then(async(e) => {
+    this.dexieService.getMovimientos().then(async (e) => {
       this.movimientos = e;
     });
-    this.dexieService.getFolios().then(async(e) => {
+    this.dexieService.getFolios().then(async (e) => {
       this.folios = e;
     });
   }
 
   getSincronizados(): void {
-    this.dexieService.getSincronizados().then(async(e) => {
+    this.dexieService.getSincronizados().then(async (e) => {
       this.sincronizados = e;
     });
   }
 
   eliminarMovimiento(movimiento: Movimiento): void {
-    this.dexieService.deleteMovimiento(movimiento).then(async(e) => {
+    this.dexieService.deleteMovimiento(movimiento).then(async (e) => {
       this.getRegistros();
     });
   }
 
-  async sincronizarMovimientos(movsIdSync: number[] = [], movsFailed: any[]) {
+  async sincronizarMovimientos(movsIdSync: { idxMov: number, exacto: number }[] = [], movsFailed: any[]) {
     $('.sincronizarBtn').prop("disabled", true);
-    (await this.dexieService.sincronizarMovimientos(movsIdSync)).subscribe( resp => {
-      this.dexieService.deleteSincronizados().then(async() => {
-        resp.forEach((element:any) => {
+    (await this.dexieService.sincronizarMovimientos(movsIdSync)).subscribe(resp => {
+      this.dexieService.deleteSincronizados().then(async () => {
+        resp.forEach((element: any) => {
           this.dexieService.addSincronizado(element);
           this.dexieService.deleteMovimiento(element);
         });
@@ -118,10 +118,10 @@ export class MovimientosComponent implements OnInit {
       })
     ).pipe(toArray()
     ).subscribe(
-      (val) => { 
+      (val) => {
         this.recorrerPartidas(val);
       },
-      (err) => { 
+      (err) => {
         console.log(err);
         Swal.fire({
           icon: 'warning',
@@ -132,7 +132,10 @@ export class MovimientosComponent implements OnInit {
   }
 
   recorrerPartidas(responses: any[]): void {
-    let movsIdToSync: number[] = [];
+    let movsIdToSync: {
+      idxMov: number,
+      exacto: number
+    }[] = [];
     let movsFailed: any[] = [];
     this.movimientos.forEach((mov: Movimiento, movIdx: number) => {
       if (mov.folio && (mov.folio.startsWith("NS_") || mov.folio.startsWith("FS_") || mov.folio.startsWith("BS_"))) {
@@ -142,38 +145,41 @@ export class MovimientosComponent implements OnInit {
         if (responses[responseIndex].encontrado) {
           let partidas = [...responses[responseIndex].partidas];
           let registros = [...mov.registros];
-          mov.registros.forEach((registro:Registro) => {
+          mov.registros.forEach((registro: Registro) => {
             let indexRemove = partidas.findIndex((e) => {
-              return registro.code === e.code && registro.cant == e.cant;
+              return registro.code === e.code && registro.cant == e.cant && registro.lote === e.lote;
             });
             if (indexRemove != -1) {
               partidas.splice(indexRemove, 1);
               registros = registros.filter((e) => {
-                return !(registro.code === e.code && registro.cant == e.cant);
+                return !(registro.code === e.code && registro.cant == e.cant && registro.lote === e.lote);
               });
             }
           });
-          if ( (partidas.length || registros.length) != 0 && responses[responseIndex].partidasExactas ) {
+          if ((partidas.length || registros.length) != 0 && responses[responseIndex].partidasExactas) {
             movsFailed.push({
-              folio:  mov.folio,
+              folio: mov.folio,
               status: 1 //No coinciden las partidas
             });
           } else if (responses[responseIndex].registradoAnteriormente) {
             movsFailed.push({
-              folio:  mov.folio,
+              folio: mov.folio,
               status: 2 //Duplicado
             });
           } else {
-            movsIdToSync.push(movIdx);
+            if ((partidas.length && registros.length) == 0) {
+              mov.exacto = 1
+            }
+            movsIdToSync.push({ idxMov: movIdx, exacto: mov.exacto });
           }
         } else {
           movsFailed.push({
-            folio:  mov.folio,
+            folio: mov.folio,
             status: 0 //No encontrado
           });
         }
       } else {
-        movsIdToSync.push(movIdx);
+        movsIdToSync.push({ idxMov: movIdx, exacto: mov.exacto });
       }
     });
     if (movsIdToSync.length) {
@@ -213,7 +219,7 @@ export class MovimientosComponent implements OnInit {
             case 0:
               string = "\nLos siguientes folios no se encontraron: " + element.folio;
               break;
-          
+
             case 1:
               string = "\nLos siguientes folios sus partidas no coinciden con lo enviado: " + element.folio;
               break;
@@ -225,7 +231,7 @@ export class MovimientosComponent implements OnInit {
             default:
               break;
           }
-        } else if (idx == array.length-1) {
+        } else if (idx == array.length - 1) {
           string = string + (idx == 0 ? '.' : (', ' + element.folio + '.'));
         } else {
           string = string + ', ' + element.folio;

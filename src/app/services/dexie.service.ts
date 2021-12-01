@@ -10,9 +10,9 @@ import Dexie from 'dexie';
 export class DexieService {
 
   db: any;
-  table: Dexie.Table<any>|any;
-  tableSincronizados: Dexie.Table<any>|any;
-  constructor(private http: HttpClient) { 
+  table: Dexie.Table<any> | any;
+  tableSincronizados: Dexie.Table<any> | any;
+  constructor(private http: HttpClient) {
     this.initIndexedDB();
   }
 
@@ -55,7 +55,7 @@ export class DexieService {
 
   async updateMovimiento(movimiento: Movimiento) {
     try {
-      await this.table.update(movimiento.idIndexed, { 'comentario': movimiento.comentario});
+      await this.table.update(movimiento.idIndexed, { 'comentario': movimiento.comentario });
     } catch (error) {
       console.log(error);
     }
@@ -69,15 +69,19 @@ export class DexieService {
     }
   }
 
-  async sincronizarMovimientos(movsIdSyn: number[]): Promise<Observable<any>> {
+  async sincronizarMovimientos(movsIdSyn: { idxMov: number, exacto: number }[]): Promise<Observable<any>> {
     let movimientos: Movimiento[] = await this.getMovimientos();
 
     movimientos = movimientos.filter((e, i) => {
-      return movsIdSyn.includes(i);
+      return movsIdSyn.findIndex((mov, idx) => idx == i) != -1;
+    }).map((mov, i) => {
+      let registro = movsIdSyn.find((reg, n) => n == i);
+      mov.exacto = registro!.exacto;
+      return mov;
     });
     console.log(movimientos);
-    movimientos = movimientos.sort(function(a: Movimiento, b: Movimiento){
-      return (a.tipoEntrada === b.tipoEntrada)? 0 : a.tipoEntrada? -1 : 1; ;
+    movimientos = movimientos.sort(function (a: Movimiento, b: Movimiento) {
+      return (a.tipoEntrada === b.tipoEntrada) ? 0 : a.tipoEntrada ? -1 : 1;
     });
     return this.http.post<Observable<any>>('https://inventario-bounes.truemedgroup.com:7004/movimientos', movimientos);
   }
