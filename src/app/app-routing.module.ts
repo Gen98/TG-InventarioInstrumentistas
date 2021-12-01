@@ -8,6 +8,7 @@ import { AlmacenesComponent } from './components/almacenes/almacenes.component';
 import { PorAtenderComponent } from './odc/por-atender/por-atender.component';
 import { ProcesarComponent } from './odc/procesar/procesar.component';
 import { LoginComponent } from './pages/login/login.component';
+import { EncuestaPageComponent } from './pages/encuesta-page/encuesta-page.component';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -37,6 +38,11 @@ const routes: Routes = [
   {
     path: 'xAtender/preparar/:idSolicitud/:idListaPrecio',
     component: ProcesarComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'encuesta',
+    component: EncuestaPageComponent,
     canActivate: [AuthGuard]
   },
   {

@@ -33,19 +33,20 @@ export class AuthService {
     params.set('username', usuario.username);
     params.set('password', usuario.password);
     return this.http.post<any>(urlEndpoint, params.toString(), { headers: httpHeaders })
-    .pipe(
-      map( resp => {
-        this.saveToken( resp[ 'clienteId' ], resp[ 'expires_in' ] );
-        return resp;
-      })
-    );
+      .pipe(
+        map(resp => {
+          this.saveToken(resp['clienteId'], resp['expires_in'], resp['mostrarEncuesta']);
+          return resp;
+        })
+      );
   }
 
 
   /* Método que se encarga de almacenar el token y la fecha de
    expiración del mismo en el localStorage*/
-  saveToken(cliente: string, expiresIn: number): void{
+  saveToken(cliente: string, expiresIn: number, mostrarEnc: boolean): void {
 
+    localStorage.setItem('showSurvey', mostrarEnc ? 'true' : 'false');
     this.cliente = cliente;
     localStorage.setItem('cliente', cliente);
     let date = new Date();
@@ -56,7 +57,7 @@ export class AuthService {
 
   /* Método que se encarga de validar si ya hay un token existente
   e inicializa la variable local con el token o con una cadena vacia*/
-  readToken(): string{
+  readToken(): string {
 
     let cliente = localStorage.getItem('cliente');
     this.cliente = cliente ? cliente : '';
@@ -66,13 +67,13 @@ export class AuthService {
 
   /* Método que verifica si hay un token existente y en caso que si lo haya,
   verifica que el mismo no haya expirado  */
-  isAuth(): boolean{
+  isAuth(): boolean {
 
-    if ( this.cliente.length < 2 ){
+    if (this.cliente.length < 2) {
       return false;
     }
 
-    if (  new Date( Number(localStorage.getItem('expiration'))-310) <= new Date() ){
+    if (new Date(Number(localStorage.getItem('expiration')) - 310) <= new Date()) {
       return false;
     }
 
@@ -81,9 +82,14 @@ export class AuthService {
 
   /* Método que elimina el token y su fecha de expiración
   del localStorage */
-  logout(): void{
+  logout(): void {
     localStorage.removeItem('cliente');
     localStorage.removeItem('expiration');
     this.router.navigate(['login']);
+  }
+
+  mostrarEncuestas(): boolean {
+    let showS = localStorage.getItem('showSurvey') || null;
+    return showS && showS == 'true' ? true : false;
   }
 }

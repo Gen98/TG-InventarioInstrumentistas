@@ -21,11 +21,11 @@ export class LoginComponent implements OnInit {
   tipoBotonPassword: string = 'password';
 
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private solicitudService: SolicitudesService,
     private dexieSolicitudService: DexieSolicitudesService,
     private router: Router
-  ) { 
+  ) {
     this.usuario = {
       username: '',
       password: ''
@@ -34,68 +34,68 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if ( this.authService.isAuth() ){
+    if (this.authService.isAuth()) {
       this.router.navigate(['']);
     }
   }
 
-  onLogin( ): void{
+  onLogin(): void {
     Swal.fire({
       allowOutsideClick: false,
       text: 'Validando información'
     });
     Swal.showLoading();
 
-    this.authSuscription = this.authService.login( this.usuario )
-    .subscribe(response => {
-      if (response.status == 200) {
-        Swal.fire({
-          allowOutsideClick: false,
-          text: 'Acceso correcto, cargando...'
-        });
-        Swal.showLoading();
-        this.getOfflineData();
-      } else {
+    this.authSuscription = this.authService.login(this.usuario)
+      .subscribe(response => {
+        if (response.status == 200) {
+          Swal.fire({
+            allowOutsideClick: false,
+            text: 'Acceso correcto, cargando...'
+          });
+          Swal.showLoading();
+          this.getOfflineData();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Usuario o contraseña incorrectos'
+          });
+        }
+      }, (err) => {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Usuario o contraseña incorrectos'
+          text: 'Conexión inestable, intenta nuevamente.'
         });
-      }
-    }, (err) => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Conexión inestable, intenta nuevamente.'
       });
-    });
   }
 
-  cambiarInputPassword():void{
-  
-    if ( this.tipoBotonPassword === 'password' )
+  cambiarInputPassword(): void {
+
+    if (this.tipoBotonPassword === 'password')
       this.tipoBotonPassword = 'text';
-      
+
     else
       this.tipoBotonPassword = 'password';
-  
+
   }
 
   getOfflineData(): void {
-    this.solicitudService.getOfflineData().subscribe((res:any) => {
-      this.dexieSolicitudService.clearDB().then(async() => {
+    this.solicitudService.getOfflineData().subscribe((res: any) => {
+      this.dexieSolicitudService.clearDB().then(async () => {
         this.guardarProveedores(res);
-      }).then(async() => {
+      }).then(async () => {
         this.guardarSolicitudesList(res);
         this.guardarSolicitudesShow(res);
-      }).then(async() => {
+      }).then(async () => {
         Swal.fire({
           icon: 'success',
           text: 'Bienvenido ' + res.proveedores[0].nombre,
           showConfirmButton: false,
           timer: 2000
         }).then((result) => {
-          this.router.navigate([ 'inicio' ]);
+          this.router.navigate(['inicio']);
         });
       });
     }, err => {
@@ -109,23 +109,24 @@ export class LoginComponent implements OnInit {
   }
 
   guardarProveedores(res: any) {
-    res.proveedores.forEach((el:any) => {
+    res.proveedores.forEach((el: any) => {
       let prov = {
-        id: el.id, 
-        nombre: el.nombre, 
-        clientes: el.clientes}
+        id: el.id,
+        nombre: el.nombre,
+        clientes: el.clientes
+      }
       this.dexieSolicitudService.addProveedor(prov);
     });
   }
-  
+
   guardarSolicitudesList(res: any) {
-    res.solicitudesList.forEach((solicitud:any) => {
+    res.solicitudesList.forEach((solicitud: any) => {
       this.dexieSolicitudService.addSolicitudList(solicitud);
     });
   }
 
   guardarSolicitudesShow(res: any) {
-    res.solicitudesShow.forEach((solicitud:any) => {
+    res.solicitudesShow.forEach((solicitud: any) => {
       this.dexieSolicitudService.addSolicitudShow(solicitud);
     });
   }

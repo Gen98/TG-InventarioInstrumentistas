@@ -14,6 +14,9 @@ import { DataTablesModule } from 'angular-datatables';
 import { AlmacenesComponent } from './components/almacenes/almacenes.component';
 import { LoginComponent } from './pages/login/login.component';
 import { BounesModule } from './bounes/bounes.module';
+import { EncuestaComponent } from './components/encuesta/encuesta.component';
+import { EncuestaPageComponent } from './pages/encuesta-page/encuesta-page.component';
+import { WebcamModule } from 'ngx-webcam';
 
 @NgModule({
   declarations: [
@@ -21,7 +24,9 @@ import { BounesModule } from './bounes/bounes.module';
     InicioComponent,
     CatalogoComponent,
     AlmacenesComponent,
-    LoginComponent
+    LoginComponent,
+    EncuestaComponent,
+    EncuestaPageComponent
   ],
   imports: [
     BrowserModule,
@@ -29,6 +34,7 @@ import { BounesModule } from './bounes/bounes.module';
     FormsModule,
     HttpClientModule,
     DataTablesModule,
+    WebcamModule,
     SharedModule,
     BounesModule,
     OdcModule,

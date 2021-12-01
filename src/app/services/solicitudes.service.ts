@@ -15,14 +15,14 @@ export class SolicitudesService {
   private endPoint: string = '';
   private cliente: string;
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     this.cliente = this.readToken();
     this.endPoint = 'https://inventario-bounes.truemedgroup.com:7004/solicitudes'
   }
 
-  readToken(): string{
+  readToken(): string {
     let cliente = localStorage.getItem('cliente');
-    return  cliente ? cliente : '';
+    return cliente ? cliente : '';
   }
 
   getOfflineData() {
@@ -45,9 +45,9 @@ export class SolicitudesService {
   downloadPDF(idRutaImagen: number): Observable<any> {
     let url = this.endPoint + `/pdf/${idRutaImagen}`;
     const requestOptions: Object = {
-        responseType: 'arrayBuffer'
+      responseType: 'arrayBuffer'
     }
-    return this.http.get(url, requestOptions );
+    return this.http.get(url, requestOptions);
   }
 
   getProveedores(): Observable<ClienteDistribuidor[]> {
@@ -87,7 +87,7 @@ export class SolicitudesService {
     const formData: FormData = new FormData();
 
     formData.append('file', solicitud.solicitudPDF);
-    formData.append('idProveedor',solicitud.idProveedor.toString());
+    formData.append('idProveedor', solicitud.idProveedor.toString());
     formData.append('idUsuarioGenera', solicitud.idUsuarioGenera.toString());
     formData.append('idCliente', solicitud.idCliente.toString());
     formData.append('noContrato', solicitud.noContrato);
@@ -110,7 +110,7 @@ export class SolicitudesService {
     const formData: FormData = new FormData();
     formData.append('file', solicitud.solicitudPDF ? solicitud.solicitudPDF : null);
     formData.append('id', solicitud.id!.toString());
-    formData.append('idProveedor',solicitud.idProveedor.toString());
+    formData.append('idProveedor', solicitud.idProveedor.toString());
     formData.append('idUsuarioGenera', solicitud.idUsuarioGenera.toString());
     formData.append('fechaEmision', solicitud.fechaEmision!);
     formData.append('estatus', solicitud.estatus!);

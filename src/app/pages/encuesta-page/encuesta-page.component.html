@@ -1,0 +1,67 @@
+<div class="container" *ngIf="!banEncuestaFinalizada else encuestaFinalizada">
+    <div class="row d-flex justify-content-center" *ngIf="!banMostrarEncuesta else encuesta">
+        <div class="col-lg-7 col-md-12">
+            <label for="cliente">Selecciona el cliente: </label>
+            <select name="cliente" id="cliente" class="form-select" (change)="seleccionarCliente($event)">
+                <option *ngFor="let cliente of clientes; index as idx" [value]="idx">
+                    {{ cliente.nombre }}
+                </option>
+            </select>
+        </div>
+    </div>
+    <hr>
+    <div class="mt-3 row d-flex justify-content-center" *ngIf="!banMostrarEncuesta else encuesta">
+        <div class="col-lg-7 col-md-12">
+            <div class="alert alert-warning" role="alert">
+                Antes de continuar, asegurate de tener acceso a la camara.
+            </div>
+            <div class="alert alert-info" role="alert" *ngIf="movil()">
+                Si la pantalla de la camara es negra, sigue las siguientes instrucciones:<br>
+                1.-Ajustes del telefono.<br>
+                2.-Aplicaciones.<br>
+                3.-InventarioBounes.<br>
+                4.-Permisos.<br>
+                5.-Dar permisos a la camara.<br>
+                6.-Cerrar esta aplicación y volver a abrir.<br>
+            </div>
+            <webcam [height]="300" [width]="265" [allowCameraSwitch]="true"></webcam>
+        </div>
+        <div class="col-lg-7 col-md-12 py-4">
+            <div class="d-grid gap-2">
+                <button class="btn btn-info" (click)="iniciarEncuesta()">Iniciar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #encuesta>
+    <app-encuesta [json]="json" (encuestaTerminada)="encuestaPorFinalizar($event)"></app-encuesta>
+</ng-template>
+<ng-template #encuestaFinalizada>
+    <div class="container">
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Encuesta terminada</h4>
+            <span>
+                Cliente: {{clienteNombre}} <br>
+                Encuesta realizada por: {{provNombre}} <br>
+                <hr>
+                <strong>
+                    Toma una foto de la ultima HOJA DE CONSUMO firmada por el doctor y guarda la encuesta.
+                </strong>
+            </span>
+        </div>
+        <div class="row" *ngIf="fotoTomada.length == 0">
+            <webcam [height]="300" [width]="265" [allowCameraSwitch]="true" [trigger]="triggerObservable"
+                (imageCapture)="evidenciaTomada($event)"></webcam>
+            <button type="button" class="btn btn-sm btn-success mt-2" (click)="tomarFoto()">Tomar foto</button>
+        </div>
+        <div class="row" *ngIf="fotoTomada.length">
+            <div class="col-sm-4 col-md-12 bg-white rounded text-center p-2">
+                <img [src]="fotoTomada" class="img-fluid img mb-2" [width]="200" />
+                <div class="d-grid gap-2">
+                    <button class="btn btn-info" (click)="fotoTomada = ''">Tomar otra foto</button>
+                    <button class="btn btn-primary" (click)="enviarEncuesta()">Enviar encuesta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

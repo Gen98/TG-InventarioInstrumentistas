@@ -7,10 +7,10 @@ import { InformacionCotizar } from '../interfaces/informacion_cotizar.interface'
   providedIn: 'root'
 })
 export class CotizacionesService {
-  
+
   private endPoint: string = '';
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     this.endPoint = 'https://inventario-bounes.truemedgroup.com:7004/cotizaciones'
   }
 
