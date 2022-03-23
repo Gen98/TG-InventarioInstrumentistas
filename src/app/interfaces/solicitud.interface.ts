@@ -1,4 +1,4 @@
-export interface Solicitud{
+export interface Solicitud {
     idProveedor: number;
     idUsuarioGenera: number;
     idCliente: number;
@@ -9,11 +9,13 @@ export interface Solicitud{
     noProveedor: string;
     paciente: string;
     nss: string;
-    fechaReq: string|undefined;
-    fechaCirugia: string|undefined;
+    fechaReq: string | undefined;
+    fechaCirugia: string | undefined;
     nombreDoctor: string;
     observacionesPrefactura: string;
-    folioConsumo: string
+    folioConsumo: string;
+    subcategoria?: number;
+    textoSubclas?: string;
 
     id?: number;
     fechaEmision?: string;
@@ -21,7 +23,7 @@ export interface Solicitud{
     idSolicitudPDF?: string;
     solicitudPDFNombre?: string;
     proveedorNombre?: string;
-    clienteNombre? :string;
+    clienteNombre?: string;
     archivoSolicitud?: any;
     cotizacion?: any
 }

@@ -7,6 +7,7 @@ import { CotizacionesService } from '../../services/cotizaciones.service';
 import { SolicitudesService } from '../../services/solicitudes.service';
 import { WifiStatusService } from '../../services/wifi-status.service';
 import { AuthService } from '../../services/auth.service';
+import { Clasificacion } from '../../interfaces/clasificacion.interface';
 import { ListaPrecio } from '../../interfaces/lista_precio.interface';
 import { Solicitud } from 'src/app/interfaces/solicitud.interface';
 import { concatMap, map, toArray } from 'rxjs/operators';
@@ -28,6 +29,7 @@ export class PorAtenderComponent implements OnInit {
   suscription: Subscription;
   suscription2: Subscription;
   solicitudes: any[] = [];
+  clasificaciones: Clasificacion[] = [];
   distribuidores: ClienteDistribuidor[] = [];
   verSolicitudModel: Solicitud;
   verSolicitudListaPrecio: ListaPrecio[];
@@ -39,13 +41,13 @@ export class PorAtenderComponent implements OnInit {
   noEnviados: any[] = [];
 
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private solicitudService: SolicitudesService,
-    private cotizacionService: CotizacionesService, 
+    private cotizacionService: CotizacionesService,
     private dexieService: DexieSolicitudesService,
     private wifiStatusService: WifiStatusService,
     private router: Router
-  ) { 
+  ) {
     this.sourcePdf = '';
     this.suscription = new Subscription();
     this.suscription2 = new Subscription();
@@ -83,17 +85,26 @@ export class PorAtenderComponent implements OnInit {
 
   getProveedor(): void {
     this.mostrarAlertCarga();
-    this.dexieService.getProveedores().then(async(data) => {
+    this.dexieService.getProveedores().then(async (data) => {
       this.distribuidores = data;
       Swal.close();
-    }).then(async() => {
+    }).then(async () => {
+      this.getClasificaciones();
       this.getNoEnviados();
     });
   }
 
+  getClasificaciones(): void {
+    this.mostrarAlertCarga();
+    this.dexieService.getClasificaciones().then(async (data) => {
+      this.clasificaciones = data;
+      Swal.close();
+    })
+  }
+
   getSolicitudes(): void {
     this.mostrarAlertCarga();
-    this.dexieService.getSolicitudesList().then(async(data) => {
+    this.dexieService.getSolicitudesList().then(async (data) => {
       this.solicitudes = data;
       this.dtTrigger.next();
       Swal.close()
@@ -136,7 +147,7 @@ export class PorAtenderComponent implements OnInit {
         } else {
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this.router.navigate(['/']);
-          }); 
+          });
         }
       }, err => {
         Swal.fire({
@@ -161,7 +172,7 @@ export class PorAtenderComponent implements OnInit {
   }
 
   checkIfExists(solicitud: Solicitud) {
-    this.dexieService.checkIfExists(solicitud.id!).then(async(count) => {
+    this.dexieService.checkIfExists(solicitud.id!).then(async (count) => {
       if (count) {
         Swal.fire({
           icon: 'question',
@@ -179,23 +190,23 @@ export class PorAtenderComponent implements OnInit {
   }
 
   guardarSolicitudEnCola(solicitud: Solicitud) {
-    this.dexieService.addSolicitudOffline(solicitud).then(async() => {
+    this.dexieService.addSolicitudOffline(solicitud).then(async () => {
       $('#distribuidor option:eq(0)').prop('selected', true);
-        $("#file").val(null);
-        $('.clearDate').click();
-        $('#closeNuevaSolicitudModal').click();
-        $('#closeVerSolicitudModal').click();
-        Swal.fire({
-          icon: 'success',
-          title: 'Solicitud guardada exitosamente. No olvides sincronizarla',
-          allowOutsideClick: false,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              this.router.navigate(['/xAtender']);
-            }); 
-          }
-        });
+      $("#file").val(null);
+      $('.clearDate').click();
+      $('#closeNuevaSolicitudModal').click();
+      $('#closeVerSolicitudModal').click();
+      Swal.fire({
+        icon: 'success',
+        title: 'Solicitud guardada exitosamente. No olvides sincronizarla',
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigate(['/xAtender']);
+          });
+        }
+      });
     });
   }
 
@@ -219,18 +230,18 @@ export class PorAtenderComponent implements OnInit {
       let idSolicitud = parseInt(solicitud.idSolicitud);
       let proveedor = solicitud.nombreSolicitante;
       let cliente = solicitud.nombreCliente;
-      this.dexieService.getSolicitudShow(idSolicitud).then(async(data) => {
+      this.dexieService.getSolicitudShow(idSolicitud).then(async (data) => {
         this.verSolicitudModel = data;
         this.verSolicitudModel.proveedorNombre = proveedor;
         this.verSolicitudModel.clienteNombre = cliente;
-  
+
         this.verSolicitudModel.solicitudPDFNombre!.endsWith('pdf') ? this.sourceIsPDF = true : this.sourceIsPDF = false;
         let clientes = this.distribuidores.find((e: any) => e.id == data.idProveedor)!.clientes!;
         let listas = clientes?.find((e: any) => e.idCliente == data.idCliente)!.listas;
-  
+
         this.verSolicitudListaPrecio = listas;
         $('.lista_precio option:eq(0)').prop('selected', true);
-        this.dexieService.checkIfExists(idSolicitud).then(async(count) => {
+        this.dexieService.checkIfExists(idSolicitud).then(async (count) => {
           if (count) {
             Swal.fire({
               icon: 'question',
@@ -288,7 +299,7 @@ export class PorAtenderComponent implements OnInit {
               if (event.procesar) {
                 this.router.navigateByUrl(`/xAtender/preparar/${event.solicitud.id}/${event.solicitud.idLista}`, { skipLocationChange: true }).then(() => {
                   this.router.navigate(['/xAtender/preparar', event.solicitud.id, event.solicitud.idLista]);
-                }); 
+                });
               } else {
                 this.getOfflineData();
               }
@@ -298,7 +309,7 @@ export class PorAtenderComponent implements OnInit {
           Swal.close();
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this.router.navigate(['/']);
-          }); 
+          });
         }
       }, err => {
         Swal.fire({
@@ -320,7 +331,7 @@ export class PorAtenderComponent implements OnInit {
         });
       });
     }, 3000);
-}
+  }
 
   previewPDF(e: any): void {
     this.sourcePdf = e;
@@ -351,14 +362,14 @@ export class PorAtenderComponent implements OnInit {
   }
 
   getNoEnviados() {
-    this.dexieService.getNoEnviados().then(async(data) => {
+    this.dexieService.getNoEnviados().then(async (data) => {
       this.noEnviados = data;
       if (!data.length) $('#noEnviadosModal').modal('hide');
     });
   }
-  
+
   eliminarNoEnviado(item: any) {
-    this.dexieService.deleteNoEnviado(item.idIndexed).then(async() => {
+    this.dexieService.deleteNoEnviado(item.idIndexed).then(async () => {
       this.getNoEnviados();
     });
   }
@@ -383,11 +394,11 @@ export class PorAtenderComponent implements OnInit {
       })
     ).pipe(toArray()
     ).subscribe(
-      (val) => { 
+      (val) => {
         console.log(val);
         this.recorrerResponses(val, noMostrar);
       },
-      (err) => { 
+      (err) => {
         console.log(err);
         if (!noMostrar) {
           Swal.fire({
@@ -416,7 +427,7 @@ export class PorAtenderComponent implements OnInit {
         title: response,
         allowOutsideClick: false
       }).then(result => {
-        if (result.isConfirmed){
+        if (result.isConfirmed) {
           Swal.fire({
             allowOutsideClick: false,
             text: 'Actualizando informacion...'
@@ -451,7 +462,7 @@ export class PorAtenderComponent implements OnInit {
             case 's':
               string = "\nLas siguientes solicitudes se generaron: " + element;
               break;
-          
+
             case 'c':
               string = "\nLas siguientes cotizaciones se generaron: " + element;
               break;
@@ -459,7 +470,7 @@ export class PorAtenderComponent implements OnInit {
             default:
               break;
           }
-        } else if (idx == array.length-1) {
+        } else if (idx == array.length - 1) {
           string = string + (idx == 0 ? '.' : (', ' + element + '.'));
         } else {
           string = string + ', ' + element;
@@ -475,13 +486,13 @@ export class PorAtenderComponent implements OnInit {
       text: 'Actualizando informacion...'
     });
     Swal.showLoading();
-    this.solicitudService.getOfflineData().subscribe((res:any) => {
-      this.dexieService.clearDB().then(async() => {
+    this.solicitudService.getOfflineData().subscribe((res: any) => {
+      this.dexieService.clearDB().then(async () => {
         this.guardarProveedores(res);
-      }).then(async() => {
+      }).then(async () => {
         this.guardarSolicitudesList(res);
         this.guardarSolicitudesShow(res);
-      }).then(async() => {
+      }).then(async () => {
         $("#noEnviadosModal").modal('hide');
         Swal.fire({
           icon: 'success',
@@ -490,7 +501,7 @@ export class PorAtenderComponent implements OnInit {
         }).then((result) => {
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this.router.navigate(['/xAtender']);
-          }); 
+          });
         });
       });
     }, err => {
@@ -504,23 +515,24 @@ export class PorAtenderComponent implements OnInit {
   }
 
   guardarProveedores(res: any) {
-    res.proveedores.forEach((el:any) => {
+    res.proveedores.forEach((el: any) => {
       let prov = {
-        id: el.id, 
-        nombre: el.nombre, 
-        clientes: el.clientes}
+        id: el.id,
+        nombre: el.nombre,
+        clientes: el.clientes
+      }
       this.dexieService.addProveedor(prov);
     });
   }
-  
+
   guardarSolicitudesList(res: any) {
-    res.solicitudesList.forEach((solicitud:any) => {
+    res.solicitudesList.forEach((solicitud: any) => {
       this.dexieService.addSolicitudList(solicitud);
     });
   }
 
   guardarSolicitudesShow(res: any) {
-    res.solicitudesShow.forEach((solicitud:any) => {
+    res.solicitudesShow.forEach((solicitud: any) => {
       this.dexieService.addSolicitudShow(solicitud);
     });
   }

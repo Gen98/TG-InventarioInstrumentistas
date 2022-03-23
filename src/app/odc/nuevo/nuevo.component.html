@@ -3,15 +3,37 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="nuevaSolicitudModalLabel">Nueva solicitud</h5>
-                <button type="button" id="closeNuevaSolicitudModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="limpiarNuevaSolicitud('completo')"></button>
+                <button type="button" id="closeNuevaSolicitudModal" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close" (click)="limpiarNuevaSolicitud('completo')"></button>
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="d-flex flex-column justify-content-center">
                         <div class="row my-4">
                             <div class="col-lg-4 col-md-12">
+                                <label for="distribuidor">Clasificación de solicitud: </label>
+                                <select name="clasificacion" id="clasificacion" class="form-select"
+                                    (change)="updateSubclasificaciones($event)">
+                                    <option selected value disabled>Selecciona una opción</option>
+                                    <option *ngFor="let clasificacion of clasificaciones" [value]="clasificacion.id">
+                                        {{ clasificacion.nombre }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-12">
+                                <label for="distribuidor">Subcategoria: </label>
+                                <select name="subcategoria" id="subcategoria" class="form-select"
+                                    (change)="updateSubcategoria($event)">
+                                    <option selected value disabled>Selecciona una opción</option>
+                                    <option *ngFor="let subcategoria of subcategorias" [value]="subcategoria.id">
+                                        {{ subcategoria.nombre }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-12">
                                 <label for="distribuidor">Distribuidor: </label>
-                                <select name="distribuidor" id="distribuidor" class="form-select" (change)="getClientes($event)">
+                                <select name="distribuidor" id="distribuidor" class="form-select"
+                                    (change)="getClientes($event)">
                                     <option selected value>Selecciona una opción</option>
                                     <option *ngFor="let distribuidor of distribuidores" [value]="distribuidor.id">
                                         {{ distribuidor.nombre }}
@@ -29,7 +51,8 @@
                             </div>
                             <div class="col-lg-4 col-md-12">
                                 <label for="lista_precios">Lista de precios: </label>
-                                <select name="lista_precio" id="lista_precio" class="form-select" (change)="actualizarListaPrecios($event)">
+                                <select name="lista_precio" id="lista_precio" class="form-select"
+                                    (change)="actualizarListaPrecios($event)">
                                     <option selected value>Selecciona una opción</option>
                                     <option *ngFor="let lista of listasPrecios" [value]="lista.idLista">
                                         {{ lista.descripcion }}
@@ -42,10 +65,11 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="folio">Ruta del archivo: </label>
-                                <input id="file" type="file" class="form-control" name="folio" (change)="subirArchivo($event)">
+                                <input id="file" type="file" class="form-control" name="folio"
+                                    (change)="subirArchivo($event)">
                             </div>
                         </div>
-                        <div class="row my-2">
+                        <div class="row my-2" *ngIf="clasificacion == 1">
                             <div class="col-md-4">
                                 <label for="folio">No Contrato: <span>{{ nuevaSolicitud.noContrato }}</span></label>
                             </div>
@@ -56,20 +80,22 @@
                                 <label for="folio">No Proveedor: <span>{{ nuevaSolicitud.noProveedor }}</span></label>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" *ngIf="clasificacion == 1">
                             <div class="col-md-12">
                                 <label for="paciente">Paciente: </label>
-                                <input type="text" class="form-control" name="paciente" [(ngModel)]="nuevaSolicitud.paciente">
+                                <input type="text" class="form-control" name="paciente"
+                                    [(ngModel)]="nuevaSolicitud.paciente">
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" *ngIf="clasificacion == 1">
                             <div class="col-md-6">
                                 <label for="nss">NSS: </label>
                                 <input type="text" class="form-control" name="nss" [(ngModel)]="nuevaSolicitud.nss">
                             </div>
                             <div class="col-md-6">
                                 <label for="folioConsumo">Folio Consumo: </label>
-                                <input type="text" class="form-control" name="folioConsumo" [(ngModel)]="nuevaSolicitud.folioConsumo">
+                                <input type="text" class="form-control" name="folioConsumo"
+                                    [(ngModel)]="nuevaSolicitud.folioConsumo">
                             </div>
                         </div>
                         <div class="row">
@@ -77,28 +103,32 @@
                                 <label for="fechaReq">Fecha Requisición: </label>
                                 <app-datepicker (actualizarModel)="nuevaSolicitud.fechaReq = $event"></app-datepicker>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" *ngIf="clasificacion == 1">
                                 <label for="fechaCirugia">Fecha Cirugía: </label>
-                                <app-datepicker (actualizarModel)="nuevaSolicitud.fechaCirugia = $event"></app-datepicker>
+                                <app-datepicker (actualizarModel)="nuevaSolicitud.fechaCirugia = $event">
+                                </app-datepicker>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" *ngIf="clasificacion == 1">
                             <div class="col-md-12">
                                 <label for="doctor">Nombre del doctor: </label>
-                                <input type="text" class="form-control" name="doctor" [(ngModel)]="nuevaSolicitud.nombreDoctor">
+                                <input type="text" class="form-control" name="doctor"
+                                    [(ngModel)]="nuevaSolicitud.nombreDoctor">
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center mb-4">
                             <div class="col-sm-12 col-md-12">
                                 <label for="observaciones">Observaciones de la cirugía/prefactura: </label>
-                                <textarea name="comentario" id="comentario" cols="30" rows="5" class="form-control" [(ngModel)]="nuevaSolicitud.observacionesPrefactura"></textarea>
+                                <textarea name="comentario" id="comentario" cols="30" rows="5" class="form-control"
+                                    [(ngModel)]="nuevaSolicitud.observacionesPrefactura"></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="limpiarNuevaSolicitud('completo')">Cancelar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                    (click)="limpiarNuevaSolicitud('completo')">Cancelar</button>
                 <button type="button" class="btn btn-primary" (click)="guardarSolicitud()">Guardar</button>
             </div>
         </div>

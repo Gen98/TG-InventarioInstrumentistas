@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UsuarioModel } from '../interfaces/usuario.interface';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DexieSolicitudesService } from './dexie-solicitudes.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class AuthService {
 
   private cliente: string;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, private dexieService: DexieSolicitudesService) {
     this.cliente = this.readToken();
   }
 
@@ -83,8 +84,10 @@ export class AuthService {
   /* Método que elimina el token y su fecha de expiración
   del localStorage */
   logout(): void {
+
     localStorage.removeItem('cliente');
     localStorage.removeItem('expiration');
+    this.dexieService.clearDB();
     this.router.navigate(['login']);
   }
 

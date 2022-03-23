@@ -3,6 +3,7 @@ import { SolicitudesService } from '../../services/solicitudes.service';
 import { ClienteDistribuidor } from '../../interfaces/cliente_distribuidor.interface';
 import { ListaPrecio } from '../../interfaces/lista_precio.interface';
 import { Solicitud } from '../../interfaces/solicitud.interface';
+import { Clasificacion } from '../../interfaces/clasificacion.interface';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 
@@ -18,12 +19,15 @@ export class NuevoComponent implements OnInit {
   nuevaSolicitud: Solicitud;
   clientes: ClienteDistribuidor[] = [];
   listasPrecios: ListaPrecio[] = [];
-  
+  subcategorias: any[] = [];
+  clasificacion: number = 0;
+
+  @Input() clasificaciones: Clasificacion[] = [];
   @Input() distribuidores: ClienteDistribuidor[] = [];
   @Output() storeSolicitud: EventEmitter<Solicitud> = new EventEmitter();
 
   constructor(private solicitudService: SolicitudesService) {
-    this.distribuidores = []; 
+    this.distribuidores = [];
     this.nuevaSolicitud = {
       idProveedor: 0,
       idUsuarioGenera: 0,
@@ -39,11 +43,25 @@ export class NuevoComponent implements OnInit {
       fechaCirugia: '',
       nombreDoctor: '',
       observacionesPrefactura: '',
-      folioConsumo: ''
+      folioConsumo: '',
+      subcategoria: 0
     }
   }
 
   ngOnInit(): void {
+  }
+
+  updateSubclasificaciones(event: any): void {
+    this.limpiarNuevaSolicitud('subcategoria');
+    let clasificacion = event.target.value;
+    if (!clasificacion || clasificacion == null) return;
+    this.clasificacion = clasificacion;
+    this.subcategorias = this.clasificaciones.find((e: any) => e.id == clasificacion)!.subclasificaciones!;
+    this.nuevaSolicitud.subcategoria = this.subcategorias[0].id;
+  }
+
+  updateSubcategoria(event: any): void {
+    this.nuevaSolicitud.subcategoria = event.target.value;
   }
 
   getClientes(event: any): void {
@@ -73,10 +91,10 @@ export class NuevoComponent implements OnInit {
   actualizarListaPrecios(e: any): void {
     this.limpiarNuevaSolicitud();
     let idLista = e.target.value;
-    
+
     if (!idLista || idLista == null) return;
 
-    let lista = this.listasPrecios.filter(function(lista) {
+    let lista = this.listasPrecios.filter(function (lista) {
       return lista.idLista == idLista;
     });
 
@@ -101,11 +119,16 @@ export class NuevoComponent implements OnInit {
   }
 
   validarSolicitud(): boolean {
+    let subclasificacion = this.subcategorias.find((e: any) => e.id == this.nuevaSolicitud.subcategoria);
     let proveedor = this.distribuidores.find((e: any) => e.id == this.nuevaSolicitud.idProveedor);
     let cliente = this.clientes.find((e: any) => e.idCliente == this.nuevaSolicitud.idCliente);
     let lista = this.listasPrecios.find((e: any) => e.idLista == this.nuevaSolicitud.idLista);
     let fechaReq = moment(this.nuevaSolicitud.fechaReq, "YYYY-MM-DD", true);
     let fechaCirugia = moment(this.nuevaSolicitud.fechaCirugia, "YYYY-MM-DD", true);
+    if (!subclasificacion) {
+      this.mostrarAlert('Selecciona la subcategoria');
+      return false;
+    }
     if (!proveedor) {
       this.mostrarAlert('Selecciona el distribuidor.');
       return false;
@@ -122,38 +145,38 @@ export class NuevoComponent implements OnInit {
       this.mostrarAlert('Es necesario subir el archivo.');
       return false;
     } else {
-      var sizeInMB = parseFloat((this.nuevaSolicitud.solicitudPDF.size / (1024*1024)).toFixed(2));
+      var sizeInMB = parseFloat((this.nuevaSolicitud.solicitudPDF.size / (1024 * 1024)).toFixed(2));
       if (sizeInMB >= 10) {
         this.mostrarAlert('Tu archivo debe pesar menos de 10 MB.');
         return false;
       }
     }
-    if (this.nuevaSolicitud.paciente.length <= 5) {
+    if (this.nuevaSolicitud.paciente.length <= 5 && this.clasificacion == 1) {
       this.mostrarAlert('Ingresa el nombre del paciente.');
       return false;
     }
-    if (!this.nuevaSolicitud.nss) {
+    if (!this.nuevaSolicitud.nss && this.clasificacion == 1) {
       this.mostrarAlert('Ingresa el NSS.');
       return false;
     }
-    if (!this.nuevaSolicitud.folioConsumo) {
+    if (!this.nuevaSolicitud.folioConsumo && this.clasificacion == 1) {
       this.mostrarAlert('Ingresa el folio de consumo.');
       return false;
     }
-    
+
     if (!fechaReq.isValid()) {
       this.mostrarAlert('La fecha de requisicion es invalida.');
       return false;
     }
-    if (!fechaCirugia.isValid()) {
+    if (!fechaCirugia.isValid() && this.clasificacion == 1) {
       this.mostrarAlert('La fecha de cirugia es invalida.');
       return false;
     }
-    if (fechaReq.isAfter(fechaCirugia)) {
+    if (fechaReq.isAfter(fechaCirugia) && this.clasificacion == 1) {
       this.mostrarAlert('La fecha de cirugia no puede ser menor a la fecha de requisicion.');
       return false;
     }
-    if (!this.nuevaSolicitud.nombreDoctor) {
+    if (!this.nuevaSolicitud.nombreDoctor && this.clasificacion == 1) {
       this.mostrarAlert('Ingresa el nombre del doctor.');
       return false;
     }
@@ -180,14 +203,26 @@ export class NuevoComponent implements OnInit {
       this.clientes = [];
       this.nuevaSolicitud.idProveedor = 0;
     }
-    if (tipo == 'cliente' || tipo == 'proveedor' || tipo =='completo') {
+    if (tipo == 'cliente' || tipo == 'proveedor' || tipo == 'completo') {
       this.listasPrecios = [];
       this.nuevaSolicitud.idCliente = 0;
     }
-    this.nuevaSolicitud.idLista = 0;
-    this.nuevaSolicitud.noContrato = '';
-    this.nuevaSolicitud.noFianza = '';
-    this.nuevaSolicitud.noProveedor = '';
+    if (tipo == 'subcategoria' || tipo == 'completo') {
+      this.nuevaSolicitud.subcategoria = 0;
+      $('.clearDate').click();
+      this.nuevaSolicitud.idUsuarioGenera = 0;
+      this.nuevaSolicitud.paciente = '';
+      this.nuevaSolicitud.nss = '';
+      this.nuevaSolicitud.fechaCirugia = ''
+      this.nuevaSolicitud.nombreDoctor = '';
+      this.nuevaSolicitud.folioConsumo = '';
+    }
+    if (tipo != 'subcategoria') {
+      this.nuevaSolicitud.idLista = 0;
+      this.nuevaSolicitud.noContrato = '';
+      this.nuevaSolicitud.noFianza = '';
+      this.nuevaSolicitud.noProveedor = '';
+    }
   }
 
   mostrarAlert(mensaje: string): void {

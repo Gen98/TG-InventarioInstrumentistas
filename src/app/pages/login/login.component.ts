@@ -84,6 +84,8 @@ export class LoginComponent implements OnInit {
   getOfflineData(): void {
     this.solicitudService.getOfflineData().subscribe((res: any) => {
       this.dexieSolicitudService.clearDB().then(async () => {
+        this.guardarClasificaciones(res);
+      }).then(async () => {
         this.guardarProveedores(res);
       }).then(async () => {
         this.guardarSolicitudesList(res);
@@ -105,6 +107,17 @@ export class LoginComponent implements OnInit {
         title: 'Error',
         text: 'Error almacenando offline Data.'
       });
+    });
+  }
+
+  guardarClasificaciones(res: any) {
+    res.clasificacionesCirugia.forEach((el: any) => {
+      let clas = {
+        id: el.id,
+        nombre: el.nombre,
+        subclasificaciones: el.subclasificaciones
+      }
+      this.dexieSolicitudService.addClasificacion(clas);
     });
   }
 
