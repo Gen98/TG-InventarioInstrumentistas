@@ -82,7 +82,7 @@
 </div>
 <app-nuevo [clasificaciones]="clasificaciones" [distribuidores]="distribuidores"
     (storeSolicitud)="guardarSolicitud($event)"></app-nuevo>
-<app-ver [solicitud]="verSolicitudModel" [listasPrecios]="verSolicitudListaPrecio"
+<app-ver [solicitud]="verSolicitudModel" [listasPrecios]="verSolicitudListaPrecio" [clasificaciones]="clasificaciones"
     (updateSolicitud)="actualizarSolicitud($event)" (previewPdf)="previewPDF($event)"></app-ver>
 <div class="container-fluid m-0 p-0">
     <div class="d-flex flex-column justify-content-center">

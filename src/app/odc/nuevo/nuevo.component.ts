@@ -151,15 +151,15 @@ export class NuevoComponent implements OnInit {
         return false;
       }
     }
-    if (this.nuevaSolicitud.paciente.length <= 5 && this.clasificacion == 1) {
+    if (this.nuevaSolicitud.paciente.length <= 5 && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('Ingresa el nombre del paciente.');
       return false;
     }
-    if (!this.nuevaSolicitud.nss && this.clasificacion == 1) {
+    if (!this.nuevaSolicitud.nss && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('Ingresa el NSS.');
       return false;
     }
-    if (!this.nuevaSolicitud.folioConsumo && this.clasificacion == 1) {
+    if (!this.nuevaSolicitud.folioConsumo && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('Ingresa el folio de consumo.');
       return false;
     }
@@ -168,15 +168,15 @@ export class NuevoComponent implements OnInit {
       this.mostrarAlert('La fecha de requisicion es invalida.');
       return false;
     }
-    if (!fechaCirugia.isValid() && this.clasificacion == 1) {
+    if (!fechaCirugia.isValid() && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('La fecha de cirugia es invalida.');
       return false;
     }
-    if (fechaReq.isAfter(fechaCirugia) && this.clasificacion == 1) {
+    if (fechaReq.isAfter(fechaCirugia) && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('La fecha de cirugia no puede ser menor a la fecha de requisicion.');
       return false;
     }
-    if (!this.nuevaSolicitud.nombreDoctor && this.clasificacion == 1) {
+    if (!this.nuevaSolicitud.nombreDoctor && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('Ingresa el nombre del doctor.');
       return false;
     }

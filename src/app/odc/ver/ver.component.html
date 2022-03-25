@@ -15,6 +15,26 @@
                                         solicitud.textoSubclas : '--' }}</span></label>
                             </div>
                             <div class="col-md-12 my-1">
+                                <label for="clasificacion">Clasificación de solicitud: </label>
+                                <select name="clasificacion" id="clasificacion" class="form-select clasificaciones"
+                                    (change)="updateSubclasificaciones($event)">
+                                    <option selected value disabled>Selecciona una opción</option>
+                                    <option *ngFor="let clasificacion of clasificaciones" [value]="clasificacion.id">
+                                        {{ clasificacion.nombre }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 my-1">
+                                <label for="subcategoria">Subcategoria: </label>
+                                <select name="subcategoria" id="subcategoria" class="form-select subclasificaciones"
+                                    (change)="updateSubcategoria($event)">
+                                    <option selected value disabled>Selecciona una opción</option>
+                                    <option *ngFor="let subcategoria of subcategorias" [value]="subcategoria.id">
+                                        {{ subcategoria.nombre }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 my-1">
                                 <label for="distribuidor">Distribuidor: <span>{{ solicitud.proveedorNombre
                                         }}</span></label>
                             </div>

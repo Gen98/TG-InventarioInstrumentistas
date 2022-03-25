@@ -223,6 +223,8 @@ export class PorAtenderComponent implements OnInit {
       this.verSolicitudModel.solicitudPDFNombre!.endsWith('pdf') ? this.sourceIsPDF = true : this.sourceIsPDF = false;
 
       $('.lista_precio option:eq(0)').prop('selected', true);
+      $('.clasificaciones option:eq(0)').prop('selected', true);
+      $('.subclasificaciones option:eq(0)').prop('selected', true);
       $('.verFooter').addClass('d-none');
       $('#noEnviadosModal').modal('hide');
       $('#verSolicitudModal').modal('show');
@@ -241,6 +243,8 @@ export class PorAtenderComponent implements OnInit {
 
         this.verSolicitudListaPrecio = listas;
         $('.lista_precio option:eq(0)').prop('selected', true);
+        $('.clasificaciones option:eq(0)').prop('selected', true);
+        $('.subclasificaciones option:eq(0)').prop('selected', true);
         this.dexieService.checkIfExists(idSolicitud).then(async (count) => {
           if (count) {
             Swal.fire({
@@ -488,6 +492,8 @@ export class PorAtenderComponent implements OnInit {
     Swal.showLoading();
     this.solicitudService.getOfflineData().subscribe((res: any) => {
       this.dexieService.clearDB().then(async () => {
+        this.guardarClasificaciones(res);
+      }).then(async () => {
         this.guardarProveedores(res);
       }).then(async () => {
         this.guardarSolicitudesList(res);
@@ -511,6 +517,17 @@ export class PorAtenderComponent implements OnInit {
         title: 'Error',
         text: 'Error almacenando offline Data.'
       });
+    });
+  }
+
+  guardarClasificaciones(res: any) {
+    res.clasificacionesCirugia.forEach((el: any) => {
+      let clas = {
+        id: el.id,
+        nombre: el.nombre,
+        subclasificaciones: el.subclasificaciones
+      }
+      this.dexieService.addClasificacion(clas);
     });
   }
 

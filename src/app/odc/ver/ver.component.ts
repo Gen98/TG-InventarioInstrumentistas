@@ -4,6 +4,7 @@ import { saveAs as importedSaveAs } from "file-saver";
 import Swal from 'sweetalert2';
 import moment from 'moment';
 import { SolicitudesService } from '../../services/solicitudes.service';
+import { Clasificacion } from '../../interfaces/clasificacion.interface';
 import { ListaPrecio } from '../../interfaces/lista_precio.interface';
 import { Solicitud } from '../../interfaces/solicitud.interface';
 
@@ -17,8 +18,11 @@ declare var $: any;
 export class VerComponent implements OnInit {
 
   dateUpdated: boolean = false;
+  clasificacion: number = 0;
+  subcategorias: any[] = [];
   @Input() solicitud: Solicitud | any;
   @Input() listasPrecios: ListaPrecio[] = [];
+  @Input() clasificaciones: Clasificacion[] = [];
   @Output() updateSolicitud: EventEmitter<any> = new EventEmitter();
   @Output() previewPdf: EventEmitter<any> = new EventEmitter();
 
@@ -96,6 +100,7 @@ export class VerComponent implements OnInit {
   }
 
   actualizarSolicitud(): void {
+    console.log(this.solicitud);
     if (this.validarSolicitud()) {
       this.updateSolicitud.emit({ solicitud: this.solicitud, procesar: false, dateUpdated: this.dateUpdated });
       this.dateUpdated = false;
@@ -103,22 +108,27 @@ export class VerComponent implements OnInit {
   }
 
   validarSolicitud(): boolean {
+    let subclasificacion = this.subcategorias.find((e: any) => e.id == this.solicitud.subcategoria);
     let lista = this.listasPrecios.find((e: any) => e.idLista == this.solicitud.idLista);
     let fechaReq = moment(this.solicitud.fechaReq, "YYYY-MM-DD", true);
     let fechaCirugia = moment(this.solicitud.fechaCirugia, "YYYY-MM-DD", true);
+    if (!subclasificacion) {
+      this.mostrarAlert('Selecciona la subcategoria');
+      return false;
+    }
     if (!lista) {
       this.mostrarAlert('Selecciona la lista de precios.');
       return false;
     }
-    if (this.solicitud.paciente.length <= 5) {
+    if (this.solicitud.paciente.length <= 5 && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('Ingresa el nombre del paciente.');
       return false;
     }
-    if (!this.solicitud.nss) {
+    if (!this.solicitud.nss && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('Ingresa el NSS.');
       return false;
     }
-    if (!this.solicitud.folioConsumo) {
+    if (!this.solicitud.folioConsumo && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('Ingresa el folio de consumo.');
       return false;
     }
@@ -127,15 +137,15 @@ export class VerComponent implements OnInit {
       this.mostrarAlert('La fecha de requisicion es invalida.');
       return false;
     }
-    if (!fechaCirugia.isValid()) {
+    if (!fechaCirugia.isValid() && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('La fecha de cirugia es invalida.');
       return false;
     }
-    if (fechaReq.isAfter(fechaCirugia)) {
+    if (fechaReq.isAfter(fechaCirugia) && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('La fecha de cirugia no puede ser menor a la fecha de requisicion.');
       return false;
     }
-    if (!this.solicitud.nombreDoctor) {
+    if (!this.solicitud.nombreDoctor && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('Ingresa el nombre del doctor.');
       return false;
     }
@@ -168,9 +178,31 @@ export class VerComponent implements OnInit {
   }
 
   mostrarCamposCirugia(): boolean {
-    let ids = [1, 2, 3, 11, 12, 13];
-
-    return ids.includes(this.solicitud.subcategoria);
+    let ids = ['1', '2', '3', '11', '12', '13'];
+    let sub = this.solicitud.subcategoria;
+    return ids.includes(sub ? sub.toString() : null);
   }
 
+  updateSubclasificaciones(event: any): void {
+    let clasificacion = event.target.value;
+    if (!clasificacion || clasificacion == null) return;
+    if (!((this.clasificacion == 5 || this.clasificacion <= 1) && (clasificacion == 5 || clasificacion == 1))) this.limpiarSolicitud();
+    this.clasificacion = clasificacion;
+    this.subcategorias = this.clasificaciones.find((e: any) => e.id == clasificacion)!.subclasificaciones!;
+    this.solicitud.subcategoria = this.subcategorias[0].id.toString();
+    $('.subclasificaciones option:eq(1)').prop('selected', true);
+  }
+
+  updateSubcategoria(event: any): void {
+    this.solicitud.subcategoria = event.target.value;
+  }
+
+  limpiarSolicitud(): void {
+    $('.clearDate').click();
+    this.solicitud.paciente = '';
+    this.solicitud.nss = '';
+    this.solicitud.fechaCirugia = ''
+    this.solicitud.nombreDoctor = '';
+    this.solicitud.folioConsumo = '';
+  }
 }

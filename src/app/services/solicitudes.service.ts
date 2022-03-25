@@ -127,6 +127,7 @@ export class SolicitudesService {
     formData.append('nombreDoctor', solicitud.nombreDoctor);
     formData.append('observacionesPrefactura', solicitud.observacionesPrefactura);
     formData.append('folioConsumo', solicitud.folioConsumo);
+    formData.append('subcategoria', solicitud.subcategoria!.toString());
 
     return this.http.put<any>(url, formData);
   }
