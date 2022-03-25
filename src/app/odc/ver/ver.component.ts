@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import {saveAs as importedSaveAs} from "file-saver";
+import { saveAs as importedSaveAs } from "file-saver";
 import Swal from 'sweetalert2';
 import moment from 'moment';
 import { SolicitudesService } from '../../services/solicitudes.service';
@@ -17,7 +17,7 @@ declare var $: any;
 export class VerComponent implements OnInit {
 
   dateUpdated: boolean = false;
-  @Input() solicitud: Solicitud|any;
+  @Input() solicitud: Solicitud | any;
   @Input() listasPrecios: ListaPrecio[] = [];
   @Output() updateSolicitud: EventEmitter<any> = new EventEmitter();
   @Output() previewPdf: EventEmitter<any> = new EventEmitter();
@@ -36,16 +36,16 @@ export class VerComponent implements OnInit {
       const byteCharacters = atob(this.solicitud.archivoSolicitud);
       const byteNumbers = new Array(byteCharacters.length);
       for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
       const byteArray = new Uint8Array(byteNumbers);
-      const file = new Blob([byteArray], {type: 'application/pdf'});
+      const file = new Blob([byteArray], { type: 'application/pdf' });
       // this.solicitudService.downloadPDF(this.solicitud.idSolicitudPDF).subscribe(res => {
-        // let file = new Blob([this.solicitud.archivoSolicitud], { type: 'application/pdf' });
-        var fileURL = URL.createObjectURL(file);
-        this.previewPdf.emit(fileURL);
-        
-        // importedSaveAs(file, this.solicitud.solicitudPDFNombre);
+      // let file = new Blob([this.solicitud.archivoSolicitud], { type: 'application/pdf' });
+      var fileURL = URL.createObjectURL(file);
+      this.previewPdf.emit(fileURL);
+
+      // importedSaveAs(file, this.solicitud.solicitudPDFNombre);
       // });
     } else {
       if (!this.solicitud.solicitudPDFNombre.endsWith('pdf')) {
@@ -62,14 +62,14 @@ export class VerComponent implements OnInit {
     }
   }
 
-  arrayBufferToBase64( buffer: any ) {
+  arrayBufferToBase64(buffer: any) {
     var binary = '';
-    var bytes = new Uint8Array( buffer );
+    var bytes = new Uint8Array(buffer);
     var len = bytes.byteLength;
     for (var i = 0; i < len; i++) {
-      binary += String.fromCharCode( bytes[ i ] );
+      binary += String.fromCharCode(bytes[i]);
     }
-    return window.btoa( binary );
+    return window.btoa(binary);
 
   }
 
@@ -82,10 +82,10 @@ export class VerComponent implements OnInit {
 
   actualizarListaPrecios(e: any): void {
     let idLista = e.target.value;
-    
+
     if (!idLista || idLista == null) return;
 
-    let lista = this.listasPrecios.filter(function(lista) {
+    let lista = this.listasPrecios.filter(function (lista) {
       return lista.idLista == idLista;
     });
 
@@ -97,7 +97,7 @@ export class VerComponent implements OnInit {
 
   actualizarSolicitud(): void {
     if (this.validarSolicitud()) {
-      this.updateSolicitud.emit({solicitud: this.solicitud, procesar: false, dateUpdated: this.dateUpdated});
+      this.updateSolicitud.emit({ solicitud: this.solicitud, procesar: false, dateUpdated: this.dateUpdated });
       this.dateUpdated = false;
     }
   }
@@ -122,7 +122,7 @@ export class VerComponent implements OnInit {
       this.mostrarAlert('Ingresa el folio de consumo.');
       return false;
     }
-    
+
     if (!fechaReq.isValid()) {
       this.mostrarAlert('La fecha de requisicion es invalida.');
       return false;
@@ -162,9 +162,15 @@ export class VerComponent implements OnInit {
 
   procesar(): void {
     if (this.validarSolicitud() && this.procesarDisponible()) {
-      this.updateSolicitud.emit({solicitud: this.solicitud, procesar: true, dateUpdated: this.dateUpdated});
+      this.updateSolicitud.emit({ solicitud: this.solicitud, procesar: true, dateUpdated: this.dateUpdated });
       this.dateUpdated = false;
     }
+  }
+
+  mostrarCamposCirugia(): boolean {
+    let ids = [1, 2, 3, 11, 12, 13];
+
+    return ids.includes(this.solicitud.subcategoria);
   }
 
 }

@@ -44,7 +44,7 @@
                                     (change)="subirArchivo($event)">
                             </div>
                         </div>
-                        <div class="row my-2" *ngIf="solicitud.subcategoria <= 3">
+                        <div class="row my-2" *ngIf="mostrarCamposCirugia()">
                             <div class="col-md-4">
                                 <label for="folio">No Contrato: <span>{{ solicitud.noContrato }}</span></label>
                             </div>
@@ -55,14 +55,14 @@
                                 <label for="folio">No Proveedor: <span>{{ solicitud.noProveedor }}</span></label>
                             </div>
                         </div>
-                        <div class="row" *ngIf="solicitud.subcategoria <= 3">
+                        <div class="row" *ngIf="mostrarCamposCirugia()">
                             <div class="col-md-12">
                                 <label for="paciente">Paciente: </label>
                                 <input type="text" class="form-control" name="paciente"
                                     [(ngModel)]="solicitud.paciente">
                             </div>
                         </div>
-                        <div class="row" *ngIf="solicitud.subcategoria <= 3">
+                        <div class="row" *ngIf="mostrarCamposCirugia()">
                             <div class="col-md-6">
                                 <label for="nss">NSS: </label>
                                 <input type="text" class="form-control" name="nss" [(ngModel)]="solicitud.nss">
@@ -78,13 +78,13 @@
                                 <label for="fechaReq">Fecha Requisición: {{ solicitud.fechaReq }} </label>
                                 <app-datepicker (actualizarModel)="solicitud.fechaReq = $event"></app-datepicker>
                             </div>
-                            <div class="col-md-6" *ngIf="solicitud.subcategoria <= 3">
+                            <div class="col-md-6" *ngIf="mostrarCamposCirugia()">
                                 <label for="fechaCirugia">Fecha Cirugía: {{ solicitud.fechaCirugia }} </label>
                                 <app-datepicker (actualizarModel)="solicitud.fechaCirugia = $event"
                                     (actualizarModel)="dateUpdated = true"></app-datepicker>
                             </div>
                         </div>
-                        <div class="row" *ngIf="solicitud.subcategoria <= 3">
+                        <div class="row" *ngIf="mostrarCamposCirugia()">
                             <div class="col-md-12">
                                 <label for="doctor">Nombre del doctor: </label>
                                 <input type="text" class="form-control" name="doctor"

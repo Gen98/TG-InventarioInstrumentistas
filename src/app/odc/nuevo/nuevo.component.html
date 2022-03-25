@@ -69,7 +69,7 @@
                                     (change)="subirArchivo($event)">
                             </div>
                         </div>
-                        <div class="row my-2" *ngIf="clasificacion == 1">
+                        <div class="row my-2" *ngIf="clasificacion == 1 || clasificacion == 5">
                             <div class="col-md-4">
                                 <label for="folio">No Contrato: <span>{{ nuevaSolicitud.noContrato }}</span></label>
                             </div>
@@ -80,14 +80,14 @@
                                 <label for="folio">No Proveedor: <span>{{ nuevaSolicitud.noProveedor }}</span></label>
                             </div>
                         </div>
-                        <div class="row" *ngIf="clasificacion == 1">
+                        <div class="row" *ngIf="clasificacion == 1 || clasificacion == 5">
                             <div class="col-md-12">
                                 <label for="paciente">Paciente: </label>
                                 <input type="text" class="form-control" name="paciente"
                                     [(ngModel)]="nuevaSolicitud.paciente">
                             </div>
                         </div>
-                        <div class="row" *ngIf="clasificacion == 1">
+                        <div class="row" *ngIf="clasificacion == 1 || clasificacion == 5">
                             <div class="col-md-6">
                                 <label for="nss">NSS: </label>
                                 <input type="text" class="form-control" name="nss" [(ngModel)]="nuevaSolicitud.nss">
@@ -103,13 +103,13 @@
                                 <label for="fechaReq">Fecha Requisición: </label>
                                 <app-datepicker (actualizarModel)="nuevaSolicitud.fechaReq = $event"></app-datepicker>
                             </div>
-                            <div class="col-md-6" *ngIf="clasificacion == 1">
+                            <div class="col-md-6" *ngIf="clasificacion == 1 || clasificacion == 5">
                                 <label for="fechaCirugia">Fecha Cirugía: </label>
                                 <app-datepicker (actualizarModel)="nuevaSolicitud.fechaCirugia = $event">
                                 </app-datepicker>
                             </div>
                         </div>
-                        <div class="row" *ngIf="clasificacion == 1">
+                        <div class="row" *ngIf="clasificacion == 1 || clasificacion == 5">
                             <div class="col-md-12">
                                 <label for="doctor">Nombre del doctor: </label>
                                 <input type="text" class="form-control" name="doctor"
