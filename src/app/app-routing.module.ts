@@ -6,7 +6,9 @@ import { CatalogoComponent } from './components/catalogo/catalogo.component';
 import { MovimientosComponent } from './bounes/movimientos/movimientos.component';
 import { AlmacenesComponent } from './components/almacenes/almacenes.component';
 import { PorAtenderComponent } from './odc/por-atender/por-atender.component';
+import { PorAtenderOnlineComponent } from './odc/por-atender-online/por-atender-online.component';
 import { ProcesarComponent } from './odc/procesar/procesar.component';
+import { ProcesarOnlineComponent } from './odc/procesar-online/procesar-online.component';
 import { LoginComponent } from './pages/login/login.component';
 import { EncuestaPageComponent } from './pages/encuesta-page/encuesta-page.component';
 
@@ -36,8 +38,18 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'xAtender-online',
+    component: PorAtenderOnlineComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'xAtender/preparar/:idSolicitud/:idListaPrecio',
     component: ProcesarComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'xAtender-online/preparar/:idSolicitud/:idListaPrecio',
+    component: ProcesarOnlineComponent,
     canActivate: [AuthGuard]
   },
   {

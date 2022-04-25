@@ -6,18 +6,19 @@ import { ClienteDistribuidor } from '../interfaces/cliente_distribuidor.interfac
 import { ListaPrecio } from '../interfaces/lista_precio.interface';
 import { Solicitud } from '../interfaces/solicitud.interface';
 import { ProductoPartida } from '../interfaces/producto_partida.interface';
+import { Clasificacion } from '../interfaces/clasificacion.interface';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SolicitudesService {
 
-  private endPoint: string = '';
+  private endPoint: string = environment.api + 'solicitudes';
   private cliente: string;
 
   constructor(private http: HttpClient) {
     this.cliente = this.readToken();
-    this.endPoint = 'https://inventario-bounes.truemedgroup.com:7004/solicitudes'
   }
 
   readToken(): string {
@@ -31,10 +32,16 @@ export class SolicitudesService {
     return this.http.get(url);
   }
 
-  getXAtender() {
+  getXAtender(): Observable<any[]> {
     this.cliente = this.readToken();
     let url = this.endPoint + `/xAtender/${this.cliente}`;
-    return this.http.get(url);
+    return this.http.get<any[]>(url);
+  }
+
+  getXAtenderDataTables(dataTablesParameters: any): Observable<any> {
+    this.cliente = this.readToken();
+    let url = this.endPoint + `/xAtender/${this.cliente}/datatables`;
+    return this.http.post<any>(url, dataTablesParameters);
   }
 
   showXAtender(idSolicitud: number): Observable<Solicitud> {
@@ -130,5 +137,11 @@ export class SolicitudesService {
     formData.append('subcategoria', solicitud.subcategoria!.toString());
 
     return this.http.put<any>(url, formData);
+  }
+
+  getClasificaciones(): Observable<Clasificacion[]> {
+    let url = this.endPoint + `/clasificaciones`;
+
+    return this.http.get<Clasificacion[]>(url);
   }
 }

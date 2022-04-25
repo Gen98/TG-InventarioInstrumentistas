@@ -154,10 +154,10 @@ export class CotizarComponent implements OnInit {
             if (result.isConfirmed) {
               $('#detalleSolicitudModal').modal('hide');
               $('#cotizarModal').modal('hide');
-              this.getOfflineData();
-              // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              //   this.router.navigate(['/xAtender']);
-              // }); 
+              // this.getOfflineData();
+              this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                this.router.navigate(['/xAtender-online']);
+              }); 
             }
           });
         }

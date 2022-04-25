@@ -49,12 +49,23 @@ export class LoginComponent implements OnInit {
     this.authSuscription = this.authService.login(this.usuario)
       .subscribe(response => {
         if (response.status == 200) {
+          // Offline
+
+          // Swal.fire({
+          //   allowOutsideClick: false,
+          //   text: 'Acceso correcto, cargando...'
+          // });
+          // Swal.showLoading();
+          // this.getOfflineData();
+
+          // Online
           Swal.fire({
-            allowOutsideClick: false,
-            text: 'Acceso correcto, cargando...'
+            icon: 'success',
+            text: 'Acceso correcto',
+            showConfirmButton: false,
+            timer: 2000
           });
-          Swal.showLoading();
-          this.getOfflineData();
+          this.router.navigate(['xAtender-online']);
         } else {
           Swal.fire({
             icon: 'error',

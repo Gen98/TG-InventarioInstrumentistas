@@ -66,7 +66,7 @@ export class SidebarComponent implements OnInit {
         this.router.navigate(['almacenes']);
         break;
       case 'xAtender':
-        this.router.navigate(['xAtender']);
+        this.router.navigate(['xAtender-online']);
         break;
     }
     setTimeout(() => {

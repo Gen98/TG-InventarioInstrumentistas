@@ -5,6 +5,7 @@ import { UsuarioModel } from '../interfaces/usuario.interface';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DexieSolicitudesService } from './dexie-solicitudes.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import { DexieSolicitudesService } from './dexie-solicitudes.service';
 export class AuthService {
 
   private cliente: string;
+  private endPoint: string = environment.api + 'security';
 
   constructor(private http: HttpClient, private router: Router, private dexieService: DexieSolicitudesService) {
     this.cliente = this.readToken();
@@ -21,7 +23,7 @@ export class AuthService {
    Para el login, se pide un objeto de tupo UsuarioModel que contiene
    su username y password */
   login(usuario: UsuarioModel): Observable<any> {
-    const urlEndpoint = 'https://inventario-bounes.truemedgroup.com:7004/security/oauth/token';
+    const urlEndpoint = this.endPoint + '/oauth/token';
     const credenciales = btoa('tmapp' + ':' + 'Ag785.-4$795Tyui');
 
     const httpHeaders = new HttpHeaders({

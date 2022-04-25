@@ -13,6 +13,8 @@ import { DetalleComponent } from './detalle/detalle.component';
 import { CotizarComponent } from './cotizar/cotizar.component';
 import { NuevoComponent } from './nuevo/nuevo.component';
 import { VerComponent } from './ver/ver.component';
+import { PorAtenderOnlineComponent } from './por-atender-online/por-atender-online.component';
+import { ProcesarOnlineComponent } from './procesar-online/procesar-online.component';
 
 
 
@@ -24,7 +26,9 @@ import { VerComponent } from './ver/ver.component';
     VerComponent,
     ProcesarComponent,
     DetalleComponent,
-    CotizarComponent
+    CotizarComponent,
+    PorAtenderOnlineComponent,
+    ProcesarOnlineComponent
   ],
   imports: [
     CommonModule,

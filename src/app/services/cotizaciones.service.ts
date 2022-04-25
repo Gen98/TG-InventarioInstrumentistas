@@ -2,16 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { InformacionCotizar } from '../interfaces/informacion_cotizar.interface';
+import { environment } from '../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CotizacionesService {
 
-  private endPoint: string = '';
+  private endPoint: string = environment.api + 'cotizaciones';
 
   constructor(private http: HttpClient) {
-    this.endPoint = 'https://inventario-bounes.truemedgroup.com:7004/cotizaciones'
+
   }
 
   getInformacionCotizar(idCliente: number): Observable<InformacionCotizar> {
