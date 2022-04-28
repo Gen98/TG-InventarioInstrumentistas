@@ -24,4 +24,5 @@ export interface InformacionCotizar {
     nosCuenta: string[];
     tiposPago: tipoPago[];
     usosCFDI: usoCFDI[];
+    esTipoCirugia?: boolean;
 }

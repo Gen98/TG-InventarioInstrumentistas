@@ -51,8 +51,20 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
+                        <label for="hoja_consumo">Hoja de soporte:</label>
+                        <input id="file-s" type="file" class="form-control" name="hoja_soporte" (change)="subirArchivo($event, 'soporte')">
+                    </div>
+                </div>
+                <div class="row" *ngIf="informacion.esTipoCirugia == true">
+                    <div class="col-12">
                         <label for="hoja_consumo">Hoja de consumo:</label>
-                        <input id="file" type="file" class="form-control" name="hoja_consumo" (change)="subirArchivo($event)">
+                        <input id="file-c" type="file" accept=".jpg, .jpeg" class="form-control" name="hoja_consumo" (change)="subirArchivo($event, 'consumo')">
+                    </div>
+                </div>
+                <div class="row" *ngIf="informacion.esTipoCirugia != true">
+                    <div class="col-12">
+                        <label for="hoja_consumo">Hoja de consumo:</label>
+                        <input id="file-c" type="file" accept=".xlsx, .xls" class="form-control" name="hoja_consumo" (change)="subirArchivo($event, 'consumo')">
                     </div>
                 </div>
             </div>
