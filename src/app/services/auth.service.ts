@@ -52,6 +52,7 @@ export class AuthService {
     localStorage.setItem('showSurvey', mostrarEnc ? 'true' : 'false');
     this.cliente = cliente;
     localStorage.setItem('cliente', cliente);
+    localStorage.setItem('clienteAlmacenes', cliente);
     let date = new Date();
     date.setSeconds(expiresIn);
     localStorage.setItem('expiration', date.getTime().toString());

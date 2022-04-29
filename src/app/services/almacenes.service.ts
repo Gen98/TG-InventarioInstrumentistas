@@ -37,7 +37,9 @@ export class AlmacenesService {
   }
 
   sincronizar(): Observable<Almacen[]> {
-    return this.http.get<Observable<any>>('https://inventario-bounes.truemedgroup.com:7004/movimientos/almacenes')
+    let idProveedor = localStorage.getItem('clienteAlmacenes') || '0';
+
+    return this.http.get<Observable<any>>('https://inventario-bounes.truemedgroup.com:7004/movimientos/almacenes/' + idProveedor)
       .pipe(
         map(resp => {
           let newArray: any[] = [];
