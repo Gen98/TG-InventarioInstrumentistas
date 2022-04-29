@@ -65,24 +65,28 @@ export class SolicitudesService {
   }
 
   getClientes(proveedor: number): Observable<ClienteDistribuidor[]> {
+    this.cliente = this.readToken();
     let url = this.endPoint + `/clientes/${proveedor}`;
 
     return this.http.get<ClienteDistribuidor[]>(url);
   }
 
   getListas(cliente: number): Observable<ListaPrecio[]> {
+    this.cliente = this.readToken();
     let url = this.endPoint + `/listas/${cliente}`;
 
     return this.http.get<ListaPrecio[]>(url);
   }
 
   getCodigosPartidas(idLista: number): Observable<string[]> {
+    this.cliente = this.readToken();
     let url = this.endPoint + `/listas/cPartidas/${idLista}`;
 
     return this.http.get<string[]>(url);
   }
 
   getProductosPartidas(idLista: number, cPartida: string): Observable<ProductoPartida[]> {
+    this.cliente = this.readToken();
     let url = this.endPoint + `/listas/productos/${idLista}/${cPartida}`;
 
     return this.http.get<ProductoPartida[]>(url);
@@ -108,6 +112,7 @@ export class SolicitudesService {
     formData.append('observacionesPrefactura', solicitud.observacionesPrefactura);
     formData.append('folioConsumo', solicitud.folioConsumo);
     formData.append('subcategoria', solicitud.subcategoria!.toString());
+    formData.append('idListaPrecio', solicitud.idLista.toString());
 
     return this.http.post<any>(url, formData);
   }
@@ -135,11 +140,13 @@ export class SolicitudesService {
     formData.append('observacionesPrefactura', solicitud.observacionesPrefactura);
     formData.append('folioConsumo', solicitud.folioConsumo);
     formData.append('subcategoria', solicitud.subcategoria!.toString());
+    formData.append('idListaPrecio', solicitud.idLista.toString());
 
     return this.http.put<any>(url, formData);
   }
 
   getClasificaciones(): Observable<Clasificacion[]> {
+    this.cliente = this.readToken();
     let url = this.endPoint + `/clasificaciones`;
 
     return this.http.get<Clasificacion[]>(url);

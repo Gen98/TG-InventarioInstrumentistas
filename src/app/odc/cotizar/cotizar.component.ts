@@ -26,6 +26,7 @@ export class CotizarComponent implements OnInit {
     tipoPago: number;
     cfdi: string;
     hojaConsumo: any;
+    hojaConsumo2: any;
   };
   isConnected: boolean = false;
   noEnviados: any[] = [];
@@ -54,6 +55,7 @@ export class CotizarComponent implements OnInit {
       tipoPago: 0,
       cfdi: '',
       hojaConsumo: null,
+      hojaConsumo2: null
     }
     wifiStatusService.createOnline().subscribe(isOnline => {
       this.isConnected = isOnline;
@@ -69,10 +71,18 @@ export class CotizarComponent implements OnInit {
     this.request.cfdi = this.informacion.usosCFDI.length ? this.informacion.usosCFDI[0].clave : '';
   }
 
-  subirArchivo(e: any): void {
-    this.request.hojaConsumo = '';
-    if (e.target.files.length) {
-      this.request.hojaConsumo = e.target.files[0];
+  subirArchivo(e: any, tipo: string): void {
+    if (tipo == 'soporte') {
+      this.request.hojaConsumo = '';
+      if (e.target.files.length) {
+        this.request.hojaConsumo = e.target.files[0];
+      }
+    }
+    if (tipo == 'consumo') {
+      this.request.hojaConsumo2 = '';
+      if (e.target.files.length) {
+        this.request.hojaConsumo2 = e.target.files[0]; 
+      }
     }
   }
 
@@ -97,9 +107,13 @@ export class CotizarComponent implements OnInit {
       pedido: pedido
     }
     if (this.isConnected) {
-      this.enviarAhora(data);
+      if (this.informacion.esTipoCirugia) {
+        this.validarRegistroSeguimiento(data);
+      } else {
+        this.enviarAhora(data);
+      }
     } else {
-      this.checkIfExists(data);
+      // this.checkIfExists(data);
     }
   }
 
@@ -110,6 +124,7 @@ export class CotizarComponent implements OnInit {
     if (!this.request.tipoPago) return false;
     if (!this.request.cfdi) return false;
     if (!this.request.hojaConsumo) return false;
+    if (!this.request.hojaConsumo2) return false;
     if (!this.pedido.length) return false;
     return true;
   }
@@ -142,45 +157,45 @@ export class CotizarComponent implements OnInit {
       text: 'Guardando, espero un momento...'
     });
     Swal.showLoading();
-    this.sincronizarNoEnviados(true);
-    setTimeout(() => {
-      this.cotizacionService.storeCotizacion(data).subscribe(res => {
-        if (res.cotizacionId) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Cotización generada exitosamente. Folio de la cotización: ' + res.cotizacionId,
-            allowOutsideClick: false,
-          }).then((result) => {
-            if (result.isConfirmed) {
-              $('#detalleSolicitudModal').modal('hide');
-              $('#cotizarModal').modal('hide');
-              // this.getOfflineData();
-              this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-                this.router.navigate(['/xAtender-online']);
-              }); 
-            }
-          });
-        }
-      }, err => {
+    // this.sincronizarNoEnviados(true);
+    // setTimeout(() => {
+    this.cotizacionService.storeCotizacion(data).subscribe(res => {
+      if (res.cotizacionId) {
         Swal.fire({
-          icon: 'error',
-          title: 'Error de conexión.',
-          text: '¿Deseas volver a intentar o sincronizar mas tarde?',
+          icon: 'success',
+          title: 'Cotización generada exitosamente. Folio de la cotización: ' + res.cotizacionId,
           allowOutsideClick: false,
-          showDenyButton: true,
-          showCancelButton: true,
-          confirmButtonText: 'Reintentar',
-          denyButtonText: `Sincronizar mas tarde`,
-          cancelButtonText: 'Cancelar'
         }).then((result) => {
           if (result.isConfirmed) {
-            this.enviarAhora(data);
-          } else if (result.isDenied) {
-            this.checkIfExists(data);
+            $('#detalleSolicitudModal').modal('hide');
+            $('#cotizarModal').modal('hide');
+            // this.getOfflineData();
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+              this.router.navigate(['/xAtender-online']);
+            }); 
           }
         });
+      }
+    }, err => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de conexión.',
+        text: '¿Deseas volver a intentar o sincronizar mas tarde?',
+        allowOutsideClick: false,
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Reintentar',
+        denyButtonText: `Sincronizar mas tarde`,
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.enviarAhora(data);
+        // } else if (result.isDenied) {
+        //   this.checkIfExists(data);
+        }
       });
-    }, 3000);
+    });
+    // }, 3000);
   }
 
   checkIfExists(data: any) {
@@ -304,5 +319,71 @@ export class CotizarComponent implements OnInit {
         console.log(err);
       }
     )
+  }
+
+  validarRegistroSeguimiento(data: any): void {
+    Swal.fire({
+      allowOutsideClick: false,
+      text: 'Guardando, espero un momento...'
+    });
+    Swal.showLoading();
+
+    let idSolicitud = data.informacion.idSolicitud.toString();
+    let idLista = data.informacion.idLista.toString();
+
+    this.cotizacionService.validarRegistroSeguimiento(idSolicitud, idLista).subscribe(res => {
+      if (res && res.idSeguimiento) {
+        this.validarImagenTurcos(data, res.idSeguimiento, res.descLista);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de conexión.',
+          allowOutsideClick: false
+        });
+      }
+    }, err => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de conexión.',
+      });
+    });
+  }
+  
+  validarImagenTurcos(data: any, idSeguimiento: string, descLista: string) {
+    let idSolicitud = data.informacion.idSolicitud.toString();
+    let nombre = `CONSUMO_ODC_${idSolicitud}.${this.request.hojaConsumo2.name.split('.')[1]}`;
+    let carpetaNombre =  descLista.replaceAll(" ", "_");
+    var reader = new FileReader();
+    reader.readAsDataURL(this.request.hojaConsumo2);
+    reader.onload = () => {
+      let json = {
+        archivo: reader.result,
+        access_key: 'truemedgroup',
+        id: idSeguimiento,
+        nombre_archivo: nombre,
+        carpeta: carpetaNombre
+      }
+      this.cotizacionService.validarTurcos(json).subscribe(res => {
+        if (res.done[0] == true) {
+          Swal.fire({
+            icon: 'success',
+            title: res.message,
+            allowOutsideClick: false,
+          }).then((result) => {
+            this.enviarAhora(data);
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: res.message,
+          });
+        }
+      }, err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de conexión.',
+        });
+      });
+    }
   }
 }

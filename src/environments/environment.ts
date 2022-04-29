@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   api: 'https://inventario-bounes.truemedgroup.com:7004/'
+  // api: 'http://localhost:8084/'
 };
 
 /*
