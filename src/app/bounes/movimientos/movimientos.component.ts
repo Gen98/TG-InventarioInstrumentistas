@@ -106,7 +106,7 @@ export class MovimientosComponent implements OnInit {
     let observables = [];
     for (const mov of this.movimientos) {
       let param = mov.folio ? mov.folio : null;
-      if (param && (param.startsWith("NS_") || param.startsWith("FS_") || param.startsWith("BS_"))) {
+      if (param && (param.startsWith("NS_") || param.startsWith("FS_") || param.startsWith("BS_") || param.startsWith("FU_"))) {
         observables.push(this.bounesService.consultarPartidasFolio(param));
       }
     }
@@ -138,7 +138,7 @@ export class MovimientosComponent implements OnInit {
     }[] = [];
     let movsFailed: any[] = [];
     this.movimientos.forEach((mov: Movimiento, movIdx: number) => {
-      if (mov.folio && (mov.folio.startsWith("NS_") || mov.folio.startsWith("FS_") || mov.folio.startsWith("BS_"))) {
+      if (mov.folio && (mov.folio.startsWith("NS_") || mov.folio.startsWith("FS_") || mov.folio.startsWith("BS_") || mov.folio.startsWith("FU_"))) {
         let responseIndex = responses.findIndex((res) => {
           return res.folio === mov.folio;
         });
