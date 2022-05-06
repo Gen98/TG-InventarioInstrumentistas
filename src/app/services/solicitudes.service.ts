@@ -92,6 +92,13 @@ export class SolicitudesService {
     return this.http.get<ProductoPartida[]>(url);
   }
 
+  getProductosPartidasReferencia(idLista: number, palabra: string): Observable<ProductoPartida[]> {
+    this.cliente = this.readToken();
+    let url = this.endPoint + `/listas/referenciar/${idLista}?kword=${palabra}`;
+
+    return this.http.get<ProductoPartida[]>(url);
+  }
+
   storeSolicitud(solicitud: Solicitud): Observable<any> {
     let url = this.endPoint;
 

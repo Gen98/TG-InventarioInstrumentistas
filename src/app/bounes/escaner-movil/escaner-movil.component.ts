@@ -17,17 +17,17 @@ declare let $: any;
 export class EscanerMovilComponent implements OnInit {
 
   loaded: boolean = false;
-  allowedFormats = [ BarcodeFormat.QR_CODE, BarcodeFormat.EAN_13, BarcodeFormat.CODE_128, BarcodeFormat.DATA_MATRIX ];
+  allowedFormats = [BarcodeFormat.QR_CODE, BarcodeFormat.EAN_13, BarcodeFormat.CODE_128, BarcodeFormat.DATA_MATRIX];
   camarasDispositivo: MediaDeviceInfo[] = [];
   camaraSeleccionada: MediaDeviceInfo | undefined;
   errors: WebcamInitError[] = [];
   private trigger: Subject<void> = new Subject<void>();
   @Input() escanerActivo: boolean = false;
   @Input() evidencias: boolean = false;
-  @Input()mostrarCamara: boolean = false;
+  @Input() mostrarCamara: boolean = false;
   @Output() codigoEscaneado: EventEmitter<string> = new EventEmitter();
   @Output() fotoTomada: EventEmitter<any> = new EventEmitter();
-  
+
   @ViewChild('scanner', { static: false }) scanner: ZXingScannerComponent = new ZXingScannerComponent();
 
   constructor() { }
@@ -63,9 +63,9 @@ export class EscanerMovilComponent implements OnInit {
     this.camarasDispositivo = e;
   }
 
-  seleccionarCamara(e:any): void {
+  seleccionarCamara(e: any): void {
     this.loaded = false;
-    let camara = this.camarasDispositivo.filter(function(el:MediaDeviceInfo) {
+    let camara = this.camarasDispositivo.filter(function (el: MediaDeviceInfo) {
       return el.deviceId == e.target.value;
     });
     this.camaraSeleccionada = camara[0];
@@ -74,13 +74,13 @@ export class EscanerMovilComponent implements OnInit {
     }, 2000);
   }
 
-  scanSuccessHandler(e:any): void {
+  scanSuccessHandler(e: any): void {
     console.log(e);
     this.codigoEscaneado.emit(e);
     this.loaded = false;
   }
 
-  camaraCambiada(e:any): void { 
+  camaraCambiada(e: any): void {
     setTimeout(() => {
       this.loaded = true;
     }, 2000);
@@ -98,7 +98,7 @@ export class EscanerMovilComponent implements OnInit {
     return this.trigger.asObservable();
   }
 
-  evidenciaTomada(e:WebcamImage): void {
+  evidenciaTomada(e: WebcamImage): void {
     let imagen = {
       name: (Math.random() + 1).toString(36).substring(7),
       base64: e.imageAsDataUrl
@@ -111,22 +111,22 @@ export class EscanerMovilComponent implements OnInit {
     this.errors.push(error);
     console.log(error)
     let message: string;
-    if (error.message === 'Permission denied'){
+    if (error.message === 'Permission denied') {
       message = 'Por favor da acceso a la camara y reintenta'
-    }else if (error.message == 'Could not start video source'){
+    } else if (error.message == 'Could not start video source') {
       message = 'No se pudo iniciar video, es probable que otra app este utilizandola o que no cuentes con una'
-    }else{
+    } else {
       message = error.message;
     }
     Swal.fire({
       icon: 'error',
       title: 'Un error a ocurrido',
-      text:  message,
+      text: message,
       showConfirmButton: true,
       confirmButtonText: 'Reintentar',
       allowOutsideClick: false
     }).then(result => {
-      if (result.isConfirmed){
+      if (result.isConfirmed) {
         $("#camaraEvidenciasModal").modal('hide');
       }
     });
@@ -147,7 +147,7 @@ export class EscanerMovilComponent implements OnInit {
           confirmButtonText: 'Reintentar',
           allowOutsideClick: false
         }).then(result => {
-          if (result.isConfirmed){
+          if (result.isConfirmed) {
             $("#camaraModal").modal('hide');
           }
         });

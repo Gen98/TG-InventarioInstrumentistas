@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { InformacionCotizar } from '../../interfaces/informacion_cotizar.interface';
 import { Solicitud } from '../../interfaces/solicitud.interface';
 import { ProductoPartida } from '../../interfaces/producto_partida.interface';
@@ -19,7 +19,7 @@ export class ProcesarOnlineComponent implements OnInit {
 
   idSolicitud: number;
   idListaPrecio: number;
-  solicitud: Solicitud|any;
+  solicitud: Solicitud | any;
   partidasPedido: any[] = [];
   totalesPedido: any;
   codigoIMSS: string;
@@ -30,11 +30,14 @@ export class ProcesarOnlineComponent implements OnInit {
   faltantesActual: number;
   sumatoriaPedido: number;
   productosPartidas: ProductoPartida[] = [];
+  productosReferencia: ProductoPartida[] = [];
   listaPrecio: any;
   sumatoriaActual: number;
   suscription: Subscription;
   suscription2: Subscription;
-  
+  palabraIMSS: string;
+  @ViewChild('divProductosReferencia') private divProductosReferencia!: ElementRef;
+
   constructor(
     private route: ActivatedRoute,
     private solicitudService: SolicitudesService,
@@ -75,6 +78,7 @@ export class ProcesarOnlineComponent implements OnInit {
       observacionesPrefactura: '',
       folioConsumo: ''
     }
+    this.palabraIMSS = "";
     this.route.paramMap.subscribe(paramMap => {
       this.idSolicitud = parseInt(paramMap.get('idSolicitud')!);
       this.idListaPrecio = parseInt(paramMap.get('idListaPrecio')!);
@@ -87,17 +91,17 @@ export class ProcesarOnlineComponent implements OnInit {
 
   getSolicitud(): void {
     this.mostrarAlertCarga();
-    this.suscription = this.solicitudService.showXAtender(this.idSolicitud).subscribe( res => {
+    this.suscription = this.solicitudService.showXAtender(this.idSolicitud).subscribe(res => {
       if (res.estatus == '2') {
         this.solicitud = res;
         this.suscription.unsubscribe();
         this.getCodigosPartidas();
         Swal.close();
       } else {
-        this.router.navigate(['']).then( () => {
+        this.router.navigate(['']).then(() => {
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this.router.navigate(['/']);
-          }); 
+          });
         });
       }
     }, err => {
@@ -123,7 +127,7 @@ export class ProcesarOnlineComponent implements OnInit {
       this.informacionCotizar.idLista = this.idListaPrecio;
       this.informacionCotizar.idSolicitud = this.solicitud.id;
       this.informacionCotizar.archivoSolicitud = new File([this.transformarArchivoSolicitud(this.solicitud.archivoSolicitud)], this.solicitud.solicitudPDFNombre);
-      this.informacionCotizar.esTipoCirugia = ['1', '2', '3', '11', '12', '13'].includes(this.solicitud.subcategoria.toString())
+      // this.informacionCotizar.esTipoCirugia = ['1', '2', '3', '11', '12', '13'].includes(this.solicitud.subcategoria.toString())
 
       this.suscription.unsubscribe();
       Swal.close();
@@ -133,7 +137,7 @@ export class ProcesarOnlineComponent implements OnInit {
   }
 
   buscarProductos(): void {
-    if (this.partidaActual && this.faltantesActual == 0 ) {
+    if (this.partidaActual && this.faltantesActual == 0) {
       let partidaExistente = this.partidasPedido.find((e: any) => e.partida === this.partidaActual.partida);
       if (!partidaExistente) {
         this.partidasPedido.unshift(this.partidaActual);
@@ -147,9 +151,9 @@ export class ProcesarOnlineComponent implements OnInit {
       this.mostrarAlertCarga();
       this.suscription = this.solicitudService.getProductosPartidas(this.idListaPrecio, cPartida).subscribe(res => {
         this.partidaActual = {
-            partida: cPartida,
-            cantidad: cantidad,
-            productos: []
+          partida: cPartida,
+          cantidad: cantidad,
+          productos: []
         };
         this.productosPartidas = res;
         this.faltantesActual = cantidad;
@@ -162,7 +166,7 @@ export class ProcesarOnlineComponent implements OnInit {
   }
 
   sumarPropiedad(array: any[], propiedad: string): number {
-    return array.reduce((sum: any, value: any) => ( sum + value[propiedad] ), 0);
+    return array.reduce((sum: any, value: any) => (sum + value[propiedad]), 0);
   }
 
   validarBusqueda(cPartida: string, cantidad: number): boolean {
@@ -187,12 +191,12 @@ export class ProcesarOnlineComponent implements OnInit {
   }
 
   modificarCantidad(producto: ProductoPartida): void {
-    let productoIndex = this.partidaActual.productos.findIndex(function(e: any) {
+    let productoIndex = this.partidaActual.productos.findIndex(function (e: any) {
       return e.codigoProducto == producto.codigoProducto;
     });
 
     if (productoIndex != -1) {
-      this.partidaActual.productos.splice(productoIndex,1);
+      this.partidaActual.productos.splice(productoIndex, 1);
     }
 
     if (!producto.cantidad || producto.cantidad <= 0) {
@@ -200,7 +204,7 @@ export class ProcesarOnlineComponent implements OnInit {
     } else {
       this.partidaActual.productos.unshift(producto);
     }
-    
+
     this.sumatoriaActual = this.sumarPropiedad(this.partidaActual.productos, 'cantidad');
     this.faltantesActual = this.partidaActual.cantidad - this.sumatoriaActual;
   }
@@ -222,7 +226,7 @@ export class ProcesarOnlineComponent implements OnInit {
           this.sumatoriaPedido = this.sumarPropiedad(this.partidasPedido, 'cantidad');
           this.cantidad = 0;
           const pedido = this.transformarPedido();
-          let subtotal = pedido.reduce((sum: any, value: any) => ( sum + (value['cantidad'] * value['precio']) ), 0);
+          let subtotal = pedido.reduce((sum: any, value: any) => (sum + (value['cantidad'] * value['precio'])), 0);
           let iva = subtotal * 0.16;
           let total = subtotal + iva;
           this.totalesPedido = {
@@ -243,7 +247,7 @@ export class ProcesarOnlineComponent implements OnInit {
     this.cantidad = 0;
 
     const pedido = this.transformarPedido();
-    let subtotal = pedido.reduce((sum: any, value: any) => ( sum + (value['cantidad'] * value['precio']) ), 0);
+    let subtotal = pedido.reduce((sum: any, value: any) => (sum + (value['cantidad'] * value['precio'])), 0);
     let iva = subtotal * 0.16;
     let total = subtotal + iva;
     this.totalesPedido = {
@@ -278,7 +282,7 @@ export class ProcesarOnlineComponent implements OnInit {
 
   transformarArchivoSolicitud(data: any): Blob {
     let byte = this.base64ToArrayBuffer(data);
-    var blob = new Blob([byte], {type: "application/pdf"});
+    var blob = new Blob([byte], { type: "application/pdf" });
     return blob;
   }
 
@@ -287,8 +291,8 @@ export class ProcesarOnlineComponent implements OnInit {
     var binaryLen = binaryString.length;
     var bytes = new Uint8Array(binaryLen);
     for (var i = 0; i < binaryLen; i++) {
-       var ascii = binaryString.charCodeAt(i);
-       bytes[i] = ascii;
+      var ascii = binaryString.charCodeAt(i);
+      bytes[i] = ascii;
     }
     return bytes;
   }
@@ -311,9 +315,51 @@ export class ProcesarOnlineComponent implements OnInit {
       if (result.isConfirmed) {
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
           this.router.navigate(['/']);
-        }); 
+        });
       }
     });
   }
 
+  buscarReferencia(): void {
+    if (this.palabraIMSS.length) {
+      let idLista = this.idListaPrecio;
+      let kword = this.palabraIMSS;
+
+      this.solicitudService.getProductosPartidasReferencia(idLista, kword).subscribe(res => {
+        this.productosReferencia = res;
+        this.divProductosReferencia.nativeElement.scrollTo(0, 0);
+      }, err => {
+        this.productosReferencia = [];
+      });
+    }
+  }
+
+  agregarProductoDeReferencia(producto: ProductoPartida): void {
+    $('#referenciarModal').modal('hide');
+    Swal.fire({
+      title: producto.descripcion,
+      text: '¿Cuantas unidades deseas agregar?',
+      icon: 'question',
+      input: 'number',
+      showCancelButton: true,
+      confirmButtonColor: '#02a3b5',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      allowOutsideClick: false
+    }).then((res) => {
+      if (res.isConfirmed && res.value && res.value > 0) {
+        producto.cantidad = parseInt(res.value);
+        this.partidaActual = {
+          partida: producto.codigoPartida,
+          cantidad: parseInt(res.value),
+          productos: [producto]
+        };
+        this.partidasPedido.unshift(this.partidaActual);
+        this.sumatoriaPedido = this.sumarPropiedad(this.partidasPedido, 'cantidad');
+        this.palabraIMSS = '';
+        this.productosReferencia = [];
+      }
+    });
+  }
 }
