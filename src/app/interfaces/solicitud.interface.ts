@@ -7,6 +7,7 @@ export interface Solicitud {
     noContrato: string;
     noFianza: string;
     noProveedor: string;
+    diagnostico?: string;
     paciente: string;
     nss: string;
     fechaReq: string | undefined;

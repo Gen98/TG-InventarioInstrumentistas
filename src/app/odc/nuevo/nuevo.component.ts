@@ -151,6 +151,12 @@ export class NuevoComponent implements OnInit {
         return false;
       }
     }
+    if ([703, 704, 705, 707, 708, 709].includes(this.nuevaSolicitud.idCliente)) {
+      if (!this.nuevaSolicitud.diagnostico || this.nuevaSolicitud.diagnostico!.length == 0) {
+        this.mostrarAlert('Ingresa el diagnostico');
+        return false;
+      }
+    }
     if (this.nuevaSolicitud.paciente.length <= 5 && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('Ingresa el nombre del paciente.');
       return false;
@@ -190,6 +196,7 @@ export class NuevoComponent implements OnInit {
       $('.clearDate').click();
       this.nuevaSolicitud.idUsuarioGenera = 0;
       this.nuevaSolicitud.solicitudPDF = '';
+      this.nuevaSolicitud.diagnostico = '';
       this.nuevaSolicitud.paciente = '';
       this.nuevaSolicitud.nss = '';
       this.nuevaSolicitud.fechaReq = '';
@@ -211,6 +218,7 @@ export class NuevoComponent implements OnInit {
       this.nuevaSolicitud.subcategoria = 0;
       $('.clearDate').click();
       this.nuevaSolicitud.idUsuarioGenera = 0;
+      this.nuevaSolicitud.diagnostico = '';
       this.nuevaSolicitud.paciente = '';
       this.nuevaSolicitud.nss = '';
       this.nuevaSolicitud.fechaCirugia = ''

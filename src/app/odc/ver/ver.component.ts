@@ -120,6 +120,12 @@ export class VerComponent implements OnInit {
       this.mostrarAlert('Selecciona la lista de precios.');
       return false;
     }
+    if ([703, 704, 705, 707, 708, 709].includes(this.solicitud.idCliente)) {
+      if (!this.solicitud.diagnostico || this.solicitud.diagnostico!.length == 0) {
+        this.mostrarAlert('Ingresa el diagnostico');
+        return false;
+      }
+    }
     if (this.solicitud.paciente.length <= 5 && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('Ingresa el nombre del paciente.');
       return false;
@@ -190,7 +196,9 @@ export class VerComponent implements OnInit {
     this.clasificacion = clasificacion;
     this.subcategorias = this.clasificaciones.find((e: any) => e.id == clasificacion)!.subclasificaciones!;
     this.solicitud.subcategoria = this.subcategorias[0].id.toString();
-    $('.subclasificaciones option:eq(1)').prop('selected', true);
+    setTimeout(() => {
+      $('.subclasificaciones option:eq(1)').prop('selected', true);
+    }, 1000);
   }
 
   updateSubcategoria(event: any): void {
@@ -199,6 +207,7 @@ export class VerComponent implements OnInit {
 
   limpiarSolicitud(): void {
     $('.clearDate').click();
+    this.solicitud.diagnostico = '';
     this.solicitud.paciente = '';
     this.solicitud.nss = '';
     this.solicitud.fechaCirugia = ''
