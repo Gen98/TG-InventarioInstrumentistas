@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ClienteDistribuidor } from '../../interfaces/cliente_distribuidor.interface';
 import { DexieSolicitudesService } from '../../services/dexie-solicitudes.service';
+import { SolicitudesService } from '../../services/solicitudes.service';
 import { EncuestasService } from '../../services/encuestas.service';
 import Swal from 'sweetalert2';
 import { Observable, Subject } from 'rxjs';
@@ -395,6 +396,7 @@ export class EncuestaPageComponent implements OnInit {
     "firstPageIsStarted": true
   }
   constructor(private encuestasService: EncuestasService,
+    private solicitudService: SolicitudesService,
     private dexieService: DexieSolicitudesService,
     private router: Router) {
     this.clienteSeleccionado = {
@@ -424,14 +426,23 @@ export class EncuestaPageComponent implements OnInit {
       text: 'Cargando'
     });
     Swal.showLoading();
-    this.dexieService.getProveedores().then(proveedores => {
+    this.solicitudService.getProveedores().subscribe( (proveedores) => {
       let proveedor = proveedores.find((prov: any) => prov.id != 505);
-      this.clientes = proveedor.clientes;
-      this.provNombre = proveedor.nombre;
-      this.clienteSeleccionado = this.clientes[0];
-      this.clienteNombre = this.clienteSeleccionado.nombre;
-      Swal.close();
+      this.provNombre = proveedor!.nombre;
+      this.solicitudService.getClientes(proveedor!.id).subscribe( (clientes) => {
+        this.clientes = clientes;
+        this.clienteSeleccionado = this.clientes[0];
+        this.clienteNombre = this.clienteSeleccionado.nombre;
+        Swal.close();
+      });
     });
+    // this.dexieService.getProveedores().then(proveedores => {
+    //   let proveedor = proveedores.find((prov: any) => prov.id != 505);
+    //   this.clientes = proveedor.clientes;
+    //   this.provNombre = proveedor.nombre;
+    //   this.clienteSeleccionado = this.clientes[0];
+    //   this.clienteNombre = this.clienteSeleccionado.nombre;
+    // });
   }
 
   seleccionarCliente(e: any) {
