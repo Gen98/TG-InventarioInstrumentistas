@@ -134,6 +134,10 @@ export class VerComponent implements OnInit {
       this.mostrarAlert('Ingresa el NSS.');
       return false;
     }
+    if (this.solicitud.idCliente == 709 && !this.solicitud.curp && (this.clasificacion == 1 || this.clasificacion == 5)) {
+      this.mostrarAlert('Ingresa el CURP del paciente.');
+      return false;
+    }
     if (!this.solicitud.folioConsumo && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('Ingresa el folio de consumo.');
       return false;
@@ -210,6 +214,7 @@ export class VerComponent implements OnInit {
     this.solicitud.diagnostico = '';
     this.solicitud.paciente = '';
     this.solicitud.nss = '';
+    this.solicitud.curp = '';
     this.solicitud.fechaCirugia = ''
     this.solicitud.nombreDoctor = '';
     this.solicitud.folioConsumo = '';

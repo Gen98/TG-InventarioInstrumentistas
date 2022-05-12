@@ -128,7 +128,6 @@ export class PorAtenderOnlineComponent implements OnInit {
         element.clientes = data;
         element.clientes.forEach(cliente => {
           this.solicitudService.getListas(cliente.idCliente).subscribe( listas => {
-            console.log(listas);
             cliente.listas = listas;
           })
         })
@@ -173,11 +172,32 @@ export class PorAtenderOnlineComponent implements OnInit {
   }
 
   actualizarSolicitud(event: { solicitud: Solicitud, procesar: false, dateUpdated: boolean }): void {
-    if (event.procesar && !event.dateUpdated) {
-      $('#verSolicitudModal').modal('hide');
-      this.router.navigateByUrl(`/xAtender-online/preparar/${event.solicitud.id}/${event.solicitud.idLista}`, { skipLocationChange: true }).then(() => {
-        this.router.navigate(['/xAtender-online/preparar', event.solicitud.id, event.solicitud.idLista]);
-      });
+    // if (event.procesar && !event.dateUpdated) {
+    if (event.procesar) {
+      this.mostrarAlertCarga('Guardando, espero un momento...');
+      this.solicitudService.updateSolicitud(event.solicitud).subscribe(res => {
+        if (res.actualizado) {
+          $('#verSolicitudModal').modal('hide');
+          Swal.close();
+          this.router.navigateByUrl(`/xAtender-online/preparar/${event.solicitud.id}/${event.solicitud.idLista}`, { skipLocationChange: true }).then(() => {
+            this.router.navigate(['/xAtender-online/preparar', event.solicitud.id, event.solicitud.idLista]);
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error.',
+            text: 'Vuelve a intentar',
+            allowOutsideClick: false,
+          });
+        }
+      }, err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error.',
+          text: 'Vuelve a intentar',
+          allowOutsideClick: false,
+        });
+      })
     } else {
       this.actualizarSolicitudAhora(event);
     }

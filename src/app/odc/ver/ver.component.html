@@ -75,7 +75,7 @@
                                 <label for="folio">No Proveedor: <span>{{ solicitud.noProveedor }}</span></label>
                             </div>
                         </div>
-                        <div class="row" *ngIf="[703,704,705,707,708,709].includes(solicitud.idCliente)">
+                        <div class="row" *ngIf="[703,704,705,707,708,709].includes(solicitud.idCliente) && mostrarCamposCirugia()">
                             <div class="col-md-12">
                                 <label for="paciente">Diagnostico: </label>
                                 <input type="text" class="form-control" name="paciente"
@@ -93,6 +93,10 @@
                             <div class="col-md-6">
                                 <label for="nss">NSS: </label>
                                 <input type="text" class="form-control" name="nss" [(ngModel)]="solicitud.nss">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="nss">CURP: </label>
+                                <input type="text" class="form-control" name="nss" [(ngModel)]="solicitud.curp">
                             </div>
                             <div class="col-md-6">
                                 <label for="folioConsumo">Folio Consumo: </label>

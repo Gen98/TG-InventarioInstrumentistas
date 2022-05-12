@@ -10,6 +10,7 @@ export interface Solicitud {
     diagnostico?: string;
     paciente: string;
     nss: string;
+    curp?: string
     fechaReq: string | undefined;
     fechaCirugia: string | undefined;
     nombreDoctor: string;

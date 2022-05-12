@@ -165,6 +165,10 @@ export class NuevoComponent implements OnInit {
       this.mostrarAlert('Ingresa el NSS.');
       return false;
     }
+    if (this.nuevaSolicitud.idCliente == 709 && !this.nuevaSolicitud.curp && (this.clasificacion == 1 || this.clasificacion == 5)) {
+      this.mostrarAlert('Ingresa el CURP del pagiente.');
+      return false;
+    }
     if (!this.nuevaSolicitud.folioConsumo && (this.clasificacion == 1 || this.clasificacion == 5)) {
       this.mostrarAlert('Ingresa el folio de consumo.');
       return false;
@@ -198,6 +202,7 @@ export class NuevoComponent implements OnInit {
       this.nuevaSolicitud.solicitudPDF = '';
       this.nuevaSolicitud.diagnostico = '';
       this.nuevaSolicitud.paciente = '';
+      this.nuevaSolicitud.curp = '';
       this.nuevaSolicitud.nss = '';
       this.nuevaSolicitud.fechaReq = '';
       this.nuevaSolicitud.fechaCirugia = ''
@@ -220,6 +225,7 @@ export class NuevoComponent implements OnInit {
       this.nuevaSolicitud.idUsuarioGenera = 0;
       this.nuevaSolicitud.diagnostico = '';
       this.nuevaSolicitud.paciente = '';
+      this.nuevaSolicitud.curp = '';
       this.nuevaSolicitud.nss = '';
       this.nuevaSolicitud.fechaCirugia = ''
       this.nuevaSolicitud.nombreDoctor = '';

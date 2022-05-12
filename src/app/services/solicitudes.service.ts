@@ -112,6 +112,7 @@ export class SolicitudesService {
     formData.append('noFianza', solicitud.noFianza);
     formData.append('noProveedor', solicitud.noProveedor);
     formData.append('diagnostico', solicitud.diagnostico ? solicitud.diagnostico : '');
+    formData.append('curpPaciente', solicitud.curp ? solicitud.curp : '');
     formData.append('paciente', solicitud.paciente);
     formData.append('nss', solicitud.nss);
     formData.append('fechaReq', solicitud.fechaReq!);
@@ -141,6 +142,7 @@ export class SolicitudesService {
     formData.append('noFianza', solicitud.noFianza);
     formData.append('noProveedor', solicitud.noProveedor);
     formData.append('diagnostico', solicitud.diagnostico ? solicitud.diagnostico : '');
+    formData.append('curpPaciente', solicitud.curp ? solicitud.curp : '');
     formData.append('paciente', solicitud.paciente);
     formData.append('nss', solicitud.nss);
     formData.append('fechaReq', solicitud.fechaReq!);

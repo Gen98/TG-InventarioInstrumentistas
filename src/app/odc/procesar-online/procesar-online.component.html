@@ -136,9 +136,10 @@
                                 <tr *ngFor="let producto of productosReferencia">
                                     <th>
                                         <div class="clearfix">
-                                            <p class="float-start">{{ producto.codigoProducto }}</p>
-                                            <p class="float-end text-info">{{ producto.precio | currency}}</p>
+                                            <p class="float-start pb-0 mb-0">{{ producto.codigoProducto }}</p>
+                                            <p class="float-end text-info pb-0 mb-0">{{ producto.precio | currency}}</p>
                                         </div>
+                                        <small class="float-start text-warning">{{ producto.codigoPartida }}</small><br>
                                         <p class="text-sm">{{ producto.descripcion }}</p>
                                     </th>
                                     <th>
