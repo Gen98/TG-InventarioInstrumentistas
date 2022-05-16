@@ -26,6 +26,7 @@ export class RegistrarComponent implements OnInit {
   cantidad: number = 0;
   barcodePaso: number = 1;
   escanerActivo: boolean = false;
+  aceptarEscaneos: boolean = true;
 
   private innerWidth: number;
 
@@ -106,14 +107,14 @@ export class RegistrarComponent implements OnInit {
   }
 
   validarQr(cadena: any[]): boolean {
-    if ($('#camaraModal').is(':visible')) $("#camaraModal").modal('hide');
+    // if ($('#camaraModal').is(':visible')) $("#camaraModal").modal('hide');
     if (cadena.length != 3) return false;
     if (!(/^\d+$/.test(cadena[0])) || !(/^([a-zA-Z0-9-]+)$/.test(cadena[1])) || !(/^\d+$/.test(cadena[2]))) return false;
     return true;
   }
 
   validarBarcode(): boolean {
-    if ($('#camaraModal').is(':visible')) $("#camaraModal").modal('hide');
+    // if ($('#camaraModal').is(':visible')) $("#camaraModal").modal('hide');
     if (this.barcodePaso == 3 && parseInt(this.cantidad.toString(), 10) <= 0) return false;
     if (this.barcodePaso == 2 && !(/^([a-zA-Z0-9-/]+)$/.test(this.lote))) return false;
     if (this.barcodePaso == 1 && !(/^\d+$/.test(this.codigo))) return false;
@@ -138,8 +139,10 @@ export class RegistrarComponent implements OnInit {
         icon: 'success',
         text: 'Registro exitoso',
         showCloseButton: true,
-        showConfirmButton: false,
-        timer: 500
+        // showConfirmButton: false,
+        timer: 5000
+      }). then(val => {
+        this.aceptarEscaneos = true;
       });
     } else {
       Swal.fire({
@@ -204,7 +207,8 @@ export class RegistrarComponent implements OnInit {
     } else if (this.barcodePaso == 2) {
       this.lote = codigo;
     }
-    this.escanerActivo = false;
+    // this.escanerActivo = false;
+    this.aceptarEscaneos = false;
     this.registrar();
   }
 }

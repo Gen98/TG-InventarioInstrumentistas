@@ -241,7 +241,7 @@
             <div class="modal-body">
                 <div class="container-fluid m-0 p-0">
                     <div class="d-flex flex-column justify-content-center">
-                        <app-escaner-movil [escanerActivo]="camaraFolio" (codigoEscaneado)="folioEscaneado($event)"
+                        <app-escaner-movil [escanerActivo]="camaraFolio" [esFolio]="true" (codigoEscaneado)="folioEscaneado($event)"
                             *ngIf="movil()"></app-escaner-movil>
                     </div>
                 </div>

@@ -104,12 +104,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="camaraModalLabel">Camara</h5>
-                <button type="button" id="closeCamaraModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" id="closeCamaraModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="escanerActivo = false"></button>
             </div>
             <div class="modal-body">
                 <div class="container-fluid m-0 p-0">
                     <div class="d-flex flex-column justify-content-center">
-                        <app-escaner-movil [escanerActivo]="escanerActivo" (codigoEscaneado)="codigoEscaneado($event)" *ngIf="movil()"></app-escaner-movil>
+                        <app-escaner-movil [escanerActivo]="escanerActivo" [emitirEscaneos]="aceptarEscaneos" (codigoEscaneado)="codigoEscaneado($event)" *ngIf="movil()"></app-escaner-movil>
                     </div>
                 </div>
             </div>

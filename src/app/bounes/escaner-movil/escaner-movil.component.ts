@@ -25,6 +25,8 @@ export class EscanerMovilComponent implements OnInit {
   @Input() escanerActivo: boolean = false;
   @Input() evidencias: boolean = false;
   @Input() mostrarCamara: boolean = false;
+  @Input() esFolio: boolean = false;
+  @Input() emitirEscaneos: boolean = true;
   @Output() codigoEscaneado: EventEmitter<string> = new EventEmitter();
   @Output() fotoTomada: EventEmitter<any> = new EventEmitter();
 
@@ -75,9 +77,13 @@ export class EscanerMovilComponent implements OnInit {
   }
 
   scanSuccessHandler(e: any): void {
-    console.log(e);
-    this.codigoEscaneado.emit(e);
-    this.loaded = false;
+    // console.log(e);
+    if (this.emitirEscaneos) {
+      this.codigoEscaneado.emit(e);
+    }
+    if (this.esFolio) {
+      this.loaded = false;
+    }
   }
 
   camaraCambiada(e: any): void {
@@ -134,26 +140,29 @@ export class EscanerMovilComponent implements OnInit {
 
   handleZxingPermission(event: any) {
     console.log(event);
-    if (event) {
-      setTimeout(() => {
-        this.loaded = true;
-      }, 2000);
-    } else {
-      if (!event) {
-        Swal.fire({
-          icon: 'info',
-          title: 'La aplicacion necesita acceder a tu camara, dirigete a la informacion de esta aplicacion y concede los permisos.',
-          showConfirmButton: true,
-          confirmButtonText: 'Reintentar',
-          allowOutsideClick: false
-        }).then(result => {
-          if (result.isConfirmed) {
-            $("#camaraModal").modal('hide');
-          }
-        });
-      } else if (!event) {
-        this.scanner.askForPermission();
-      }
-    }
+    setTimeout(() => {
+      this.loaded = true;
+    }, 2000);
+    // if (event) {
+    //   setTimeout(() => {
+    //     this.loaded = true;
+    //   }, 2000);
+    // } else {
+    //   if (!event) {
+    //     Swal.fire({
+    //       icon: 'info',
+    //       title: 'La aplicacion necesita acceder a tu camara, dirigete a la informacion de esta aplicacion y concede los permisos.',
+    //       showConfirmButton: true,
+    //       confirmButtonText: 'Reintentar',
+    //       allowOutsideClick: false
+    //     }).then(result => {
+    //       if (result.isConfirmed) {
+    //         $("#camaraModal").modal('hide');
+    //       }
+    //     });
+    //   } else if (!event) {
+    //     this.scanner.askForPermission();
+    //   }
+    // }
   }
 }
