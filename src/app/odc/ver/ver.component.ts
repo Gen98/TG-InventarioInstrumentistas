@@ -120,7 +120,7 @@ export class VerComponent implements OnInit {
       this.mostrarAlert('Selecciona la lista de precios.');
       return false;
     }
-    if ([703, 704, 705, 707, 708, 709].includes(this.solicitud.idCliente)) {
+    if ([703, 704, 705, 707, 708, 709].includes(this.solicitud.idCliente) && this.mostrarCamposCirugia()) {
       if (!this.solicitud.diagnostico || this.solicitud.diagnostico!.length == 0) {
         this.mostrarAlert('Ingresa el diagnostico');
         return false;

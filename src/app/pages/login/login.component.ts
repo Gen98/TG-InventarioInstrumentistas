@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit {
             showConfirmButton: false,
             timer: 2000
           });
-          this.router.navigate(['xAtender-online']);
+          this.router.navigate(['']);
         } else {
           Swal.fire({
             icon: 'error',

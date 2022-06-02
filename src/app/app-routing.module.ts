@@ -11,6 +11,7 @@ import { ProcesarComponent } from './odc/procesar/procesar.component';
 import { ProcesarOnlineComponent } from './odc/procesar-online/procesar-online.component';
 import { LoginComponent } from './pages/login/login.component';
 import { EncuestaPageComponent } from './pages/encuesta-page/encuesta-page.component';
+import { PorAutorizarComponent } from './gastos/por-autorizar/por-autorizar.component';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -60,6 +61,11 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'gastos',
+    component: PorAutorizarComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: '**',

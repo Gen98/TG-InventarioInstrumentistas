@@ -1,0 +1,125 @@
+<!-- Modal Preview PDF -->
+<div class="container-fluid" *ngIf="!esNuevo">
+    <div class="modal fade" id="previewPdfModal" tabindex="-1" role="dialog" aria-labelledby="previewPdfModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content h-100">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewPdfModalLabel">Archivo de solicitud: {{
+                        solicitud.idPedido }}</h5>
+                    <button *ngIf="sourceIsPDF" (click)="zoom(-0.5)" class="btn btn-sm btn-light mx-4">
+                        <i class="fas fa-search-minus fa-sm"></i>
+                    </button>
+                    <button *ngIf="sourceIsPDF" (click)="zoom(0.5)" class="btn btn-sm btn-light">
+                        <i class="fas fa-search-plus fa-sm"></i>
+                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <pdf-viewer class="h-100" *ngIf="sourceIsPDF" [src]="sourcePdf" [original-size]="false" [zoom]="zoomPdf"></pdf-viewer>
+                <div class="modal-body" *ngIf="!sourceIsPDF">
+                    <img [src]="sourcePdf" alt="imagen" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="{{esNuevo ? 'nuevaSolicitudModal' : 'verSolicitudModal'}}" tabindex="-1" aria-labelledby="nuevaSolicitudModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nuevaSolicitudModalLabel">{{esNuevo ? 'Nueva solicitud de Pedido' : ('Pedido #' + solicitud.idPedido + ' - ' + solicitud.fecha)}}</h5>
+                <button type="button" id="closeNuevaSolicitudModal" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close" (click)="limpiarModal()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="d-flex flex-column justify-content-center">
+                        <div class="row d-flex justify-content-center mb-2">
+                            <div class="col-sm-12 col-md-12">
+                                <label for="observaciones">Observaciones: </label>
+                                <textarea cols="30" rows="2" class="form-control" [(ngModel)]="solicitud.observaciones"></textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <label>
+                                    Archivo Gral:
+                                    <span *ngIf="!esNuevo" role="button" class="text-primary my-2"  (click)="descargarArchivo(solicitud.rutaId!)">{{
+                                        solicitud.ruta }}</span> 
+                                </label>
+                                <input *ngIf="esNuevo" id="archivo-gral" type="file" accept=".pdf, .doc, .docx" class="form-control mt-2" name="archivo-gral" (change)="cargarArchivoPdf($event, true)">
+                                <input id="archivo-gral-xml" type="file" accept=".xml" class="form-control d-none" name="archivo" (change)="cargarArchivoXml($event, true)">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mb-2">
+                            <div class="col-lg-4 col-md-12">
+                                <label for="distribuidor">Producto: </label>
+                                <select name="productos" id="producto" class="form-select" (change)="selectProd($event)">
+                                    <option selected value disabled>Selecciona una opción</option>
+                                    <option *ngFor="let prod of productos" [value]="prod.id">
+                                        {{ prod.descripcion }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-6">
+                                <label for="precio">Precio: </label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" [(ngModel)]="nuevoProducto.precio">
+                                  </div>
+                            </div>
+                            <div class="col-lg-4 col-6">
+                                <label for="cantidad">Cantidad: </label>
+                                <input type="number" class="form-control" name="cantidad" id="cantidad" [(ngModel)]="nuevoProducto.cantidad" >
+                            </div>
+                            <div class="col-md-12" *ngIf="mostrarInputFile()">
+                                <label for="archivo">Archivo: </label>
+                                <input id="archivo-pdf" type="file" accept=".pdf" class="form-control" name="archivo" (change)="cargarArchivoPdf($event)">
+                                <input id="archivo-xml" type="file" accept=".xml" class="form-control d-none" name="archivo" (change)="cargarArchivoXml($event)">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row" *ngIf="solicitud.productos.length">
+                            <ul class="list-group container" *ngFor="let prod of solicitud.productos; let idx = index">
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <small>{{prod.codigo}}</small>
+                                        </div>
+                                        <div class="col-9">
+                                            <small>{{prod.descripcion}}</small>
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <small>Cantidad: {{prod.cantidad}}</small>
+                                            <small><strong>Precio:</strong>{{prod.precio | currency}}</small>
+                                            <small><strong>Importe:</strong> {{prod.importe | currency}}</small>
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <small *ngIf="esNuevo">{{ prod.archivo!.name}}</small>
+                                            <small *ngIf="!esNuevo">
+                                                <span role="button" class="text-primary my-2" (click)="descargarArchivo(prod.rutaId!)">{{
+                                                    prod.ruta ? prod.ruta : prod.archivo!.name }}</span> 
+                                            </small>
+                                            <!-- <div class="btn-group" role="group"> -->
+                                                <!-- <button class="btn btn-outline-primary"><i class="fas fa-eye"></i></button> -->
+                                            <button class="btn btn-outline-danger"><i class="fas fa-trash" (click)="eliminarPartida(idx)"></i></button>
+                                            <!-- </div> -->
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="col-12 mt-3">
+                                <p><strong>Precio Total:</strong> {{solicitud.precioTotal| currency}}</p>
+                                <p><strong>Importe Total:</strong> {{solicitud.importeTotal| currency}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"  (click)="limpiarModal()">Cancelar</button>
+                <button type="button" class="btn btn-primary" *ngIf="esNuevo" (click)="guardarSolicitud()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

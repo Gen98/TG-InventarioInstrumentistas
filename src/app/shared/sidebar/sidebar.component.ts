@@ -68,6 +68,9 @@ export class SidebarComponent implements OnInit {
       case 'xAtender':
         this.router.navigate(['xAtender-online']);
         break;
+      case 'gastos':
+        this.router.navigate(['gastos']);
+        break;
     }
     setTimeout(() => {
       this.url = this.location.path();

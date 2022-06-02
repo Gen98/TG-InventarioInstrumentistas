@@ -80,7 +80,7 @@
                                 <label for="folio">No Proveedor: <span>{{ nuevaSolicitud.noProveedor }}</span></label>
                             </div>
                         </div>
-                        <div class="row" *ngIf="[703,704,705,707,708,709].includes(nuevaSolicitud.idCliente)">
+                        <div class="row" *ngIf="[703,704,705,707,708,709].includes(nuevaSolicitud.idCliente) && (clasificacion == 1 || clasificacion == 5) ">
                             <div class="col-md-12">
                                 <label for="diagnostico">Diagnostico: </label>
                                 <input type="text" class="form-control" name="paciente"

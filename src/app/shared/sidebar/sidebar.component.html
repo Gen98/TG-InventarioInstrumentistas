@@ -35,13 +35,19 @@
         </li>
         <hr>
         <div class="text-center my-2 text-white font-weight">
-            <span class="nav-text"> ODC </span>
+            <span class="nav-text"> ONLINE </span>
         </div>
         <li (click)="ruta ( 'xAtender' )"
             [ngClass]="{'bg-white text-secondary':url == '/xAtender'}"
             class="nav-item">
             <i class="fa fa-calendar-alt fa-2x"></i>
             <span class="nav-text"> Solicitudes por Atender </span>
+        </li>
+        <li (click)="ruta ( 'gastos' )"
+            [ngClass]="{'bg-white text-secondary':url == '/gastos'}"
+            class="nav-item">
+            <i class="fa fa-file-invoice-dollar fa-2x"></i>
+            <span class="nav-text"> Comprobación de Gastos </span>
         </li>
     </ul>
     <ul class="logout" *ngIf="isAuth">
