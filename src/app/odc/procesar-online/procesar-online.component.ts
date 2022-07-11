@@ -127,8 +127,7 @@ export class ProcesarOnlineComponent implements OnInit {
       this.informacionCotizar.idLista = this.idListaPrecio;
       this.informacionCotizar.idSolicitud = this.solicitud.id;
       this.informacionCotizar.archivoSolicitud = new File([this.transformarArchivoSolicitud(this.solicitud.archivoSolicitud)], this.solicitud.solicitudPDFNombre);
-      // this.informacionCotizar.esTipoCirugia = ['1', '2', '3', '11', '12', '13'].includes(this.solicitud.subcategoria.toString())
-
+      this.informacionCotizar.esTipoCirugia = ['1', '2', '3', '11', '12', '13'].includes(this.solicitud.subcategoria.toString())
       this.suscription.unsubscribe();
       Swal.close();
     }, err => {

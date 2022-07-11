@@ -96,11 +96,28 @@ export class NuevoComponent implements OnInit {
 
   cargarArchivoXml(e: any, esGral: boolean = false): void {
     if (e.target.files.length) {
-      if (esGral) {
-        this.solicitud.archivoGralXml = e.target.files[0];
+      if (!e.target.files[0].name.endsWith('.xml')) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Debe ser un archivo xml',
+          allowOutsideClick: false
+        }).then(res => {
+          $('#archivo-xml').val(null);
+          $('#archivo-gral-xml').val(null);
+          if (esGral) {
+            $("#archivo-gral-xml").click();
+          } else {
+            $('#archivo-xml').click();
+          }
+          return;
+        })
       } else {
-        this.nuevoProducto.archivoXml = e.target.files[0];
-        this.leerXml();
+        if (esGral) {
+          this.solicitud.archivoGralXml = e.target.files[0];
+        } else {
+          this.nuevoProducto.archivoXml = e.target.files[0];
+          this.leerXml();
+        }
       }
     }
   }

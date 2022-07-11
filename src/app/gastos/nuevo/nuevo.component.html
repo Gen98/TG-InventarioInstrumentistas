@@ -46,8 +46,8 @@
                                     <span *ngIf="!esNuevo" role="button" class="text-primary my-2"  (click)="descargarArchivo(solicitud.rutaId!)">{{
                                         solicitud.ruta }}</span> 
                                 </label>
-                                <input *ngIf="esNuevo" id="archivo-gral" type="file" accept=".pdf, .doc, .docx" class="form-control mt-2" name="archivo-gral" (change)="cargarArchivoPdf($event, true)">
-                                <input id="archivo-gral-xml" type="file" accept=".xml" class="form-control d-none" name="archivo" (change)="cargarArchivoXml($event, true)">
+                                <input *ngIf="esNuevo" id="archivo-gral" type="file" accept=".pdf" class="form-control mt-2" name="archivo-gral" (change)="cargarArchivoPdf($event, true)">
+                                <input id="archivo-gral-xml" type="file" class="form-control d-none" name="archivo" (change)="cargarArchivoXml($event, true)">
                             </div>
                         </div>
                         <hr>
@@ -75,7 +75,7 @@
                             <div class="col-md-12" *ngIf="mostrarInputFile()">
                                 <label for="archivo">Archivo: </label>
                                 <input id="archivo-pdf" type="file" accept=".pdf" class="form-control" name="archivo" (change)="cargarArchivoPdf($event)">
-                                <input id="archivo-xml" type="file" accept=".xml" class="form-control d-none" name="archivo" (change)="cargarArchivoXml($event)">
+                                <input id="archivo-xml" type="file" class="form-control d-none" name="archivo" (change)="cargarArchivoXml($event)">
                             </div>
                         </div>
                         <hr>

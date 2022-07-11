@@ -28,4 +28,5 @@ export interface Solicitud {
     clienteNombre?: string;
     archivoSolicitud?: any;
     cotizacion?: any
+    curpPaciente?: string;
 }

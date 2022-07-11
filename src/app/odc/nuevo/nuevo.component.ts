@@ -151,7 +151,7 @@ export class NuevoComponent implements OnInit {
         return false;
       }
     }
-    if ([703, 704, 705, 707, 708, 709].includes(this.nuevaSolicitud.idCliente)) {
+    if ([703, 704, 705, 707, 708, 709].includes(this.nuevaSolicitud.idCliente) && (this.clasificacion == 1 || this.clasificacion == 5)) {
       if (!this.nuevaSolicitud.diagnostico || this.nuevaSolicitud.diagnostico!.length == 0) {
         this.mostrarAlert('Ingresa el diagnostico');
         return false;

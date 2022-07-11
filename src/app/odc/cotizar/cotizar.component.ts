@@ -124,7 +124,7 @@ export class CotizarComponent implements OnInit {
     if (!this.request.tipoPago) return false;
     if (!this.request.cfdi) return false;
     if (!this.request.hojaConsumo) return false;
-    if (!this.request.hojaConsumo2) return false;
+    if (this.informacion.esTipoCirugia && !this.request.hojaConsumo2) return false;
     if (!this.pedido.length) return false;
     return true;
   }
@@ -350,40 +350,45 @@ export class CotizarComponent implements OnInit {
   }
   
   validarImagenTurcos(data: any, idSeguimiento: string, descLista: string) {
-    let idSolicitud = data.informacion.idSolicitud.toString();
-    let nombre = `CONSUMO_ODC_${idSolicitud}.${this.request.hojaConsumo2.name.split('.')[1]}`;
-    let carpetaNombre =  descLista.replaceAll(" ", "_");
-    var reader = new FileReader();
-    reader.readAsDataURL(this.request.hojaConsumo2);
-    reader.onload = () => {
-      let json = {
-        archivo: reader.result,
-        access_key: 'truemedgroup',
-        id: idSeguimiento,
-        nombre_archivo: nombre,
-        carpeta: carpetaNombre
-      }
-      this.cotizacionService.validarTurcos(json).subscribe(res => {
-        if (res.done[0] == true) {
-          Swal.fire({
-            icon: 'success',
-            title: res.message,
-            allowOutsideClick: false,
-          }).then((result) => {
-            this.enviarAhora(data);
-          });
-        } else {
+    if (!this.informacion.esTipoCirugia) {
+      this.enviarAhora(data);
+    } else {
+      let idSolicitud = data.informacion.idSolicitud.toString();
+      let nombre = `CONSUMO_ODC_${idSolicitud}.${this.request.hojaConsumo2.name.split('.')[1]}`;
+      let carpetaNombre =  descLista.replaceAll(" ", "_");
+      var reader = new FileReader();
+      reader.readAsDataURL(this.request.hojaConsumo2);
+      reader.onload = () => {
+        let json = {
+          archivo: reader.result,
+          access_key: 'truemedgroup',
+          id: idSeguimiento,
+          nombre_archivo: nombre,
+          carpeta: carpetaNombre
+        }
+        this.cotizacionService.validarTurcos(json).subscribe(res => {
+          if (res.done[0] == true) {
+            // Swal.fire({
+            //   icon: 'success',
+            //   title: res.message,
+            //   allowOutsideClick: false,
+            //   confirmButtonText: 'CONTINUAR'
+            // }).then((result) => {
+              this.enviarAhora(data);
+            // });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: res.message,
+            });
+          }
+        }, err => {
           Swal.fire({
             icon: 'error',
-            title: res.message,
+            title: 'Error de conexión.',
           });
-        }
-      }, err => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error de conexión.',
         });
-      });
+      }
     }
   }
 }

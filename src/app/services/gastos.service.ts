@@ -60,7 +60,7 @@ export class GastosService {
     formData.append('cantidad', producto.cantidad.toString());
     formData.append('importe', producto.importe.toString());
     formData.append('archivo', producto.archivo!);
-    formData.append('archivoXml',  producto.archivo ? producto.archivo : '');
+    formData.append('archivoXml',  producto.archivoXml ? producto.archivoXml : '');
     formData.append('uuid', producto.uuid ? producto.uuid : '');
     formData.append('proveedor', this.cliente);
 

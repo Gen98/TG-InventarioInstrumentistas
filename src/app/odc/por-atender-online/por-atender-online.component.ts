@@ -252,6 +252,7 @@ export class PorAtenderOnlineComponent implements OnInit {
       this.verSolicitudModel = data;
       this.verSolicitudModel.proveedorNombre = proveedor;
       this.verSolicitudModel.clienteNombre = cliente;
+      this.verSolicitudModel.curp = data.curpPaciente;
 
       this.verSolicitudModel.solicitudPDFNombre!.endsWith('pdf') ? this.sourceIsPDF = true : this.sourceIsPDF = false;
       let clientes = this.distribuidores.find((e: any) => e.id == data.idProveedor)!.clientes!;

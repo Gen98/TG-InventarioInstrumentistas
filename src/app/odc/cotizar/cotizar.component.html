@@ -52,19 +52,20 @@
                 <div class="row">
                     <div class="col-12">
                         <label for="hoja_consumo">Hoja de soporte:</label>
-                        <input id="file-s" type="file" class="form-control" name="hoja_soporte" (change)="subirArchivo($event, 'soporte')">
+                        <input id="file-s" type="file" class="form-control" name="hoja_soporte" (change)="subirArchivo($event, 'soporte')" accept=".pdf">
                     </div>
                 </div>
                 <div class="row" *ngIf="informacion.esTipoCirugia == true">
                     <div class="col-12">
-                        <label for="hoja_consumo">Hoja de consumo:</label>
-                        <input id="file-c" type="file" accept=".jpg, .jpeg" class="form-control" name="hoja_consumo" (change)="subirArchivo($event, 'consumo')">
+                        <label for="hoja_consumo">Foto de consumo:</label>
+                        <input *ngIf="['677','680','681','682'].includes(informacion.idCliente!.toString())" id="file-c" type="file" accept=".pdf" class="form-control" name="hoja_consumo" (change)="subirArchivo($event, 'consumo')">
+                        <input *ngIf="!['677','680','681','682'].includes(informacion.idCliente!.toString())" id="file-c" type="file" accept="image/*" class="form-control" name="hoja_consumo" (change)="subirArchivo($event, 'consumo')">
                     </div>
                 </div>
                 <div class="row" *ngIf="informacion.esTipoCirugia != true">
                     <div class="col-12">
-                        <label for="hoja_consumo">Hoja de consumo:</label>
-                        <input id="file-c" type="file" accept=".xlsx, .xls" class="form-control" name="hoja_consumo" (change)="subirArchivo($event, 'consumo')">
+                        <label for="hoja_consumo">Foto de consumo:</label>
+                        <input id="file-c" type="file" class="form-control" name="hoja_consumo" (change)="subirArchivo($event, 'consumo')">
                     </div>
                 </div>
             </div>

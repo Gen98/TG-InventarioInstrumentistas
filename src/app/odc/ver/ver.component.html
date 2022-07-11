@@ -60,7 +60,7 @@
                                     <span role="button" class="text-primary" (click)="descargarArchivoSolicitud()">{{
                                         solicitud.solicitudPDFNombre }}</span>
                                 </label>
-                                <input id="fileVer" type="file" class="form-control" name="folio"
+                                <input id="fileVer" type="file" class="form-control" name="folio" accept=".pdf"
                                     (change)="subirArchivo($event)">
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="nss">CURP: </label>
-                                <input type="text" class="form-control" name="nss" [(ngModel)]="solicitud.curp">
+                                <input type="text" class="form-control" name="curp" [(ngModel)]="solicitud.curp">
                             </div>
                             <div class="col-md-6">
                                 <label for="folioConsumo">Folio Consumo: </label>

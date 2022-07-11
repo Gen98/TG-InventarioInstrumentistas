@@ -38,7 +38,9 @@ export class AuthService {
     return this.http.post<any>(urlEndpoint, params.toString(), { headers: httpHeaders })
       .pipe(
         map(resp => {
-          this.saveToken(resp['clienteId'], resp['expires_in'], resp['mostrarEncuesta']);
+          if (resp['clienteId']) {
+            this.saveToken(resp['clienteId'], resp['expires_in'], resp['mostrarEncuesta']);
+          }
           return resp;
         })
       );
